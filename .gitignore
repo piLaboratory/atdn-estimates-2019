@@ -1,0 +1,11 @@
+/.RData
+/.Rhistory
+*.#
+*.*#
+*~
+*.aux
+*.bbl
+*.blg
+*.log
+*.toc
+steege_files/

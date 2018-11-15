@@ -1,0 +1,15 @@
+base
+VGAM
+bbmle
+sads
+poilog
+ggplot2
+StanHeaders
+rstan
+knitr
+MASS
+survival
+fitdistrplus
+evd
+truncdist
+SPECIES
