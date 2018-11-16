@@ -73,6 +73,21 @@
 
 
 
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlstd{dados} \hlkwb{<-} \hlkwd{read.csv2}\hlstd{(}\hlstr{"data.csv"}\hlstd{,} \hlkwc{as.is}\hlstd{=}\hlnum{TRUE}\hlstd{)}
+\hlstd{y} \hlkwb{<-} \hlstd{dados}\hlopt{$}\hlstd{N.ind}
+\hlstd{Sobs} \hlkwb{<-} \hlkwd{length}\hlstd{(y)}
+\hlcom{## Total number of trees (average density x area)}
+\hlstd{Tot.t} \hlkwb{<-} \hlnum{567}\hlopt{*}\hlnum{5.5e8}
+\hlcom{## Proportion of total trees in the sample}
+\hlstd{p1} \hlkwb{<-} \hlkwd{sum}\hlstd{(dados}\hlopt{$}\hlstd{N.ind)}\hlopt{/}\hlstd{Tot.t}
+\hlcom{## Total number of plots}
+\hlstd{N.plots} \hlkwb{<-} \hlnum{1945}
+\end{alltt}
+\end{kframe}
+\end{knitrout}
 
 \section*{Poisson lognormal}
 
@@ -109,7 +124,7 @@ The estimated parameters of the Poilog are:
 \end{alltt}
 \begin{verbatim}
 ##       mu      sig 
-## 2.778902 2.477996
+## 2.787362 2.491355
 \end{verbatim}
 \end{kframe}
 \end{knitrout}
@@ -123,9 +138,14 @@ $ M = \mu - \ln(p)$
 
 where $p$ is the proportion of the community that has been sampled
 \citep{Bulmer1974,Saether2013}.
-As the total sampled area is $1.9 \times 10^3$ ha and the 
-total area of Amazon is $5.5 \times 10^8$ ha, $p=$~\ensuremath{3.4545455\times 10^{-6}}.
-Therefore, we have $M=$~15.3547215.
+%% As the total sampled area is $2.048 \times 10^3$ ha and the 
+%% total area of Amazon is $5.79 \times 10^8$ ha, $p=$~(p1=2.048e3/5.79e8).
+%% Therefore, we have $M=$~unname(pln.cf[1])-log(p1).
+
+As the estimated total number of trees in  Amazon is $3.1 \times 10^{11}$, 
+and the number of identified trees in the sample
+is 986577, $p=$~\ensuremath{3.1636267\times 10^{-6}}.
+Therefore, we have $M=$~15.4511534.
 
 The mean of the lognormal distribution is 
 
@@ -139,11 +159,11 @@ with an average number of trees/species of
 \definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
 \begin{alltt}
 \hlstd{pln.cf} \hlkwb{<-} \hlkwd{unname}\hlstd{(pln.cf)}
-\hlstd{Mu} \hlkwb{<-} \hlstd{pln.cf[}\hlnum{1}\hlstd{]}\hlopt{-}\hlkwd{log}\hlstd{(}\hlnum{1.9e3}\hlopt{/}\hlnum{5.5e8}\hlstd{)}
+\hlstd{Mu} \hlkwb{<-} \hlstd{pln.cf[}\hlnum{1}\hlstd{]}\hlopt{-}\hlkwd{log}\hlstd{(p1)}
 \hlstd{(mean.ln} \hlkwb{<-} \hlkwd{exp}\hlstd{(Mu} \hlopt{+} \hlstd{pln.cf[}\hlnum{2}\hlstd{]}\hlopt{^}\hlnum{2}\hlopt{/}\hlnum{2}\hlstd{))}
 \end{alltt}
 \begin{verbatim}
-## [1] 100428076
+## [1] 114327511
 \end{verbatim}
 \end{kframe}
 \end{knitrout}
@@ -155,13 +175,11 @@ divided by the mean above:
 \begin{knitrout}
 \definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
 \begin{alltt}
-\hlcom{## Total number of trees (average density x area)}
-\hlstd{Tot.t} \hlkwb{<-} \hlnum{567}\hlopt{*}\hlnum{5.5e8}
 \hlcom{## Estimated number of species}
 \hlstd{(pln.S} \hlkwb{<-} \hlstd{Tot.t}\hlopt{/}\hlstd{mean.ln)}
 \end{alltt}
 \begin{verbatim}
-## [1] 3105.207
+## [1] 2727.69
 \end{verbatim}
 \end{kframe}
 \end{knitrout}
@@ -184,14 +202,14 @@ had zero abundance in the sample. Simple as that:
 \hlstd{(pln.d0} \hlkwb{<-} \hlkwd{dpoilog}\hlstd{(}\hlnum{0}\hlstd{,} \hlkwc{mu} \hlstd{= pln.cf[}\hlnum{1}\hlstd{],} \hlkwc{sig}\hlstd{=pln.cf[}\hlnum{2}\hlstd{]))}
 \end{alltt}
 \begin{verbatim}
-## [1] 0.1120095
+## [1] 0.1124546
 \end{verbatim}
 \end{kframe}
 \end{knitrout}
 
 That is, an estimate that the recorded species are 89\%
 of the total number of species.
-This gives an estimate of 5571 species.
+This gives an estimate of 5671 species.
 
 \subsubsection*{Likelihood and confidence intervals}
 
@@ -209,8 +227,8 @@ and so match frequentist confidence intervals:
 \end{alltt}
 \begin{verbatim}
 ##        2.5 %   97.5 %
-## mu  2.675600 2.876732
-## sig 2.404746 2.555894
+## mu  2.684205 2.885074
+## sig 2.418213 2.569101
 \end{verbatim}
 \begin{alltt}
 \hlstd{(pln.li} \hlkwb{<-} \hlkwd{likelregions}\hlstd{(pln.prf))}
@@ -219,16 +237,16 @@ and so match frequentist confidence intervals:
 ## Likelihood regions for ratio = 2.079442 
 ## 
 ##  mu:
-##         lower    upper
-## [1,] 2.671338 2.880652
+##         lower   upper
+## [1,] 2.679937 2.88898
 ## 
 ##  sig:
-##         lower    upper
-## [1,] 2.401954 2.559099
+##         lower   upper
+## [1,] 2.415443 2.57232
 \end{verbatim}
 \end{kframe}
 
-{\centering \includegraphics[width=\maxwidth]{figure/confindence_and_likelihood_limits_of_PLN-1} 
+{\centering \includegraphics[width=\maxwidth]{figure/confidence_and_likelihood_limits_of_PLN-1} 
 
 }
 
@@ -239,8 +257,8 @@ and so match frequentist confidence intervals:
 The likelihood interval of total species richness can be estimated
 visually from the likelihood surface. 
 Using the likelihood ratio of two (bold black isoline)
-we see that the likelihood interval for total species richness from PLN is
-ca 5500 -- 5650:
+we can see the isolines that are tangent tothe likelihood region.
+%likelihood interval for total species richness from PLN is ca 5600 -- 5750:
 
 \begin{knitrout}
 \definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}
@@ -267,14 +285,14 @@ upper bound):
 \hlstd{Sobs} \hlopt{/} \hlstd{(}\hlnum{1} \hlopt{-} \hlkwd{dpoilog}\hlstd{(}\hlnum{0}\hlstd{, pln.ci[}\hlnum{1}\hlstd{,}\hlnum{2}\hlstd{], pln.ci[}\hlnum{2}\hlstd{,}\hlnum{1}\hlstd{]))}
 \end{alltt}
 \begin{verbatim}
-## [1] 5493.925
+## [1] 5592.471
 \end{verbatim}
 \begin{alltt}
 \hlcom{## Upper bound}
 \hlstd{Sobs} \hlopt{/} \hlstd{(}\hlnum{1} \hlopt{-} \hlkwd{dpoilog}\hlstd{(}\hlnum{0}\hlstd{, pln.ci[}\hlnum{1}\hlstd{,}\hlnum{1}\hlstd{], pln.ci[}\hlnum{2}\hlstd{,}\hlnum{2}\hlstd{]))}
 \end{alltt}
 \begin{verbatim}
-## [1] 5657.733
+## [1] 5758.637
 \end{verbatim}
 \end{kframe}
 \end{knitrout}
@@ -320,7 +338,7 @@ But just for the records:
 \hlstd{(S.ls} \hlkwb{<-} \hlstd{alpha}\hlopt{*}\hlkwd{log}\hlstd{(}\hlnum{1} \hlopt{+} \hlstd{Tot.t}\hlopt{/}\hlstd{alpha))}
 \end{alltt}
 \begin{verbatim}
-## [1] 13631.92
+## [1] 13809.86
 \end{verbatim}
 \end{kframe}
 \end{knitrout}
@@ -335,7 +353,7 @@ interval for estimated total richness from these values
 \end{alltt}
 \begin{verbatim}
 ##    2.5 %   97.5 % 
-## 629.8799 740.3396
+## 638.9166 750.1000
 \end{verbatim}
 \begin{alltt}
 \hlcom{## Estimated species richness for lower bound of alpha's IC}
@@ -343,14 +361,14 @@ interval for estimated total richness from these values
 \end{alltt}
 \begin{verbatim}
 ##    2.5 % 
-## 12610.36
+## 12782.17
 \end{verbatim}
 \begin{alltt}
 \hlstd{ls.ci[}\hlnum{2}\hlstd{]}\hlopt{*}\hlkwd{log}\hlstd{(}\hlnum{1} \hlopt{+} \hlstd{Tot.t}\hlopt{/}\hlstd{ls.ci[}\hlnum{2}\hlstd{])}
 \end{alltt}
 \begin{verbatim}
 ##   97.5 % 
-## 14702.17
+## 14886.17
 \end{verbatim}
 \end{kframe}
 \end{knitrout}
@@ -377,14 +395,14 @@ those provided by the log-series (but has much lower AIC value, see below).
 \end{alltt}
 \begin{verbatim}
 ## (Intercept):1 (Intercept):2 
-##   47.98400878    0.04074046
+##   48.96347392    0.04048581
 \end{verbatim}
 \begin{alltt}
 \hlkwd{coef}\hlstd{(y.nb2)}
 \end{alltt}
 \begin{verbatim}
 ##        size          mu 
-##  0.04163341 48.91066826
+##  0.04153996 50.08844429
 \end{verbatim}
 \end{kframe}
 \end{knitrout}
@@ -406,6 +424,7 @@ those provided by the log-series (but has much lower AIC value, see below).
 
 \end{knitrout}
 
+
 \subsection*{Estimate of  species richness}
 
 Following the recipe of \citet{tovo2017}:
@@ -418,10 +437,11 @@ Following the recipe of \citet{tovo2017}:
 \hlstd{csi.p} \hlkwb{<-} \hlkwd{unname}\hlstd{(cf.nb[}\hlnum{2}\hlstd{]}\hlopt{/}\hlstd{(}\hlkwd{sum}\hlstd{(cf.nb)))}
 \hlstd{csi} \hlkwb{<-} \hlstd{csi.p}\hlopt{/}\hlstd{(p1}\hlopt{+}\hlstd{(}\hlnum{1}\hlopt{-}\hlstd{p1)}\hlopt{*}\hlstd{csi.p)}
 \hlcom{## Estimated number of species }
-\hlstd{(S.est} \hlkwb{<-} \hlkwd{unname}\hlstd{(Sobs}\hlopt{*}\hlstd{(}\hlnum{1}\hlopt{-}\hlstd{(}\hlnum{1}\hlopt{-}\hlstd{csi)}\hlopt{^}\hlstd{cf.nb[}\hlnum{1}\hlstd{])} \hlopt{/} \hlstd{(}\hlnum{1}\hlopt{-}\hlstd{(}\hlnum{1}\hlopt{-}\hlstd{csi.p)}\hlopt{^}\hlstd{cf.nb[}\hlnum{1}\hlstd{])))}
+\hlstd{S.est} \hlkwb{<-} \hlstd{Sobs}\hlopt{*}\hlstd{(}\hlnum{1}\hlopt{-}\hlstd{(}\hlnum{1}\hlopt{-}\hlstd{csi)}\hlopt{^}\hlstd{cf.nb[}\hlnum{1}\hlstd{])} \hlopt{/} \hlstd{(}\hlnum{1}\hlopt{-}\hlstd{(}\hlnum{1}\hlopt{-}\hlstd{csi.p)}\hlopt{^}\hlstd{cf.nb[}\hlnum{1}\hlstd{])}
+\hlkwd{unname}\hlstd{(S.est)}
 \end{alltt}
 \begin{verbatim}
-## [1] 10838.57
+## [1] 11038.67
 \end{verbatim}
 \end{kframe}
 \end{knitrout}
@@ -437,8 +457,8 @@ coefficients of the NB fit (see file \code{functions.R})
 \hlkwd{tovo}\hlstd{(}\hlkwc{fit} \hlstd{= y.nb2,} \hlkwc{p} \hlstd{= p1,} \hlkwc{CI}\hlstd{=}\hlnum{TRUE}\hlstd{)}
 \end{alltt}
 \begin{verbatim}
-## Estimated species richness: 10838.57 
-##  95% CI: 10129.92 - 11753.85
+## Estimated species richness: 11038.67 
+##  95% CI: 10328.09 - 11977.2
 \end{verbatim}
 \end{kframe}
 \end{knitrout}
@@ -453,13 +473,13 @@ provides the best fit:
 \begin{knitrout}
 \definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
 \begin{alltt}
-\hlkwd{AICtab}\hlstd{(pln, y.nb2, y.ls)}
+\hlkwd{AICtab}\hlstd{(pln, y.nb2, y.ls,} \hlkwc{base}\hlstd{=}\hlnum{TRUE}\hlstd{)}
 \end{alltt}
 \begin{verbatim}
-##       dAIC df
-## y.nb2  0.0 2 
-## y.ls  26.3 1 
-## pln   32.4 2
+##       AIC     dAIC    df
+## y.nb2 54530.9     0.0 2 
+## y.ls  54557.5    26.6 1 
+## pln   54577.6    46.6 2
 \end{verbatim}
 \end{kframe}
 \end{knitrout}
@@ -479,14 +499,14 @@ To take into account undetected species I tried to truncate this
 continuous distribution at different points.
 
 The second approach was to fit the distribution
-of frequencies (the number of plots out of the total of 1900
+of frequencies (the number of plots out of the total of 1945
 in which each species has been recorded) to
 a beta-binomial distribution. Because this is a discrete distribution, 
 truncation is at a single point (species with zero frequency in the sample).
 
 In both cases I assumed that the occupancies of the species
 follow a beta distribution, and that the observed frequencies were
-the result of independent 1900 trials for each species, in which
+the result of independent 1945 trials for each species, in which
 the number of occupied plots follow a binomial distribution. 
 Hence the compound beta-binomial distribution that underlies both approaches.
 With this distribution we can estimate the proportion of undetected species
@@ -506,14 +526,27 @@ A first-order approximation is to truncate the
 beta distribution at 1/(number of plots). 
 
 I then fitted the distribution of occupancies to beta distributions
-without truncation and truncated at $0.1/1900$, $0.5/1900$ and $0.9/1900$.
+without truncation and truncated at $0.1/$1945, $0.5/$1945 and $0.9$1945.
 The code for fitting with maximum likelihood
 is in the source file of this document.  
 Below I show the QQplots of predicted x observed values,
-which shows that truncation above $0.5/1900$ clearly
+which shows that truncation above $0.5/$1945 clearly
 improves the fit:
 
-
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{verbatim}
+##        s1        s2 
+##  0.473385 23.882701
+##         s1         s2 
+##  0.3083174 17.9980203
+##          s1          s2 
+##  0.07090589 11.67846020
+##           s1           s2 
+## 5.217535e-05 1.086736e+01
+\end{verbatim}
+\end{kframe}
+\end{knitrout}
 
 \begin{knitrout}
 \definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}
@@ -526,7 +559,7 @@ improves the fit:
 
 \end{knitrout}
 
-And the model selection shows that the truncation at $0.9/1900$
+And the model selection shows that the truncation at $0.9/$1945
 provides a much better fit:
 
 \begin{knitrout}
@@ -537,25 +570,16 @@ provides a much better fit:
 \begin{verbatim}
 ##           dAIC   df
 ## f.betat.9    0.0 2 
-## f.betat.5 1091.5 2 
-## f.betat.1 2469.0 2 
-## f.beta    3186.2 2
+## f.betat.5 1112.7 2 
+## f.betat.1 2528.3 2 
+## f.beta    3270.3 2
 \end{verbatim}
 \end{kframe}
 \end{knitrout}
 
 \subsubsection*{Estimate of species richness}
 
-\begin{knitrout}
-\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
-\begin{verbatim}
-## [1] 5637.334
-## [1] 6431.079
-## [1] 15417.45
-## [1] 7481742
-\end{verbatim}
-\end{kframe}
-\end{knitrout}
+
 
 If we assume that species occur in the plots
 independently with different values of occupancies
@@ -578,23 +602,23 @@ got the following:
 \hline
 Truncation & Estimated richness\\
 \hline
-None & 5637\\
+None & 5642\\
 \hline
-0.1/1900 & 6431\\
+0.1/N plots & 6458\\
 \hline
-0.5/1900 & 15417\\
+0.5/N plots & 16142\\
 \hline
-0.9/900 & 7481742\\
+0.9/N plots & 18099397\\
 \hline
 \end{tabular}
 
 
 \end{knitrout}
 
-The distribution truncated at $0.9/1900$ gives unrealistic estimates,
-so I'll follow with the model with truncation at $0.5/1900$.
-With the likelihood surface I get a likelihood interval
-for the richness estimated by this model of 12550--20800.
+The distribution truncated at $0.9/$1945 gives unrealistic estimates,
+so I'll follow with the model with truncation at $0.5/$1945.
+With the likelihood surface we get an idea of likelihood interval:
+%I get a likelihood interval for the richness estimated by this model of 13000--22200.
 
 \begin{knitrout}
 \definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}
@@ -621,8 +645,7 @@ is truncated. To truncate also the beta compounding distribution
 we would need Bayesian models.
 
 With this model I got an estimated total richness of
-\ensuremath{1.008\times 10^{4}}, with an likelihood interval
-of 9878 -- 10280.
+\ensuremath{1.0081\times 10^{4}}, with an likelihood interval below:
 
 \begin{knitrout}
 \definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}
@@ -639,16 +662,17 @@ of 9878 -- 10280.
 
 Results of the non-parametric indices
 available in the package \emph{SPECIES} \citep{SPECIES}.
-Only the 'Penalized non-parametric maximum likelihood estimate'
-from \citet{wang2005} is close the number of species recorded
-in Amazon. The others estimate  ~5000 species.
+All around ~5000 species.
+%% Only the 'Penalized non-parametric maximum likelihood estimate'
+%% from \citet{wang2005} is close the number of species recorded in Amazon. 
+%% The other indices estimate  ~5000 species.
 
 \begin{knitrout}
 \definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
 \begin{alltt}
 \hlstd{Ab} \hlkwb{<-} \hlkwd{as.data.frame}\hlstd{(}\hlkwd{table}\hlstd{(dados}\hlopt{$}\hlstd{N.ind))}
 \hlkwd{names}\hlstd{(Ab)} \hlkwb{<-} \hlkwd{c}\hlstd{(}\hlstr{"j"}\hlstd{,} \hlstr{"n_j"}\hlstd{)}
-\hlstd{Ab}\hlopt{$}\hlstd{j} \hlkwb{<-} \hlkwd{as.integer}\hlstd{(Ab}\hlopt{$}\hlstd{j)}
+\hlstd{Ab}\hlopt{$}\hlstd{j} \hlkwb{<-} \hlkwd{as.integer}\hlstd{(}\hlkwd{as.character}\hlstd{(Ab}\hlopt{$}\hlstd{j))}
 \hlcom{##jackknife method}
 \hlstd{(Sj} \hlkwb{<-} \hlkwd{jackknife}\hlstd{(Ab,}\hlkwc{k}\hlstd{=}\hlnum{5}\hlstd{))}
 \end{alltt}
@@ -657,17 +681,17 @@ in Amazon. The others estimate  ~5000 species.
 ## Your specified order is larger than that determined by the test, 
 ## Therefore the order from the test is used.
 ## $JackknifeOrder
-## [1] 3
+## [1] 2
 ## 
 ## $Nhat
-## [1] 5738
+## [1] 5737
 ## 
 ## $SE
-## [1] 91.08238
+## [1] 55.53377
 ## 
 ## $CI
 ##        lb   ub
-## [1,] 5559 5917
+## [1,] 5628 5846
 \end{verbatim}
 \begin{alltt}
 \hlcom{##ACE coverage method}
@@ -675,15 +699,15 @@ in Amazon. The others estimate  ~5000 species.
 \end{alltt}
 \begin{verbatim}
 ## $Nhat
-## [1] 5298 5379
+## [1] 5399 5485
 ## 
 ## $SE
-## [1] 32.28437 42.56110
+## [1] 33.21531 44.06319
 ## 
 ## $CI
 ##         lb   ub
-## ACE   5235 5362
-## ACE-1 5297 5463
+## ACE   5334 5464
+## ACE-1 5400 5573
 \end{verbatim}
 \begin{alltt}
 \hlcom{##Chao1984 lower bound estimator}
@@ -691,14 +715,14 @@ in Amazon. The others estimate  ~5000 species.
 \end{alltt}
 \begin{verbatim}
 ## $Nhat
-## [1] 5358
+## [1] 5441
 ## 
 ## $SE
-## [1] 47.95818
+## [1] 47.05694
 ## 
 ## $CI
 ##        lb   ub
-## [1,] 5274 5463
+## [1,] 5358 5544
 \end{verbatim}
 \begin{alltt}
 \hlcom{##Chao and Bunge coverage-duplication method}
@@ -706,14 +730,14 @@ in Amazon. The others estimate  ~5000 species.
 \end{alltt}
 \begin{verbatim}
 ## $Nhat
-## [1] 5431
+## [1] 5542
 ## 
 ## $SE
-## [1] 52.90512
+## [1] 55.42057
 ## 
 ## $CI
 ##        lb   ub
-## [1,] 5329 5536
+## [1,] 5435 5652
 \end{verbatim}
 \begin{alltt}
 \hlcom{##Penalized NPMLE method}
@@ -722,12 +746,12 @@ in Amazon. The others estimate  ~5000 species.
 \begin{verbatim}
 ## Method: Penalized NPMLE method by  Wang and Lindsay 2005. 
 ## 
-##         MLE=                                10868 
+##         MLE=                                5551 
 ##         Estimated zero-truncated Poisson mixture components:       
-##         p=                                  0.5623688 1.653021 4.309661 9.819462 
-##         pi=                                 0.177733 0.2490224 0.2523565 0.320888
+##         p=                                  0.9153796 2.048484 4.198693 9.778435 
+##         pi=                                 0.3390338 0.0835869 0.2598503 0.317529
 ## $Nhat
-## [1] 10868
+## [1] 5551
 \end{verbatim}
 \begin{alltt}
 \hlcom{##Unconditonal NPMLE method}
@@ -737,12 +761,12 @@ in Amazon. The others estimate  ~5000 species.
 ## Method: Unconditional NPMLE method by Norris and Pollock 1996, 1998, 
 ##         using algorithm by Wang and Lindsay 2005: 
 ## 
-##         MLE=                                5754 
+##         MLE=                                5608 
 ##         Estimated Poisson mixture components:       
-##         p=                                  0.2409245 1.512412 6.239167 
-##         pi=                                 0.2808498 0.4096634 0.3094868
+##         p=                                  0.370657 1.411825 6.183764 
+##         pi=                                 0.1811724 0.4804983 0.3383293
 ## $Nhat
-## [1] 5754
+## [1] 5608
 \end{verbatim}
 \begin{alltt}
 \hlcom{##Poisson-compound Gamma method}
@@ -752,13 +776,13 @@ in Amazon. The others estimate  ~5000 species.
 ## Method: Poisson-Compound Gamma method by Wang 2010. 
 ## Alpha grid used: 1 2 3 4 5 6 7 8 9 10 . 
 ## 
-##         MLE=                                5560 
+##         MLE=                                5576 
 ##         Selected alpha model:               Inf 
 ##         Estimated Gamma components:         
-##         p=                                  0.5864097 2.208562 6.843692 14.67578 
-##         pi=                                 0.1845476 0.2968098 0.2893603 0.2292823
+##         p=                                  0.734205 2.246373 6.79769 14.67896 
+##         pi=                                 0.2218206 0.2631206 0.286423 0.2286358
 ## $Nhat
-## [1] 5560
+## [1] 5576
 ## 
 ## $AlphaModel
 ## [1] Inf
@@ -766,12 +790,41 @@ in Amazon. The others estimate  ~5000 species.
 \end{kframe}
 \end{knitrout}
 
-\section*{Some  thoughts}
+\section*{Wrap up}
 
-I can see a paper that reviews comprehensively the species richness estimates we can get from this data. Of course one important information is the known number of species recorded in the region. There is a gap between the estimates, rather than a more uniform spread over the range of values. We have a cluster os estimates around 5000-6000 and other around the known number of species. Another idea is to do the same for Mata Atlantica.  A nice main figure would be a point-and-error-bars of all estimates for both ecorregions.
+\subsection*{Findings}
+\begin{itemize}
+\item There is a gap between the estimates, rather than a more uniform spread over the range of values. We have a cluster of estimates around 5000-6000 and other around or above the known number of species.
+\item Using a strict approach of selecting the best SAD model with AIC, negative binomial wins. As noted by \citet{tovo2017}, NB provides a lower total richness estimate compared to Log-series. But now it is still a realistic value (\ensuremath{1.1038668\times 10^{4}}). The diagnostic plots show that is so because LS overestimate singletons more than NB. If we go for NB we would check if/how to make the hypothetical SAD for the whole Amazonia from a Negative Binomial, as the codes by Steege et al. do.
+\item The realistic estimates (that is, above the known number of species)  
+  came from methods that
+  approximate some  effect of a large beta-diversity. 
+  Such beta-diversity effect is approximated in different ways.
+  Log-series assumes an open metacommunity with an infinite number of species,
+  negative binomial describes SADs with a variance higher than those expected
+  by an independent distribution of species, beta-binomial models
+  capture spatial aggregation of species.
+\end{itemize}
+
+\subsection*{Open questions}
+
+\begin{itemize}
+\item Which models to include?
+  \begin{itemize}
+  \item I would not use the 1st method to estimate S from Poisson-Lognormal, nor the truncated beta method. Agree?
+  \item On the other hand, not so sure if we should include truncated beta-binomial. \textbf{Pros}: raises an simple, alternative way to estimate (occupancy-based); realistic estimates based on some assumption of beta-diversity. \textbf{Cons}: shift the focus from SADs (best keep for another paper?); need to search in the literature to check if/how this method has already been used.
+  \end{itemize}
+\item Keep the estimation based the reconstruction of the regional SAD? If so, try to do that for negative binomial? If we stick to the current reconstruction based on LS, how to deal with the better performance of NB from model selection?
+\end{itemize}
+
+\section*{More (and some redundant) thoughts}
+
+Oldies, kept for the records
+
+I can see a paper that reviews comprehensively the species richness estimates we can get from this data. Of course one important information is the known number of species recorded in the region. There is a gap between the estimates, rather than a more uniform spread over the range of values. We have a cluster of estimates around 5000-6000 and other around the known number of species. Another idea is to do the same for Mata Atlantica.  A nice main figure would be a point-and-error-bars of all estimates for both ecorregions.
 
 The estimates provided by non-parametric and
-also the parametric ones with strong assumptions of random and independent dispersion of species
+also the parametric methods with strong assumptions of random and independent dispersion of species
 across space (which implies in describing the plots as Poisson samples) were
 consistently below the number of species currently recorded for the Amazon.
 
@@ -783,9 +836,10 @@ Such beta-diversity effect is approximated in different ways.
 Log-series assumes an open metacommunity with an infinite number of species,
 negative binomial describes SADs with a variance higher than those expected
 by an independent distribution of species, and beta and beta-binomial models
-capture spatial aggregation of species. Still to be checked,
-the only non-parametric estimate that was above 10,000 has also a similar 
-effect by allowing a different detectability for each species \citep{wang2005}.
+capture spatial aggregation of species. 
+%% Still to be checked,
+%% the only non-parametric estimate that was above 10,000 has also a similar 
+%% effect by allowing a different detectability for each species \citep{wang2005}.
 I think that the key message here 
 is that beta-diversity matters a lot to get a better estimate. And also
 that those models that performed better are still rough approximations.
@@ -799,12 +853,12 @@ I would not venture in general evaluations of the estimators because
 there is already a ton of papers about that, so I think we do not
 need the simulated data.
 
-Finally, I found interesting that
-some models provided a good fit
-to a distribution but did not provide a good estimate of species richness.
-The obvious explanation is that the approximation any model does
-may break down when you use it in extrapolations. But as obvious it may sound
-I think it is an important issue concerning the estimation of species richness.
+%% Finally, I found interesting that
+%% some models provided a good fit
+%% to a distribution but did not provide a good estimate of species richness.
+%% The obvious explanation is that the approximation any model does
+%% may break down when you use it in extrapolations. But as obvious it may sound
+%% I think it is an important issue concerning the estimation of species richness.
 
 
 \subsection*{Next steps}
@@ -820,7 +874,7 @@ I started to work in this idea with Renato and I have some preliminary R codes
 of a bootsrap estimator. The \emph{SADISA} package uses a similar approach (using the information of 
 replicate samples from the same metacommunity).
 
-A related topic is the idea of SOD's (Species Ocuupancies Distributions),
+A related topic is the idea of SOD's (Species Occupancies Distributions),
 which depends of checking if we are not reinventing the weel. But I think
 that combining SODs and SADs in a bivariate model has not been fully explored
 yet.

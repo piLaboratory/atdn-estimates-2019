@@ -21,7 +21,7 @@
 \maketitle
 
 
-<<setup, echo=FALSE>>=
+<<setup, echo=FALSE, include=FALSE>>=
 library(VGAM)
 library(fitdistrplus)
 library(sads)
@@ -31,17 +31,26 @@ source("functions.R")
 opts_chunk$set(fig.align = 'center', fig.show = 'hold',
                fig.height = 6, warning = FALSE, message = FALSE,
                error = FALSE, echo=TRUE)
-options(formatR.arrow = TRUE, width = 90, cache=TRUE)    
-y <- read.table("abundVector.txt")[,1]
-Sobs <- length(y)
+options(formatR.arrow = TRUE, width = 90, cache=TRUE)
 @ %def 
 
+<<Data prep>>=
+dados <- read.csv2("data.csv", as.is=TRUE)
+y <- dados$N.ind
+Sobs <- length(y)
+## Total number of trees (average density x area)
+Tot.t <- 567*5.5e8
+## Proportion of total trees in the sample
+p1 <- sum(dados$N.ind)/Tot.t
+## Total number of plots
+N.plots <- 1945
+@ 
 
 \section*{Poisson lognormal}
 
 Seems to overestimate the abundance of the most abundant species (see qq-plots)
  
-<<fit pln, cache=TRUE>>=
+<<fit pln>>=
 pln <- fitpoilog(y)
 par(mfrow=c(2,2))
 plot(pln)
@@ -67,8 +76,13 @@ $ M = \mu - \ln(p)$
 
 where $p$ is the proportion of the community that has been sampled
 \citep{Bulmer1974,Saether2013}.
-As the total sampled area is $1.9 \times 10^3$ ha and the 
-total area of Amazon is $5.5 \times 10^8$ ha, $p=$~\Sexpr{(p1=1.9e3/5.5e8)}.
+%% As the total sampled area is $2.048 \times 10^3$ ha and the 
+%% total area of Amazon is $5.79 \times 10^8$ ha, $p=$~\Sexpr{(p1=2.048e3/5.79e8)}.
+%% Therefore, we have $M=$~\Sexpr{unname(pln.cf[1])-log(p1)}.
+
+As the estimated total number of trees in  Amazon is $3.1 \times 10^{11}$, 
+and the number of identified trees in the sample
+is \Sexpr{(sum(dados$N.ind))}, $p=$~\Sexpr{p1}.
 Therefore, we have $M=$~\Sexpr{unname(pln.cf[1])-log(p1)}.
 
 The mean of the lognormal distribution is 
@@ -81,7 +95,7 @@ with an average number of trees/species of
  
 <<mean lognormal>>=
 pln.cf <- unname(pln.cf)
-Mu <- pln.cf[1]-log(1.9e3/5.5e8)
+Mu <- pln.cf[1]-log(p1)
 (mean.ln <- exp(Mu + pln.cf[2]^2/2))
 @ %def 
 
@@ -90,8 +104,6 @@ divided by the mean above:
 
  
 <<lognorm S estimate>>=
-## Total number of trees (average density x area)
-Tot.t <- 567*5.5e8
 ## Estimated number of species
 (pln.S <- Tot.t/mean.ln)
 @ %def 
@@ -121,7 +133,7 @@ This gives an estimate of \Sexpr{round(Sobs/(1-pln.d0))} species.
 Confidence profiles for both parameters are quite well-behaved (parabolic)
 and so match frequentist confidence intervals:
 
-<<confindence and likelihood limits of PLN, cache=TRUE>>=
+<<confidence and likelihood limits of PLN>>=
 pln.prf <- profile(pln)
 par(mfrow=c(1,2))
 plotprofmle(pln.prf)
@@ -133,14 +145,14 @@ par(mfrow=c(1,1))
 The likelihood interval of total species richness can be estimated
 visually from the likelihood surface. 
 Using the likelihood ratio of two (bold black isoline)
-we see that the likelihood interval for total species richness from PLN is
-ca 5500 -- 5650:
+we can see the isolines that are tangent tothe likelihood region.
+%likelihood interval for total species richness from PLN is ca 5600 -- 5750:
 
-<<PLN richness ci, echo=FALSE, cache=TRUE>>=
+<<PLN richness ci, echo=FALSE>>=
 pln.smu <- seq(pln.li$mu[[1]][1], pln.li$mu[[1]][2], length=25)
 pln.ssig <- seq(pln.li$sig[[1]][1], pln.li$sig[[1]][2], length=25)
 LL1 <- Vectorize( function(mu,sig)
-    -sum(dtrunc("poilog", x=y, trunc=0, coef=list(mu=mu, sig=sig), log=TRUE)) )
+    -sum(sads::dtrunc("poilog", x=y, trunc=0, coef=list(mu=mu, sig=sig), log=TRUE)) )
 ER1 <- Vectorize(function(mu,sig) Sobs/ (1 - dpoilog(0, mu,sig)))
 pln.ll <- outer(pln.smu, pln.ssig, LL1)
 pln.llr <- pln.ll - LL1(pln.cf[1],pln.cf[2])
@@ -148,8 +160,9 @@ Sest <- outer(pln.smu, pln.ssig, ER1)
 contour(x=pln.smu, y=pln.ssig, z=pln.llr, xlab="mu", ylab="sigma",
         levels=3:5)
 contour(x=pln.smu, y=pln.ssig, z=pln.llr, levels=2, add=TRUE, lwd=2, labcex=1.5)
-contour(x=pln.smu, y=pln.ssig, z=Sest, add=TRUE, col="blue", lwd=2, labcex=1,
-        levels= c(5501,5650, round(Sobs/(1-pln.d0))))
+contour(x=pln.smu, y=pln.ssig, z=Sest, add=TRUE, col="blue", lwd=2, labcex=1)
+#contour(x=pln.smu, y=pln.ssig, z=Sest, add=TRUE, col="blue", lwd=2, labcex=1,
+        #levels= c(5589,5756, round(Sobs/(1-pln.d0))))
 @ 
 
 Because confidence intervals of the estimated parameters are very close to likelihood intervals 
@@ -214,7 +227,7 @@ The results were similar, and the fit looks identical to
 those provided by the log-series (but has much lower AIC value, see below).
 
  
-<<fit NB, cache=TRUE>>=
+<<fit NB>>=
 ## With VGAM
 y.nb <- vglm(y ~ 1, posnegbinomial)
 ## With sads
@@ -230,6 +243,7 @@ plot(y.nb2)
 par(mfrow=c(1,1))
 @ 
 
+
 \subsection*{Estimate of  species richness}
 
 Following the recipe of \citet{tovo2017}:
@@ -240,7 +254,8 @@ cf.nb <- coef(y.nb2)
 csi.p <- unname(cf.nb[2]/(sum(cf.nb)))
 csi <- csi.p/(p1+(1-p1)*csi.p)
 ## Estimated number of species 
-(S.est <- unname(Sobs*(1-(1-csi)^cf.nb[1]) / (1-(1-csi.p)^cf.nb[1])))
+S.est <- Sobs*(1-(1-csi)^cf.nb[1]) / (1-(1-csi.p)^cf.nb[1])
+unname(S.est)
 @ %def 
 
 I did a simple function to automate the calculations and to return
@@ -260,7 +275,7 @@ provides the best fit:
 
  
 <<model selection>>=
-AICtab(pln, y.nb2, y.ls)
+AICtab(pln, y.nb2, y.ls, base=TRUE)
 @ %def 
 
 \section*{Parametric estimates from occupancies}
@@ -278,14 +293,14 @@ To take into account undetected species I tried to truncate this
 continuous distribution at different points.
 
 The second approach was to fit the distribution
-of frequencies (the number of plots out of the total of 1900
+of frequencies (the number of plots out of the total of \Sexpr{N.plots}
 in which each species has been recorded) to
 a beta-binomial distribution. Because this is a discrete distribution, 
 truncation is at a single point (species with zero frequency in the sample).
 
 In both cases I assumed that the occupancies of the species
 follow a beta distribution, and that the observed frequencies were
-the result of independent 1900 trials for each species, in which
+the result of independent \Sexpr{N.plots} trials for each species, in which
 the number of occupied plots follow a binomial distribution. 
 Hence the compound beta-binomial distribution that underlies both approaches.
 With this distribution we can estimate the proportion of undetected species
@@ -305,33 +320,32 @@ A first-order approximation is to truncate the
 beta distribution at 1/(number of plots). 
 
 I then fitted the distribution of occupancies to beta distributions
-without truncation and truncated at $0.1/1900$, $0.5/1900$ and $0.9/1900$.
+without truncation and truncated at $0.1/$\Sexpr{N.plots}, $0.5/$\Sexpr{N.plots} and $0.9$\Sexpr{N.plots}.
 The code for fitting with maximum likelihood
 is in the source file of this document.  
 Below I show the QQplots of predicted x observed values,
-which shows that truncation above $0.5/1900$ clearly
+which shows that truncation above $0.5/$\Sexpr{N.plots} clearly
 improves the fit:
 
-<<beta fit, echo=FALSE, eval=FALSE>>=
-dados <- read.csv2("data.csv", as.is=TRUE)
+<<beta fit, echo=FALSE>>=
 ########################################################
 ## Fit a beta and truncated beta to observed proportions
 ########################################################
 ## Initial fit to get start values
-f.st <- fitdist(dados$N.plots/1900, "beta")
+f.st <- fitdist(dados$N.plots/N.plots, "beta")
 cf.st <- coef(f.st)
 ## likelihood functions
 LL.beta <- function(s1, s2){
-    -sum ( dbeta(x = dados$N.plots/1900, shape1=s1, shape2=s2, log=TRUE) )
+    -sum ( dbeta(x = dados$N.plots/N.plots, shape1=s1, shape2=s2, log=TRUE) )
 }
 LL.betat.1 <- function(s1, s2){
-    -sum ( sads::dtrunc("beta", x = dados$N.plots/1900, trunc=0.1/1900, coef = list(shape1=s1, shape2=s2), log=TRUE) )
+    -sum ( sads::dtrunc("beta", x = dados$N.plots/N.plots, trunc=0.1/N.plots, coef = list(shape1=s1, shape2=s2), log=TRUE) )
 }
 LL.betat.5 <- function(s1, s2){
-    -sum ( sads::dtrunc("beta", x = dados$N.plots/1900, trunc=0.5/1900, coef = list(shape1=s1, shape2=s2), log=TRUE) )
+    -sum ( sads::dtrunc("beta", x = dados$N.plots/N.plots, trunc=0.5/N.plots, coef = list(shape1=s1, shape2=s2), log=TRUE) )
 }
 LL.betat.9 <- function(s1, s2){
-    -sum ( sads::dtrunc("beta", x = dados$N.plots/1900, trunc=0.9/1900, coef = list(shape1=s1, shape2=s2), log=TRUE) )
+    -sum ( sads::dtrunc("beta", x = dados$N.plots/N.plots, trunc=0.9/N.plots, coef = list(shape1=s1, shape2=s2), log=TRUE) )
 }
 ## Fits: ran first with SANN and the with default method
 f.beta <- mle2(LL.beta, start=list(s1=cf.st[1], s2=cf.st[2]))
@@ -343,7 +357,7 @@ f.betat.5 <- mle2(LL.betat.5, start=list(s1=cf.st[1], s2=cf.st[2]),
 f.betat.5 <- mle2(LL.betat.5, start=as.list(coef(f.betat.5)))
 f.betat.9 <- mle2(LL.betat.9, start=list(s1=cf.st[1], s2=cf.st[2]), 
                   method="SANN")
-f.betat.9 <- mle2(LL.betat.9, start=as.list(coef(f.betat.9))) ## did not converge
+#f.betat.9 <- mle2(LL.betat.9, start=as.list(coef(f.betat.9))) ## did not converge
 ## Coefficients
 (cf.beta <- coef(f.beta))
 (cf.betat.1 <- coef(f.betat.1))
@@ -354,22 +368,22 @@ f.betat.9 <- mle2(LL.betat.9, start=as.list(coef(f.betat.9))) ## did not converg
 <<beta qqplots, echo=FALSE>>=
 ## Checking fits with QQ-plots
 par(mfrow=c(2,2))
-QQ.plot(dados$N.plots/1900, distr = "beta",
+QQ.plot(dados$N.plots/N.plots, distr = "beta",
         coef = list(shape1 = cf.beta[1], shape2 = cf.beta[2]),
         main="No Truncation")
-QQ.plot(dados$N.plots/1900, distr = "beta", trunc=0.1/1900,
+QQ.plot(dados$N.plots/N.plots, distr = "beta", trunc=0.1/N.plots,
         coef = list(shape1 = cf.betat.1[1], shape2 = cf.betat.1[2]),
-        main="Truncation at 0.1/1900")
-QQ.plot(dados$N.plots/1900, distr = "beta", trunc=0.5/1900,
+        main=paste("Truncation at 0.1/",N.plots, sep=""))
+QQ.plot(dados$N.plots/N.plots, distr = "beta", trunc=0.5/N.plots,
         coef = list(shape1 = cf.betat.5[1], shape2 = cf.betat.5[2]),
-        main="Truncation at 0.5/1900")
-QQ.plot(dados$N.plots/1900, distr = "beta", trunc=0.9/1900,
+        main=paste("Truncation at 0.5/",N.plots, sep=""))
+QQ.plot(dados$N.plots/N.plots, distr = "beta", trunc=0.9/N.plots,
         coef = list(shape1 = cf.betat.9[1], shape2 = cf.betat.9[2]),
-        main="Truncation at 0.9/1900")
+        main=paste("Truncation at 0.9/",N.plots, sep=""))
 par(mfrow=c(1,1))
 @
 
-And the model selection shows that the truncation at $0.9/1900$
+And the model selection shows that the truncation at $0.9/$\Sexpr{N.plots}
 provides a much better fit:
 
 <<beta model selection>>= 
@@ -378,12 +392,12 @@ AICtab(f.beta, f.betat.1, f.betat.5, f.betat.9)
 
 \subsubsection*{Estimate of species richness}
 
-<<Estimated number of species, echo=FALSE>>=
+<<Estimated number of species, echo=FALSE, include=FALSE>>=
 ## Estimated number of species using the beta binom truncated
-(bb.S <- bb.Sest(shape1=cf.beta[1], shape2=cf.beta[2], Sobs=S.obs, size=1900))
-(bbt.1.S <- bb.Sest(shape1=cf.betat.1[1], shape2=cf.betat.1[2], Sobs=S.obs, size=1900))
-(bbt.5.S <- bb.Sest(shape1=cf.betat.5[1], shape2=cf.betat.5[2], Sobs=S.obs, size=1900))
-(bbt.9.S <- bb.Sest(shape1=cf.betat.9[1], shape2=cf.betat.9[2], Sobs=S.obs, size=1900)) ## unrealistic high
+(bb.S <- bb.Sest(shape1=cf.beta[1], shape2=cf.beta[2], Sobs=S.obs, size=N.plots))
+(bbt.1.S <- bb.Sest(shape1=cf.betat.1[1], shape2=cf.betat.1[2], Sobs=S.obs, size=N.plots))
+(bbt.5.S <- bb.Sest(shape1=cf.betat.5[1], shape2=cf.betat.5[2], Sobs=S.obs, size=N.plots))
+(bbt.9.S <- bb.Sest(shape1=cf.betat.9[1], shape2=cf.betat.9[2], Sobs=S.obs, size=N.plots)) ## unrealistic high
 @
 
 If we assume that species occur in the plots
@@ -404,18 +418,18 @@ got the following:
 <<table of estimated richness, echo=FALSE>>=
 kable(
     data.frame(
-        trunc=c("None","0.1/1900","0.5/1900","0.9/900"),
+        trunc=c("None","0.1/N plots","0.5/N plots","0.9/N plots"),
         S = c(bb.S, bbt.1.S, bbt.5.S, bbt.9.S)),
     digits=0, col.names=c("Truncation","Estimated richness")
     )
 @ 
 
-The distribution truncated at $0.9/1900$ gives unrealistic estimates,
-so I'll follow with the model with truncation at $0.5/1900$.
-With the likelihood surface I get a likelihood interval
-for the richness estimated by this model of 12550--20800.
+The distribution truncated at $0.9/$\Sexpr{N.plots} gives unrealistic estimates,
+so I'll follow with the model with truncation at $0.5/$\Sexpr{N.plots}.
+With the likelihood surface we get an idea of likelihood interval:
+%I get a likelihood interval for the richness estimated by this model of 13000--22200.
 
-<<beta likelihood surface, echo=FALSE, cache=TRUE>>=
+<<beta likelihood surface, echo=FALSE>>=
 ## Profile
 betat.5.prf <- profile(f.betat.5)
 betat.5.ci <- confint(betat.5.prf)
@@ -428,15 +442,15 @@ Vbb.Sest <- Vectorize(function(s1, s2,...) bb.Sest(shape1=s1, shape2=s2, ...), c
 VLL.betat.5 <- Vectorize(LL.betat.5)
 z1 <- outer(x, y, VLL.betat.5)
 z1 <- z1 - min(z1)
-z2 <- outer(x, y, Vbb.Sest, Sobs=S.obs, size=1900)
+z2 <- outer(x, y, Vbb.Sest, Sobs=S.obs, size=N.plots)
 contour(x,y,z1, levels=2, col="red", xlab="shape1", ylab="shape2")
-contour(x, y, z2, add=TRUE, col="blue", levels=c(12550,20800) )
+contour(x, y, z2, add=TRUE, col="blue", levels=c(13000,22200) )
 contour(x, y, z2, add=TRUE, col="blue", levels=round(bbt.5.S))
 @ 
 
 \subsection*{Truncated beta-binomial}
 
-<<fit truncated beta-binomial, cache=TRUE, echo=FALSE, eval=FALSE>>=
+<<fit truncated beta-binomial, echo=FALSE>>=
 ##start values converted for rho and prob, 
 ## both bounded between zero and one
 ## See help(VGAM::betabinom)
@@ -447,7 +461,7 @@ rho.st <- 1/(1 + sum(cf.st))
 unlogit <- function(x) exp(x)/(1+exp(x))
 logit <- function(x) log(x/(1-x))
 LL2.bbt0 <- function(lmu, lrho){
-    -sum(dbetabinom.t0(x = dados$N.plots, size = 1900, mu = unlogit(lmu), rho = unlogit(lrho), log=TRUE))
+    -sum(dbetabinom.t0(x = dados$N.plots, size = N.plots, mu = unlogit(lmu), rho = unlogit(lrho), log=TRUE))
 }
 ## fit with mle2
 beta.bin.ML2 <- bbmle::mle2(LL2.bbt0, start=list(lmu=logit(mu.st), lrho=logit(rho.st)), method="SANN")
@@ -456,7 +470,7 @@ bb.mle2 <- unlogit(coef(beta.bin.ML2))
 beta.bin.prf2 <- profile(beta.bin.ML2)
 bb.ci2 <- confint(beta.bin.prf2)
 ## Total number of species
-bb2.S <- bb.Sest(mu = bb.mle2[1], rho = bb.mle2[2], size = 1900, Sobs=S.obs)
+bb2.S <- bb.Sest(mu = bb.mle2[1], rho = bb.mle2[2], size = N.plots, Sobs=S.obs)
 @ 
 
 Another easy way to get species richness estimates
@@ -469,8 +483,7 @@ is truncated. To truncate also the beta compounding distribution
 we would need Bayesian models.
 
 With this model I got an estimated total richness of
-\Sexpr{round(bb2.S)}, with an likelihood interval
-of 9878 -- 10280.
+\Sexpr{round(bb2.S)}, with an likelihood interval below:
 
 <<beta-binomial likelihood surface, echo=FALSE>>=
 x <- seq(unlogit(bb.ci2[1,1]), unlogit(bb.ci2[1,2]), length=30)
@@ -479,9 +492,9 @@ Vbb.Sest <- Vectorize(bb.Sest, c("mu", "rho"))
 VLL.bbt0 <- Vectorize(LL.bbt0)
 z1 <- outer(x, y, VLL.bbt0)
 z1 <- z1 - min(z1)
-z2 <- outer(x, y, Vbb.Sest, Sobs=S.obs, size=1900)
+z2 <- outer(x, y, Vbb.Sest, Sobs=S.obs, size=N.plots)
 contour(x,y,z1, levels=2, col="red", xlab="mu", ylab="rho")
-contour(x, y, z2, add=TRUE, col="blue", levels=c(9878,10280)) 
+contour(x, y, z2, add=TRUE, col="blue", levels=c(9850,10250)) 
 contour(x, y, z2, add=TRUE, col="blue", levels=round(bb2.S))
 @
 
@@ -489,14 +502,15 @@ contour(x, y, z2, add=TRUE, col="blue", levels=round(bb2.S))
 
 Results of the non-parametric indices
 available in the package \emph{SPECIES} \citep{SPECIES}.
-Only the 'Penalized non-parametric maximum likelihood estimate'
-from \citet{wang2005} is close the number of species recorded
-in Amazon. The others estimate  ~5000 species.
+All around ~5000 species.
+%% Only the 'Penalized non-parametric maximum likelihood estimate'
+%% from \citet{wang2005} is close the number of species recorded in Amazon. 
+%% The other indices estimate  ~5000 species.
 
-<<SPECIES package, cache=TRUE, eval=TRUE>>=
+<<SPECIES package, eval=TRUE>>=
 Ab <- as.data.frame(table(dados$N.ind))
 names(Ab) <- c("j", "n_j")
-Ab$j <- as.integer(Ab$j)
+Ab$j <- as.integer(as.character(Ab$j))
 ##jackknife method
 (Sj <- jackknife(Ab,k=5))
 ##ACE coverage method
@@ -513,12 +527,41 @@ Ab$j <- as.integer(Ab$j)
 (SPG <- pcg(Ab,t=20))
 @ 
 
-\section*{Some  thoughts}
+\section*{Wrap up}
 
-I can see a paper that reviews comprehensively the species richness estimates we can get from this data. Of course one important information is the known number of species recorded in the region. There is a gap between the estimates, rather than a more uniform spread over the range of values. We have a cluster os estimates around 5000-6000 and other around the known number of species. Another idea is to do the same for Mata Atlantica.  A nice main figure would be a point-and-error-bars of all estimates for both ecorregions.
+\subsection*{Findings}
+\begin{itemize}
+\item There is a gap between the estimates, rather than a more uniform spread over the range of values. We have a cluster of estimates around 5000-6000 and other around or above the known number of species.
+\item Using a strict approach of selecting the best SAD model with AIC, negative binomial wins. As noted by \citet{tovo2017}, NB provides a lower total richness estimate compared to Log-series. But now it is still a realistic value (\Sexpr{S.est}). The diagnostic plots show that is so because LS overestimate singletons more than NB. If we go for NB we would check if/how to make the hypothetical SAD for the whole Amazonia from a Negative Binomial, as the codes by Steege et al. do.
+\item The realistic estimates (that is, above the known number of species)  
+  came from methods that
+  approximate some  effect of a large beta-diversity. 
+  Such beta-diversity effect is approximated in different ways.
+  Log-series assumes an open metacommunity with an infinite number of species,
+  negative binomial describes SADs with a variance higher than those expected
+  by an independent distribution of species, beta-binomial models
+  capture spatial aggregation of species.
+\end{itemize}
+
+\subsection*{Open questions}
+
+\begin{itemize}
+\item Which models to include?
+  \begin{itemize}
+  \item I would not use the 1st method to estimate S from Poisson-Lognormal, nor the truncated beta method. Agree?
+  \item On the other hand, not so sure if we should include truncated beta-binomial. \textbf{Pros}: raises an simple, alternative way to estimate (occupancy-based); realistic estimates based on some assumption of beta-diversity. \textbf{Cons}: shift the focus from SADs (best keep for another paper?); need to search in the literature to check if/how this method has already been used.
+  \end{itemize}
+\item Keep the estimation based the reconstruction of the regional SAD? If so, try to do that for negative binomial? If we stick to the current reconstruction based on LS, how to deal with the better performance of NB from model selection?
+\end{itemize}
+
+\section*{More (and some redundant) thoughts}
+
+Oldies, kept for the records
+
+I can see a paper that reviews comprehensively the species richness estimates we can get from this data. Of course one important information is the known number of species recorded in the region. There is a gap between the estimates, rather than a more uniform spread over the range of values. We have a cluster of estimates around 5000-6000 and other around the known number of species. Another idea is to do the same for Mata Atlantica.  A nice main figure would be a point-and-error-bars of all estimates for both ecorregions.
 
 The estimates provided by non-parametric and
-also the parametric ones with strong assumptions of random and independent dispersion of species
+also the parametric methods with strong assumptions of random and independent dispersion of species
 across space (which implies in describing the plots as Poisson samples) were
 consistently below the number of species currently recorded for the Amazon.
 
@@ -530,9 +573,10 @@ Such beta-diversity effect is approximated in different ways.
 Log-series assumes an open metacommunity with an infinite number of species,
 negative binomial describes SADs with a variance higher than those expected
 by an independent distribution of species, and beta and beta-binomial models
-capture spatial aggregation of species. Still to be checked,
-the only non-parametric estimate that was above 10,000 has also a similar 
-effect by allowing a different detectability for each species \citep{wang2005}.
+capture spatial aggregation of species. 
+%% Still to be checked,
+%% the only non-parametric estimate that was above 10,000 has also a similar 
+%% effect by allowing a different detectability for each species \citep{wang2005}.
 I think that the key message here 
 is that beta-diversity matters a lot to get a better estimate. And also
 that those models that performed better are still rough approximations.
@@ -546,12 +590,12 @@ I would not venture in general evaluations of the estimators because
 there is already a ton of papers about that, so I think we do not
 need the simulated data.
 
-Finally, I found interesting that
-some models provided a good fit
-to a distribution but did not provide a good estimate of species richness.
-The obvious explanation is that the approximation any model does
-may break down when you use it in extrapolations. But as obvious it may sound
-I think it is an important issue concerning the estimation of species richness.
+%% Finally, I found interesting that
+%% some models provided a good fit
+%% to a distribution but did not provide a good estimate of species richness.
+%% The obvious explanation is that the approximation any model does
+%% may break down when you use it in extrapolations. But as obvious it may sound
+%% I think it is an important issue concerning the estimation of species richness.
 
 
 \subsection*{Next steps}
@@ -567,7 +611,7 @@ I started to work in this idea with Renato and I have some preliminary R codes
 of a bootsrap estimator. The \emph{SADISA} package uses a similar approach (using the information of 
 replicate samples from the same metacommunity).
 
-A related topic is the idea of SOD's (Species Ocuupancies Distributions),
+A related topic is the idea of SOD's (Species Occupancies Distributions),
 which depends of checking if we are not reinventing the weel. But I think
 that combining SODs and SADs in a bivariate model has not been fully explored
 yet.

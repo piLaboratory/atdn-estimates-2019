@@ -23,7 +23,7 @@ options(mc.cores = parallel::detectCores())
 ## Data 
 Y <- dados$N.ind
 ## List with all data need for the model
-m1.data <- list(s = length(Y), y=Y, a=1.9e3/5.5e8, lN=log(5.5e8))
+m1.data <- list(s = length(Y), y=Y, a=2.048e3/5.79e8, lN=log(567*5.5e8))
 ## To set a priori distributions: fit a poilog to the data
 Y.pl <- fitpoilog(Y)
 cf2 <- coef(Y.pl)
