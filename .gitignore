@@ -1,7 +1,9 @@
 /.RData
 /.Rhistory
 *.#
+*#
 *.*#
+.#*
 *~
 *.aux
 *.bbl
@@ -10,3 +12,4 @@
 *.toc
 steege_files/
 cache/
+figure/

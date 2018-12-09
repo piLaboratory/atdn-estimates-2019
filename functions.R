@@ -11,16 +11,17 @@ tovo <- function(fit, cf, S.obs, p, CI=FALSE){
         S.obs <- length(fit@data$x)
     if(missing(cf))
         cf <- unname(coef(fit))
-    csi.p <- cf[2]/(sum(cf))
-    csi <- csi.p/(p+(1-p)*csi.p)
+    csi <- tovo.csi(cf[1], cf[2], p=p, log=FALSE)
     ## Estimated number of species 
     S.est <- S.obs*(1-(1-csi)^cf[1]) / (1-(1-csi.p)^cf[1])
     if(CI){
         ci <- confint(fit)
-        low <- tovo(cf=ci[,1], S.obs=S.obs, p=p)
-        upp <- tovo(cf=ci[,2],S.obs=S.obs, p=p)
-        CIs <- rbind(ci,c(low,upp))
-        rownames(CIs)[3] <- "S est"
+        p.low <- 1 - tovo.csi(ci[1,1], ci[2,1], p=p, log=FALSE)
+        p.up <- 1 - tovo.csi(ci[1,2], ci[2,2], p=p, log=FALSE)
+        S.low <- tovo(cf=ci[,1], S.obs=S.obs, p=p)
+        S.upp <- tovo(cf=ci[,2],S.obs=S.obs, p=p)
+        CIs <- rbind(ci, c(p.low,p.up), c(S.low,S.upp)  )
+        rownames(CIs)[c(3,4)] <- c("prob", "S.est")
         cat("Estimated species richness:", S.est, "\n",
             "95% CI:",CIs[3,2],"-",CIs[3,1], "\n")
         return(invisible(list(S.est=S.est, CIs=CIs)))
@@ -28,6 +29,40 @@ tovo <- function(fit, cf, S.obs, p, CI=FALSE){
     else
         return(S.est)
 }
+
+#' Calculate re-scaled value of mu from Tovo et al re-scaled nbinom
+tovo.mu <- function(size, mu, p, log=TRUE){
+    csi.p <- mu/(mu+size)
+    if(log){
+        ##re-scaled csi (log)
+        lcsi <- tovo.csi(size, mu, p, log=TRUE)
+        ##re-scaled mu
+        f1 <- function(m) l.csi-(log(m)-log(m+size))
+    }
+    else{
+        csi <- tovo.csi(size, mu, p, log=FALSE)
+        f1 <- function(m) csi - (m/(m+size))
+    }
+    uniroot(f1, c(exp(-100), exp(100)))
+}
+
+#'Tovo et al csi calulation
+tovo.csi <- function(size, mu, p, log=FALSE){
+    csi.p <- mu/(mu+size)
+    if(log)
+        y <- log(csi.p)-log( (p+(1-p)*csi.p) )
+    else
+        y <- csi.p/(p1+(1-p1)*csi.p)
+    return(y)
+    }
+
+#' Zero-truncated negative binomial RAD
+rad.posnegbin <- function(S.est, size, prob, npoints=100){
+    pp <- rev(ppoints(S.est))
+    x <- seq(1,S.est, length=npoints)
+    y <- qposnegbin(p = pp[x], size = size, prob = prob)
+    data.frame(x, y)
+    }
 
 #' Find total number of species sampling probabilities of occurence from a beta distribution
 #' @param shape1 parameter shape1 of a beta distribution
@@ -110,4 +145,49 @@ nbln.Sest <- function(mu, sig, k, Sobs, a=1){
         dlnorm(x, mu, sig)*dnbinom(0, size=k, mu=x*a)
     }
     integrate(f1, 0, Inf)
+}
+
+#' Fisher logseries predicted species abundance
+ls.pred <- function(rank, N, alpha){
+    X <- N/(alpha+N)
+    alpha*(X^rank)/rank
+}
+
+#' estimates parameter k from NB using # of observed zeroes
+est.k <- function(mu, nzeroes, Nplots){
+    f1 <- function(k) {
+        p <- dnbinom(0, size=k, mu=mu)
+        -dbinom(nzeroes, size=Nplots, prob=p, log=TRUE)
+    }
+    fit <- mle2(f1, method="Brent", start=list(k=1), lower=1e-9, upper=10)
+    unname(coef(fit))
+}
+
+est.kv <- Vectorize(est.k, c("mu", "nzeroes"))
+
+#' analytical
+est.ka <- function(mu, nzeroes, Nplots){
+    (mu * nzeroes)/(Nplots - nzeroes)
+    }
+ 
+#'Drawn N samples from Negative binomial for a pair of parameters of the NB (mu and size) and the sums up these values
+rnbinom2 <- function(mu, size, N){
+        y <- rnbinom(n = N, mu  = mu, size = size)
+        sum(y)
+        }
+
+#'Drawn N samples from a Poisson distribution and then sums up these values
+rpois2 <- function(lambda, N){
+        y <- rpois(n = N, lambda  = lambda)
+        sum(y)
+    }
+
+#' Simulates the number of non-occupied plots for a Negative Binomial sampling or a Poisson samplig
+sim.occ <- function(mu, size, N, pois.samp=TRUE){
+    if(pois.samp)
+        lp <- -mu
+    else
+        lp <- size*(log(size)- log(mu+size))
+    p0 <- exp(N*lp)
+    sample(0:1, size=1, prob=c(p0, 1-p0))
 }

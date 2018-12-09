@@ -23,6 +23,7 @@
 
 <<setup, echo=FALSE, include=FALSE>>=
 library(VGAM)
+library(untb)
 library(fitdistrplus)
 library(sads)
 library(knitr)
@@ -254,8 +255,8 @@ cf.nb <- coef(y.nb2)
 csi.p <- unname(cf.nb[2]/(sum(cf.nb)))
 csi <- csi.p/(p1+(1-p1)*csi.p)
 ## Estimated number of species 
-S.est <- Sobs*(1-(1-csi)^cf.nb[1]) / (1-(1-csi.p)^cf.nb[1])
-unname(S.est)
+S.nb <- Sobs*(1-(1-csi)^cf.nb[1]) / (1-(1-csi.p)^cf.nb[1])
+(S.nb <- unname(S.nb))
 @ %def 
 
 I did a simple function to automate the calculations and to return
@@ -264,7 +265,7 @@ coefficients of the NB fit (see file \code{functions.R})
 
  
 <<NB S est CI>>=
-tovo(fit = y.nb2, p = p1, CI=TRUE)
+(tovo.S <- tovo(fit = y.nb2, p = p1, CI=TRUE))
 @ %def 
 
 
@@ -277,6 +278,62 @@ provides the best fit:
 <<model selection>>=
 AICtab(pln, y.nb2, y.ls, base=TRUE)
 @ %def 
+
+\section*{Regional RAD}
+
+Here I replicated the extrapolation method from the regional RAD of the
+estimated abundances, first for the logseries projection:
+
+<<Linear extrapolation from regional RAD>>=
+## Regional RAD
+pop.rad <- rad(dados$population)
+## Linear regression through central 50% quantiles of the RAD
+p.lm <- lm(log(abund)~rank, data=data.frame(pop.rad), subset=rank>max(rank)*.25&rank<max(rank)*.75)
+## Regression coefficients
+cf.p.lm <- unname(coef(p.lm))
+## Logseries projection (upper bound)
+(S.reg1 <- abs(cf.p.lm[1]/cf.p.lm[2]))
+@ 
+
+And also the same extrapolation assuming a log-normal, which is lower-bound estimate:
+
+<<regional rad lognormal>>=
+d <- log(max(dados$population))-cf.p.lm[1]
+(S.reg2 <- abs((cf.p.lm[1]-d)/cf.p.lm[2]))
+@ 
+
+\subsection*{Regional RAD from negative binomial}
+
+Here I compare the regional RAD with RADs predicted by the logseries
+and the negative binomial for the upper-bound and lower-bound estimate of species
+obtained above. I also added the regression lines used to estimate such lower and
+upper bounds
+
+
+<<nbinom rad>>=
+## ppoints for estimated species richness
+S.nb.p1 <- rev(ppoints(tovo.S$S.est))
+## Predicted Negative Binomial for 100 points over the rad using richness predicted from negbib lower limit mu
+## Estimated richness value
+nb.pred <- rad.posnegbin(S = tovo.S$S.est, size = cf.nb[1], prob = 1-tovo.csi(cf.nb[1], cf.nb[2], p1))
+## Lower and upper limits
+nb.pred.l <- rad.posnegbin(S = tovo.S$CIs[4,1], size = tovo.S$CIs[1,1], prob = tovo.S$CIs[3,1])
+nb.pred.u <- rad.posnegbin(S = tovo.S$CIs[4,2], size = tovo.S$CIs[1,2], prob = tovo.S$CIs[3,2])
+
+nb.pred1 <- qposnegbin(p=S.nb.p1[seq(1,tovo.S$S.est,length=100)], size = cf.nb[1], prob = 1-tovo.csi(cf.nb[1], cf.nb[2], p1))
+
+nb.pred2 <- qposnegbin(p=S.nb.p1[seq(1,S.reg1,length=100)], size = y.nb2.ci[1,2], prob = 1-y.nb2p.u)
+## Logseries for 100 points
+#ls.pred1 <- qls(p=S.nb.p1[seq(1,S.reg1,length=100)], N=Tot.t, alpha= a.reg1) ## overflow
+## The plots
+plot(abund~rank, data=data.frame(pop.rad), xlim=c(1,S.reg1), ylim=c(1,max(dados$population)), log="y")
+lines(nb.pred, col="blue")
+lines(seq(1,tovo.S$S.est,length=100), nb.pred1, col="blue")
+lines(seq(1,S.reg1,length=100), nb.pred2, col="green")
+curve(exp(cf.p.lm[1]+cf.p.lm[2]*x), add=TRUE)
+@ 
+
+
 
 \section*{Parametric estimates from occupancies}
 
@@ -532,7 +589,7 @@ Ab$j <- as.integer(as.character(Ab$j))
 \subsection*{Findings}
 \begin{itemize}
 \item There is a gap between the estimates, rather than a more uniform spread over the range of values. We have a cluster of estimates around 5000-6000 and other around or above the known number of species.
-\item Using a strict approach of selecting the best SAD model with AIC, negative binomial wins. As noted by \citet{tovo2017}, NB provides a lower total richness estimate compared to Log-series. But now it is still a realistic value (\Sexpr{S.est}). The diagnostic plots show that is so because LS overestimate singletons more than NB. If we go for NB we would check if/how to make the hypothetical SAD for the whole Amazonia from a Negative Binomial, as the codes by Steege et al. do.
+\item Using a strict approach of selecting the best SAD model with AIC, negative binomial wins. As noted by \citet{tovo2017}, NB provides a lower total richness estimate compared to Log-series. But now it is still a realistic value (\Sexpr{S.nb}). The diagnostic plots show that is so because LS overestimate singletons more than NB. If we go for NB we would check if/how to make the hypothetical SAD for the whole Amazonia from a Negative Binomial, as the codes by Steege et al. do.
 \item The realistic estimates (that is, above the known number of species)  
   came from methods that
   approximate some  effect of a large beta-diversity. 
