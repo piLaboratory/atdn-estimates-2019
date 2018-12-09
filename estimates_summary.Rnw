@@ -1,0 +1,490 @@
+\documentclass[12pt, A4]{article}
+%\usepackage[brazil]{babel}
+\usepackage{graphicx}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{url}
+\usepackage{natbib}
+\usepackage{amsmath}
+\bibliographystyle{rusnat}
+\usepackage{framed, color}
+\usepackage{xspace}
+\definecolor{shadecolor}{rgb}{0.9, 0.9, 0.9}
+\newcommand{\R}{\textnormal{\sffamily\bfseries R}\xspace}
+\newcommand{\code}[1]{\texttt{#1}}
+
+
+\title{Estimates of total tree richness in Amazon - Summary}
+\author{Han Ter Steege, Paulo Inácio Prado, Renato Lima, ATDN}
+
+\begin{document}
+
+\maketitle
+
+
+<<setup, echo=FALSE, include=FALSE>>=
+library(VGAM)
+library(untb)
+library(fitdistrplus)
+library(sads)
+library(knitr)
+library(SPECIES)
+library(xtable)
+source("functions.R")
+opts_chunk$set(fig.align = 'center', fig.show = 'hold',
+               fig.height = 6.5, warning = FALSE, message = FALSE,
+               error = FALSE, echo=TRUE)
+options(formatR.arrow = TRUE, width = 90, cache=TRUE)
+@ %def 
+
+\section{Data preparation}
+
+<<Data prep>>=
+dados <- read.csv2("data.csv", as.is=TRUE)
+y <- dados$N.ind
+Sobs <- length(y)
+## Total number of trees (average density x area)
+Tot.t <- 567*5.5e8
+## Proportion of total trees in the sample
+p1 <- sum(dados$N.ind)/Tot.t
+## Total number of plots
+N.plots <- 1945
+## Total area hectares
+Tot.A <- 5.79e8
+## Sampled area ha
+Samp.A <- 2.048e3
+## Amazon RAD sent by Hans
+load("steege_files/AmazonRAD.RData")
+## Truncated Negative binomial 
+## (already generated, too slow to rerun)
+nb.pred.full <- read.csv("NB_RAD.csv")$x
+@ 
+
+\section{Poisson lognormal}
+
+Seems to overestimate the abundance of the most abundant species (see qq-plots)
+ 
+<<fit pln, cache=TRUE>>=
+pln <- fitpoilog(y)
+par(mfrow=c(2,2))
+plot(pln)
+par(mfrow=c(1,1))
+@ %def 
+
+
+\subsection*{Estimating species richness from PLN}
+
+The fitted PLN allows to estimate the probability value assigned to species that
+had zero abundance in the sample:
+
+<<PLN species richness estimate 2>>=
+(pln.d0 <- dpoilog(0, mu = pln.cf[1], sig=pln.cf[2]))
+@ 
+
+That is, an estimate that the recorded species are \Sexpr{round(100-pln.d0*100,0)}\%
+of the total number of species.
+This gives an estimate of \Sexpr{round(Sobs/(1-pln.d0))} species.
+
+
+\section{Log-series}
+
+Log-series seems to overestimate the number of singletons
+and to underestimate the abundance of species with intermediary abundances
+(between 16 and 64 individuals, see octave plot). Also, the qq-plot shows that
+the model underestimates the larger abundances.
+
+ 
+<<fit ls>>=
+y.ls <- fitls(y)
+par(mfrow=c(2,2))
+plot(y.ls)
+par(mfrow=c(1,1))
+@ %def 
+
+\subsection*{Estimate of species richness}
+
+From the value of $\alpha$ estimated from the sample of plots:
+ 
+<<estimated S ls>>=
+alpha <- coef(y.ls)[[2]]
+(S.ls <- alpha*log(1 + Tot.t/alpha))
+@ %def 
+
+And here is the confidence interval for Fisher's $\alpha$ and the
+interval for estimated total richness from these values
+
+<<ls and S est for ls>>=
+(ls.ci <- confint(y.ls))
+## Estimated species richness for lower bound of alpha's IC
+ls.ci[1]*log(1 + Tot.t/ls.ci[1])
+ls.ci[2]*log(1 + Tot.t/ls.ci[2])
+@ 
+
+\section{Zero-truncated Negative binomial}
+\label{sec:negbin}
+
+Here I use the method proposed by \citet{tovo2017}. The first step is
+to fit a zero-truncated negative binomial (TNB) to the abundances in the sample.
+I did that with the \emph{VGAM} package (as the authors did)
+and also with the \emph{sads} package. 
+The results were similar, and the fit looks identical to
+those provided by the log-series (but has much lower AIC value, see below).
+ 
+<<fit NB>>=
+## With VGAM
+y.nb <- vglm(y ~ 1, posnegbinomial)
+## With sads
+y.nb2 <- fitnbinom(y, start.value=c(size=0.3, mu=mean(y)))
+## Comparing: 
+exp(coef(y.nb))
+coef(y.nb2)
+@ %def 
+
+<<nb plots>>=
+par(mfrow=c(2,2))
+plot(y.nb2)
+par(mfrow=c(1,1))
+@ 
+
+
+\subsection*{Estimate of  species richness}
+
+Following the recipe of \citet{tovo2017}:
+
+ 
+<<Tovo S estimate>>=
+cf.nb <- coef(y.nb2)
+csi.p <- unname(cf.nb[2]/(sum(cf.nb)))
+csi <- csi.p/(p1+(1-p1)*csi.p)
+## Estimated number of species 
+S.nb <- Sobs*(1-(1-csi)^cf.nb[1]) / (1-(1-csi.p)^cf.nb[1])
+(S.nb <- unname(S.nb))
+@ %def 
+
+I did a simple function to automate the calculations and to return
+the confidence intervals, based on the confidence intervals of the 
+coefficients of the NB fit (see file \code{functions.R})
+
+ 
+<<NB S est CI>>=
+(tovo.S <- tovo(fit = y.nb2, p = p1, CI=TRUE))
+@ %def 
+
+
+\section{Model selection}
+
+Among the three models, TNB
+provides the best fit to the abundances in the sample:
+
+ 
+<<model selection>>=
+AICtab(pln, y.nb2, y.ls, base=TRUE)
+@ %def 
+
+TNB overestimates the higher abundances, while the logseries
+underestimates the lower abundances in the sample:
+
+<<Comparing LS and NB, echo=FALSE>>=
+par(mfrow=c(2,2))
+ls.rad <- radpred(y.ls)
+nb.rad <- radpred(y.nb2)
+plot(ls.rad$abund, nb.rad$abund, log="xy",
+     xlab="Logseries theor. quantiles",
+     ylab="TNB theor. quantiles", 
+     col="grey", cex=0.25)
+abline(0,1, col="blue")
+plot(rad(dados$N.ind), col="grey", cex=0.5)
+lines(ls.rad)
+lines(nb.rad, col="red")
+legend("topright", c("LS", "NB"), col=c("blue","red"), 
+       lty=1, bty="n")
+ls.oc <- octavpred(y.ls)
+nb.oc <- octavpred(y.nb2)
+plot(octav(dados$N.ind), ylim=range(c(ls.oc$Freq, nb.oc$Freq)))
+lines(ls.oc)
+lines(nb.oc, col="red")
+legend("topright", c("LS", "NB"), col=c("blue","red"), 
+       lty=1, bty="n")
+par(mfrow=c(1,1))
+@ 
+
+\section{Estimates based in the regional RAD}
+
+\subsection*{Linear extrapolation from the regional RAD}
+
+Here I replicated the extrapolation method from the regional RAD of the
+estimated abundances for the whole Amazonia, first for the logseries projection:
+
+<<Linear extrapolation from regional RAD>>=
+## Regional RAD
+pop.rad <- rad(dados$population)
+## Linear regression through central 50% quantiles of the RAD
+p.lm <- lm(log(abund)~rank, data=data.frame(pop.rad), 
+           subset=rank>max(rank)*.25&rank<max(rank)*.75)
+## Regression coefficients
+cf.p.lm <- unname(coef(p.lm))
+## Logseries projection (upper bound)
+(S.reg1 <- abs(cf.p.lm[1]/cf.p.lm[2]))
+@ 
+
+Which is exactly the value reported in the manuscript (\Sexpr{round(S.reg1)} species). 
+
+According to \citet{ulrich2005}, this is an upper limit to the estimation of species. 
+They propose that the same linear extrapolation assuming a log-normal is a lower-bound estimate.
+Following their recipe (eq.2) such lower bound would be:
+
+<<regional rad lognormal>>=
+d <- log(max(dados$population))-cf.p.lm[1]
+(S.reg2 <- abs((cf.p.lm[1]-d)/cf.p.lm[2]))
+@ 
+
+\subsection*{Regional RAD from TNB}
+
+Here I compare the regional RAD with RADs predicted  by 
+the zero-truncated negative binomial and the upper-bound and lower-bound estimate of species
+obtained above.
+
+The RAD of negative binomial was upscaled according to \citep{tovo2017} 
+and gets to the number of species estimated by this method (section~\ref{sec:negbin}).
+
+<<nbinom rad, echo=FALSE>>=
+plot(rad(Amazon.rad), col="red", lwd=2, type="n",
+     ylim=c(1, max(dados$population)))
+points(rad(dados$population), col="grey")
+curve(exp(cf.p.lm[1]+cf.p.lm[2]*x), add=TRUE)
+curve(exp(cf.p.lm[1]-d+cf.p.lm[2]*x), add=TRUE)
+lines(rad(nb.pred.full), col="blue", lwd=2)
+lines(rad(Amazon.rad), col="red", lwd=2)
+legend("topright", c("LS", "TNB", "Linear upper/lower bounds"), 
+       col=c("red", "blue", "black"), lty=1, lwd=2, bty="n")
+@ 
+
+The blue line is the RAD predicted by zero-truncated negative binomial upscaled to the total number of
+trees in Amazonia. %Broken lines are approximated 95\% CIs. 
+The red line is the upscaled log-series for the Amazon,
+as sent by Hans ( file \code{script\_for\_Paulo.R} ). 
+Black lines are the linear extrapolations for the 50\% 
+central quantile of the estimated population sizes, for
+the Log-series and log-normal model \citep{ulrich2005}.
+
+The negative binomial has a power-bending factor that
+results in a lower estimate of total richness, below to
+the lower-limit of the linear extrapolations.
+
+\section{Comparing population sizes predicted by LS and NB regional RADs}
+
+\subsection*{Methods}
+
+To check which RAD model would approximate better the total population sizes estimated
+for the sampled species, we simulated samples from the Amazon RAD generated by the Log-series 
+and Truncated Negative Binomial, with and without clumping. 
+In both cases we assumed a random drawn of \Sexpr{N.plots} 1-ha plots
+from the Amazon RADs, where the number of individuals of each species
+in each plot followed a Poisson (random sampling) or a Negative Binomial (clumped sampling)
+distribution. 
+
+The simulated population sizes where the total population sizes taken from
+the regional RAD, only for those species that had been recorded 
+in the simulated sample. 
+The probability of each species be not included in a sample of $N$ plots is  $P(0)=(1-p)^N$.
+
+Where $p$ is the probability of occurrence in each plot. 
+Given the density of the species per plot $\mu$, 
+for a Poisson sample 
+
+\begin{equation}
+  \label{eq:3}
+  P(0) = e^{-\mu} 
+\end{equation} 
+
+and for a Negative Binomial sample
+
+\begin{equation}
+  \label{eq:2}
+  P(0) = \left( \frac{k}{k+\mu} \right)^k 
+\end{equation}
+
+Where $k$ is the dispersion parameter of the negative binomial distribution.
+%This coefficient adds extra variance compared to a Poisson sampling.
+Thus we simulated occurrences of each species by sampling presence/absences
+from a Bernoulli distribution with probability of occurrence $1-P(0)$.
+
+\subsubsection*{Simulating clumping coefficients}
+
+For simulations of clumped sampling, 
+we allowed interspecific variation in clumping, 
+by allowing a different value of the dispersion coefficient ($k$) for each species.
+Hence, we had to define the value of $k$ for each species in the regional
+RADs. We did that by (i) estimating the values of $k$ for the sampled species and
+then (ii) by using the relationship between $k$ and $\mu$ to estimate the values of $k$
+of each species.
+
+To estimate the values of the aggregation coefficients
+of the sampled species
+we assumed that the number of plots that each species has been recorded follows
+a binomial distribution with a probability of occurrence in each plot of $p=1-P(0)$,
+with $P(0)$ from equation~\ref{eq:2}.
+The parameter $k$ was then estimated by numerically maximizing the
+log-likelihood function of the binomial distribution:
+
+\begin{equation}
+  \mathcal{L}(k | \mu, N, f_0) \ =  \ f_0 \ln (1-p) + (N - f_0) \ln p
+\end{equation}
+
+Where $N$ is the total number of plots, $f_0$ is 
+the number of plots where the species was not recorded.
+This log-likelihood function is conditioned to $\mu$, because this parameter was 
+set to the observed density of each species in the sample.
+
+Once we estimated a value of $k$ for each species recorded, 
+we fit a linear regression of these values in function of the
+observed species densities, in log scale.
+The commands and model summary were:
+
+<<k x dens regression>>=
+## estimating k parameter of a NB for each species 
+dados$dens.ha <- dados$N.ind/Samp.A
+dados$k <- est.kv(mu=dados$dens.ha, 
+                  nzeroes=N.plots-dados$N.plots, 
+                  Nplots=N.plots)
+lm.k <-lm(log(k)~log(dens.ha), 
+          data=dados, subset=k<1)
+## Estimated regression standard error
+lm.k.sigma <- summary(lm.k)$sigma
+summary(lm.k)
+@ 
+
+And a plot of with the regression line is
+
+<<lok k x log density plot, echo=FALSE>>=
+plot(log(k)~log(dens.ha), data=dados, 
+     subset=k<1, xlab="Density (ind/ha)",
+     ylab="Aggregation parameter of NB",
+     col="grey")
+abline(lm.k, col="blue", lwd=2)
+@ 
+
+We then used this regression model to set a value of $k$ for each species from
+their abundances as predicted by the regional RAD. 
+In each simulation we drawn a value of $\ln k$ for each species
+in the Amazon RAD from a Normal distribution with the mean as
+the predicted value from the linear regression above for the population
+density of the species in the RAD. The standard deviation of these
+Normal distributions was the standard error of the linear regression.
+
+\subsubsection*{Simulation scripts}
+
+<<sim popsizes LS and NB, cache=TRUE>>=
+## Simulation of population sizes from samples of 
+## the regional RADs
+nrep <- 100 #number of repetitions
+## Samples from LS RAD
+## Matrices to store samples
+tmp1 <- tmp2 <- matrix(0,nrow=length(Amazon.rad), ncol=nrep)
+for(j in 1:nrep){
+    ## Samples aggregation parameters for each species according to 
+    ## the linear model + standard errors of this model
+    k1 <- exp(rnorm(length(Amazon.rad), 
+                    mean=Amazon.rad.lk, sd=lm.k.sigma))
+    ## Random (Poisson) sample
+    y1 <- mapply(sim.occ, mu = Amazon.rad/Tot.A,
+                   MoreArgs=list(N = N.plots))
+    ## Clumped (negative binomial) sample
+    y2 <- mapply(sim.occ, mu = Amazon.rad/Tot.A, size = k1,
+                   MoreArgs=list(N = N.plots, pois.samp=FALSE))
+    ## Pick the population sizes for species
+    ## recorded in the sample
+    tmp1[1:sum(y1),j] <- Amazon.rad[y1>0]
+    tmp2[1:sum(y2),j] <- Amazon.rad[y2>0]
+}
+## Simulation of samples from TNB 
+tmp4 <- tmp3 <- matrix(0,nrow=length(nb.pred.full), ncol=nrep)
+for(j in 1:nrep){
+    k2 <- exp(rnorm(length(nb.pred.full), 
+                    mean=nb.pred.full.lk, sd=lm.k.sigma))
+    y3 <- mapply(sim.occ, mu = nb.pred.full/Tot.A,
+                   MoreArgs=list(N = N.plots))
+    y4 <- mapply(sim.occ, mu = nb.pred.full/Tot.A, size = k2,
+                   MoreArgs=list(N = N.plots, pois.samp=FALSE))
+    tmp3[1:sum(y3),j] <- nb.pred.full[y3>0]
+    tmp4[1:sum(y4),j] <- nb.pred.full[y4>0]
+}
+## Mean RADs for each simulation
+ls.rnd <- apply(tmp1,1,mean)
+ls.clump <- apply(tmp2,1,mean)
+nb.rnd <- apply(tmp3,1,mean)
+nb.clump <- apply(tmp4,1,mean)
+@ 
+
+
+\subsubsection*{Results}
+
+Visually, clumped sample from a LS RAD and random (Poisson) sampling
+from a TNB RAD approximate better the total population sizes:
+
+<<plot sampled RADS, echo=FALSE>>=
+plot(rad(dados$population), col="grey", log="y", xlim=c(1,5500),
+     ylab = "Population size")
+lines(rad(ls.rnd), lwd=2)
+lines(rad(ls.clump), lwd=2, col="red")
+lines(rad(nb.rnd), lwd=2, col="green")
+lines(rad(nb.clump), lwd=2, col="black")
+legend("topright", 
+       c("LS, random sample", "LS, clumped sample", "NB, random sample", "NB, clumped sample"), 
+       col=c("blue","red","green", "black"), lty=1, lwd=2, bty="n")
+@ 
+
+
+The aggregation coefficients estimated from the sample clearly show that
+the species are clumped accross 1-ha plots, and so that
+Poisson sampling is not realistic. This would suffice to
+discard the TNB RAD, as they only provides a realistic fit under Poisson sampling.
+Moreover, the mean-squared errors of the log of simulated values relative
+to the log of the estimated population sizes clearly show that
+the clumped sample of LS is a best approximation, among those tested:
+
+
+<<mean squared errors, echo=FALSE, results="asis">>=
+## Mean squared deviation of log abundances
+MS.tab <- xtable(
+    data.frame(
+        MS= c(
+            mean((log(dados$population) - log(ls.rnd[1:nrow(dados)]))^2),
+            mean((log(dados$population) - log(nb.rnd[1:nrow(dados)]))^2),
+            mean((log(dados$population) - log(ls.clump[1:nrow(dados)]))^2)
+        ),
+        row.names=c("LS random", "NB random", "LS clumped")
+    ), digits=4)
+## Inf because of many species with zero abundance in the sample
+## mean((log(dados$population) - log(nb.clump[1:nrow(dados)]))^2)
+print(MS.tab)    
+@ 
+
+
+\subsection*{My guesses, updated}
+
+\begin{itemize}
+\item TNB was the selected model for the sample, probably because it better approximates the
+  effect of clumping on the sampled SADs. Nevertheless, the simulations suggest that this best fit in the sample
+  can be explained by a clumped sampling of a regional LS RAD. Nice! So let's stick with LS. Not sure if we mention the fit to TNB in supplementary material.
+\item Still to be done, check estimates from occupancies (see next section).
+\end{itemize}
+
+\section{Parametric estimates from occupancies}
+
+These methods use the data of the proportion of plots occupied by each species, which is directly linked to species-area curves.
+
+To be updated, after the comprehensive revision by \citet{kunin2018}. In short, many of the methods I already tried 
+(e.g. beta-binomial) and an indication of the best ones. I will try those that performed better to estimate total richness,
+according these authors (see page 9, 2nd paragraph):
+
+\begin{itemize}
+\item The two applications from \citet{shen2008} method;
+\item Paired upper and lower estimates from \citet{ulrich2005}, applied to occupancy data;
+\item Hui's ORC models presented in \citet{kunin2018}.  
+\end{itemize}
+
+
+\bibliography{/home/paulo/work/resources/bib/geral.bib}
+
+\end{document}
