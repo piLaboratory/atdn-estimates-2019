@@ -13,3 +13,5 @@
 steege_files/
 cache/
 figure/
+*RData
+*.pdf
