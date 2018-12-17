@@ -24,10 +24,10 @@
 <<setup, echo=FALSE, include=FALSE>>=
 library(VGAM)
 library(untb)
-library(fitdistrplus)
+##library(fitdistrplus)
 library(sads)
 library(knitr)
-library(SPECIES)
+##library(SPECIES)
 source("functions.R")
 opts_chunk$set(fig.align = 'center', fig.show = 'hold',
                fig.height = 6, warning = FALSE, message = FALSE,
@@ -36,13 +36,13 @@ options(formatR.arrow = TRUE, width = 90, cache=TRUE)
 @ %def 
 
 <<Data prep>>=
-dados <- read.csv2("data.csv", as.is=TRUE)
-y <- dados$N.ind
+Dec2018 <- read.csv2("data.csv", as.is=TRUE)
+y <- Dec2018$N.ind
 Sobs <- length(y)
 ## Total number of trees (average density x area)
 Tot.t <- 567*5.5e8
 ## Proportion of total trees in the sample
-p1 <- sum(dados$N.ind)/Tot.t
+p1 <- sum(Dec2018$N.ind)/Tot.t
 ## Total number of plots
 N.plots <- 1945
 @ 
@@ -83,7 +83,7 @@ where $p$ is the proportion of the community that has been sampled
 
 As the estimated total number of trees in  Amazon is $3.1 \times 10^{11}$, 
 and the number of identified trees in the sample
-is \Sexpr{(sum(dados$N.ind))}, $p=$~\Sexpr{p1}.
+is \Sexpr{(sum(Dec2018$N.ind))}, $p=$~\Sexpr{p1}.
 Therefore, we have $M=$~\Sexpr{unname(pln.cf[1])-log(p1)}.
 
 The mean of the lognormal distribution is 
@@ -286,7 +286,7 @@ estimated abundances, first for the logseries projection:
 
 <<Linear extrapolation from regional RAD>>=
 ## Regional RAD
-pop.rad <- rad(dados$population)
+pop.rad <- rad(Dec2018$population)
 ## Linear regression through central 50% quantiles of the RAD
 p.lm <- lm(log(abund)~rank, data=data.frame(pop.rad), subset=rank>max(rank)*.25&rank<max(rank)*.75)
 ## Regression coefficients
@@ -298,7 +298,7 @@ cf.p.lm <- unname(coef(p.lm))
 And also the same extrapolation assuming a log-normal, which is lower-bound estimate:
 
 <<regional rad lognormal>>=
-d <- log(max(dados$population))-cf.p.lm[1]
+d <- log(max(Dec2018$population))-cf.p.lm[1]
 (S.reg2 <- abs((cf.p.lm[1]-d)/cf.p.lm[2]))
 @ 
 
@@ -326,7 +326,7 @@ nb.pred2 <- qposnegbin(p=S.nb.p1[seq(1,S.reg1,length=100)], size = y.nb2.ci[1,2]
 ## Logseries for 100 points
 #ls.pred1 <- qls(p=S.nb.p1[seq(1,S.reg1,length=100)], N=Tot.t, alpha= a.reg1) ## overflow
 ## The plots
-plot(abund~rank, data=data.frame(pop.rad), xlim=c(1,S.reg1), ylim=c(1,max(dados$population)), log="y")
+plot(abund~rank, data=data.frame(pop.rad), xlim=c(1,S.reg1), ylim=c(1,max(Dec2018$population)), log="y")
 lines(nb.pred, col="blue")
 lines(seq(1,tovo.S$S.est,length=100), nb.pred1, col="blue")
 lines(seq(1,S.reg1,length=100), nb.pred2, col="green")
@@ -389,20 +389,20 @@ improves the fit:
 ## Fit a beta and truncated beta to observed proportions
 ########################################################
 ## Initial fit to get start values
-f.st <- fitdist(dados$N.plots/N.plots, "beta")
+f.st <- fitdist(Dec2018$N.plots/N.plots, "beta")
 cf.st <- coef(f.st)
 ## likelihood functions
 LL.beta <- function(s1, s2){
-    -sum ( dbeta(x = dados$N.plots/N.plots, shape1=s1, shape2=s2, log=TRUE) )
+    -sum ( dbeta(x = Dec2018$N.plots/N.plots, shape1=s1, shape2=s2, log=TRUE) )
 }
 LL.betat.1 <- function(s1, s2){
-    -sum ( sads::dtrunc("beta", x = dados$N.plots/N.plots, trunc=0.1/N.plots, coef = list(shape1=s1, shape2=s2), log=TRUE) )
+    -sum ( sads::dtrunc("beta", x = Dec2018$N.plots/N.plots, trunc=0.1/N.plots, coef = list(shape1=s1, shape2=s2), log=TRUE) )
 }
 LL.betat.5 <- function(s1, s2){
-    -sum ( sads::dtrunc("beta", x = dados$N.plots/N.plots, trunc=0.5/N.plots, coef = list(shape1=s1, shape2=s2), log=TRUE) )
+    -sum ( sads::dtrunc("beta", x = Dec2018$N.plots/N.plots, trunc=0.5/N.plots, coef = list(shape1=s1, shape2=s2), log=TRUE) )
 }
 LL.betat.9 <- function(s1, s2){
-    -sum ( sads::dtrunc("beta", x = dados$N.plots/N.plots, trunc=0.9/N.plots, coef = list(shape1=s1, shape2=s2), log=TRUE) )
+    -sum ( sads::dtrunc("beta", x = Dec2018$N.plots/N.plots, trunc=0.9/N.plots, coef = list(shape1=s1, shape2=s2), log=TRUE) )
 }
 ## Fits: ran first with SANN and the with default method
 f.beta <- mle2(LL.beta, start=list(s1=cf.st[1], s2=cf.st[2]))
@@ -425,16 +425,16 @@ f.betat.9 <- mle2(LL.betat.9, start=list(s1=cf.st[1], s2=cf.st[2]),
 <<beta qqplots, echo=FALSE>>=
 ## Checking fits with QQ-plots
 par(mfrow=c(2,2))
-QQ.plot(dados$N.plots/N.plots, distr = "beta",
+QQ.plot(Dec2018$N.plots/N.plots, distr = "beta",
         coef = list(shape1 = cf.beta[1], shape2 = cf.beta[2]),
         main="No Truncation")
-QQ.plot(dados$N.plots/N.plots, distr = "beta", trunc=0.1/N.plots,
+QQ.plot(Dec2018$N.plots/N.plots, distr = "beta", trunc=0.1/N.plots,
         coef = list(shape1 = cf.betat.1[1], shape2 = cf.betat.1[2]),
         main=paste("Truncation at 0.1/",N.plots, sep=""))
-QQ.plot(dados$N.plots/N.plots, distr = "beta", trunc=0.5/N.plots,
+QQ.plot(Dec2018$N.plots/N.plots, distr = "beta", trunc=0.5/N.plots,
         coef = list(shape1 = cf.betat.5[1], shape2 = cf.betat.5[2]),
         main=paste("Truncation at 0.5/",N.plots, sep=""))
-QQ.plot(dados$N.plots/N.plots, distr = "beta", trunc=0.9/N.plots,
+QQ.plot(Dec2018$N.plots/N.plots, distr = "beta", trunc=0.9/N.plots,
         coef = list(shape1 = cf.betat.9[1], shape2 = cf.betat.9[2]),
         main=paste("Truncation at 0.9/",N.plots, sep=""))
 par(mfrow=c(1,1))
@@ -518,7 +518,7 @@ rho.st <- 1/(1 + sum(cf.st))
 unlogit <- function(x) exp(x)/(1+exp(x))
 logit <- function(x) log(x/(1-x))
 LL2.bbt0 <- function(lmu, lrho){
-    -sum(dbetabinom.t0(x = dados$N.plots, size = N.plots, mu = unlogit(lmu), rho = unlogit(lrho), log=TRUE))
+    -sum(dbetabinom.t0(x = Dec2018$N.plots, size = N.plots, mu = unlogit(lmu), rho = unlogit(lrho), log=TRUE))
 }
 ## fit with mle2
 beta.bin.ML2 <- bbmle::mle2(LL2.bbt0, start=list(lmu=logit(mu.st), lrho=logit(rho.st)), method="SANN")
@@ -565,7 +565,7 @@ All around ~5000 species.
 %% The other indices estimate  ~5000 species.
 
 <<SPECIES package, eval=TRUE>>=
-Ab <- as.data.frame(table(dados$N.ind))
+Ab <- as.data.frame(table(Dec2018$N.ind))
 names(Ab) <- c("j", "n_j")
 Ab$j <- as.integer(as.character(Ab$j))
 ##jackknife method

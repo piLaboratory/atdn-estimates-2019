@@ -25,10 +25,10 @@
 <<setup, echo=FALSE, include=FALSE>>=
 library(VGAM)
 library(untb)
-library(fitdistrplus)
+#library(fitdistrplus)
 library(sads)
 library(knitr)
-library(SPECIES)
+#library(SPECIES)
 library(xtable)
 source("functions.R")
 opts_chunk$set(fig.align = 'center', fig.show = 'hold',
@@ -40,24 +40,25 @@ options(formatR.arrow = TRUE, width = 90, cache=TRUE)
 \section{Data preparation}
 
 <<Data prep>>=
-dados <- read.csv2("data.csv", as.is=TRUE)
-y <- dados$N.ind
+Dec2018 <- read.csv2("data.csv", as.is=TRUE)
+y <- Dec2018$N.ind
 Sobs <- length(y)
 ## Total number of trees (average density x area)
 Tot.t <- 567*5.5e8
 ## Proportion of total trees in the sample
-p1 <- sum(dados$N.ind)/Tot.t
+p1 <- sum(Dec2018$N.ind)/Tot.t
 ## Total number of plots
 N.plots <- 1945
 ## Total area hectares
 Tot.A <- 5.79e8
 ## Sampled area ha
 Samp.A <- 2.048e3
+## Not necessary anymore, new functions do it quickly##
 ## Amazon RAD sent by Hans
-load("steege_files/AmazonRAD.RData")
+## load("steege_files/AmazonRAD.RData")
 ## Truncated Negative binomial 
 ## (already generated, too slow to rerun)
-nb.pred.full <- read.csv("NB_RAD.csv")$x
+#nb.pred.full <- read.csv("NB_RAD.csv")$x
 @ 
 
 \section{Poisson lognormal}
@@ -193,14 +194,14 @@ plot(ls.rad$abund, nb.rad$abund, log="xy",
      ylab="TNB theor. quantiles", 
      col="grey", cex=0.25)
 abline(0,1, col="blue")
-plot(rad(dados$N.ind), col="grey", cex=0.5)
+plot(rad(Dec2018$N.ind), col="grey", cex=0.5)
 lines(ls.rad)
 lines(nb.rad, col="red")
 legend("topright", c("LS", "NB"), col=c("blue","red"), 
        lty=1, bty="n")
 ls.oc <- octavpred(y.ls)
 nb.oc <- octavpred(y.nb2)
-plot(octav(dados$N.ind), ylim=range(c(ls.oc$Freq, nb.oc$Freq)))
+plot(octav(Dec2018$N.ind), ylim=range(c(ls.oc$Freq, nb.oc$Freq)))
 lines(ls.oc)
 lines(nb.oc, col="red")
 legend("topright", c("LS", "NB"), col=c("blue","red"), 
@@ -216,27 +217,35 @@ Here I replicated the extrapolation method from the regional RAD of the
 estimated abundances for the whole Amazonia, first for the logseries projection:
 
 <<Linear extrapolation from regional RAD>>=
-## Regional RAD
-pop.rad <- rad(dados$population)
-## Linear regression through central 50% quantiles of the RAD
-p.lm <- lm(log(abund)~rank, data=data.frame(pop.rad), 
-           subset=rank>max(rank)*.25&rank<max(rank)*.75)
-## Regression coefficients
-cf.p.lm <- unname(coef(p.lm))
-## Logseries projection (upper bound)
-(S.reg1 <- abs(cf.p.lm[1]/cf.p.lm[2]))
+(S.r.ls <- ulrich(Dec2018$population)[1])
 @ 
 
-Which is exactly the value reported in the manuscript (\Sexpr{round(S.reg1)} species). 
+Which are exactly the value reported in the manuscript (\Sexpr{round(S.r.ls)} species). 
+Thus, the value of Fisher's $\alpha$ for the whole Amazon is
+
+<<Amazon alpha>>=
+(alpha.r <- fishers.alpha(N = Tot.t, S = S.r.ls))
+@ 
+
+I made a function to calculate the regional RAD which runs faster than the original code.
+With the we get the log-series RAD for the whole region (Amazon):
+
+<<amazon LS rad>>=
+reg.ls.rad <- ceiling(
+    rad.ls(S = S.r.ls, N = Tot.t, alpha = alpha.r)$y
+)
+@ 
+
+\subsubsection*{Lower limit of the linear extrapolation}
 
 According to \citet{ulrich2005}, this is an upper limit to the estimation of species. 
 They propose that the same linear extrapolation assuming a log-normal is a lower-bound estimate.
 Following their recipe (eq.2) such lower bound would be:
 
 <<regional rad lognormal>>=
-d <- log(max(dados$population))-cf.p.lm[1]
-(S.reg2 <- abs((cf.p.lm[1]-d)/cf.p.lm[2]))
+(S.r.ln <- ulrich(Dec2018$population)[2])
 @ 
+
 
 \subsection*{Regional RAD from TNB}
 
@@ -246,15 +255,21 @@ obtained above.
 
 The RAD of negative binomial was upscaled according to \citep{tovo2017} 
 and gets to the number of species estimated by this method (section~\ref{sec:negbin}).
+I did a function that returns this upscaled RAD pretty fast
+
+<<TNB regionl RAD>>=
+reg.nb.rad <- rad.posnegbin(S = S.nb, size = cf.nb[1], 
+                            prob = 1-csi)$y
+@ 
 
 <<nbinom rad, echo=FALSE>>=
-plot(rad(Amazon.rad), col="red", lwd=2, type="n",
-     ylim=c(1, max(dados$population)))
-points(rad(dados$population), col="grey")
+plot(rad(reg.ls.rad), col="red", lwd=2, type="n",
+     ylim=c(1, max(Dec2018$population)))
+points(rad(Dec2018$population), col="grey")
 curve(exp(cf.p.lm[1]+cf.p.lm[2]*x), add=TRUE)
 curve(exp(cf.p.lm[1]-d+cf.p.lm[2]*x), add=TRUE)
-lines(rad(nb.pred.full), col="blue", lwd=2)
-lines(rad(Amazon.rad), col="red", lwd=2)
+lines(rad(reg.nb.rad), col="blue", lwd=2)
+lines(rad(reg.ls.rad), col="red", lwd=2)
 legend("topright", c("LS", "TNB", "Linear upper/lower bounds"), 
        col=c("red", "blue", "black"), lty=1, lwd=2, bty="n")
 @ 
@@ -341,23 +356,24 @@ we fit a linear regression of these values in function of the
 observed species densities, in log scale.
 The commands and model summary were:
 
-<<k x dens regression>>=
+<<k x dens regression, cache=TRUE>>=
 ## estimating k parameter of a NB for each species 
-dados$dens.ha <- dados$N.ind/Samp.A
-dados$k <- est.kv(mu=dados$dens.ha, 
-                  nzeroes=N.plots-dados$N.plots, 
+Dec2018$dens.ha <- Dec2018$N.ind/Samp.A
+Dec2018$k <- est.kv(mu=Dec2018$dens.ha, 
+                  nzeroes=N.plots-Dec2018$N.plots, 
                   Nplots=N.plots)
 lm.k <-lm(log(k)~log(dens.ha), 
-          data=dados, subset=k<1)
+          data=Dec2018, subset=k<1)
 ## Estimated regression standard error
 lm.k.sigma <- summary(lm.k)$sigma
+## Model summary
 summary(lm.k)
 @ 
 
 And a plot of with the regression line is
 
 <<lok k x log density plot, echo=FALSE>>=
-plot(log(k)~log(dens.ha), data=dados, 
+plot(log(k)~log(dens.ha), data=Dec2018, 
      subset=k<1, xlab="Density (ind/ha)",
      ylab="Aggregation parameter of NB",
      col="grey")
@@ -372,63 +388,49 @@ the predicted value from the linear regression above for the population
 density of the species in the RAD. The standard deviation of these
 Normal distributions was the standard error of the linear regression.
 
-\subsubsection*{Simulation scripts}
+\subsubsection*{Simulations}
+
+Functions 
 
 <<sim popsizes LS and NB, cache=TRUE>>=
-## Simulation of population sizes from samples of 
-## the regional RADs
-nrep <- 100 #number of repetitions
-## Samples from LS RAD
-## Matrices to store samples
-tmp1 <- tmp2 <- matrix(0,nrow=length(Amazon.rad), ncol=nrep)
-for(j in 1:nrep){
-    ## Samples aggregation parameters for each species according to 
-    ## the linear model + standard errors of this model
-    k1 <- exp(rnorm(length(Amazon.rad), 
-                    mean=Amazon.rad.lk, sd=lm.k.sigma))
-    ## Random (Poisson) sample
-    y1 <- mapply(sim.occ, mu = Amazon.rad/Tot.A,
-                   MoreArgs=list(N = N.plots))
-    ## Clumped (negative binomial) sample
-    y2 <- mapply(sim.occ, mu = Amazon.rad/Tot.A, size = k1,
-                   MoreArgs=list(N = N.plots, pois.samp=FALSE))
-    ## Pick the population sizes for species
-    ## recorded in the sample
-    tmp1[1:sum(y1),j] <- Amazon.rad[y1>0]
-    tmp2[1:sum(y2),j] <- Amazon.rad[y2>0]
-}
-## Simulation of samples from TNB 
-tmp4 <- tmp3 <- matrix(0,nrow=length(nb.pred.full), ncol=nrep)
-for(j in 1:nrep){
-    k2 <- exp(rnorm(length(nb.pred.full), 
-                    mean=nb.pred.full.lk, sd=lm.k.sigma))
-    y3 <- mapply(sim.occ, mu = nb.pred.full/Tot.A,
-                   MoreArgs=list(N = N.plots))
-    y4 <- mapply(sim.occ, mu = nb.pred.full/Tot.A, size = k2,
-                   MoreArgs=list(N = N.plots, pois.samp=FALSE))
-    tmp3[1:sum(y3),j] <- nb.pred.full[y3>0]
-    tmp4[1:sum(y4),j] <- nb.pred.full[y4>0]
-}
-## Mean RADs for each simulation
-ls.rnd <- apply(tmp1,1,mean)
-ls.clump <- apply(tmp2,1,mean)
-nb.rnd <- apply(tmp3,1,mean)
-nb.clump <- apply(tmp4,1,mean)
+## Predicted log(k) values for LS rad
+reg.ls.rad.lk <- predict(lm.k, 
+                         newdata=data.frame(dens.ha=reg.ls.rad/Tot.A))
+## Predicted log(k) values for TNB rad
+reg.nb.rad.lk <- predict(lm.k, 
+                           newdata=data.frame(dens.ha=reg.nb.rad/Tot.A))
+## Simulation of population sizes from samples of each RAD
+ls.rnd <- Pois.samp(rad = reg.ls.rad, tot.area = Tot.A, 
+                    n.plots = N.plots, nrep=100)
+ls.clump <- NB.samp(rad = reg.ls.rad, tot.area = Tot.A, 
+                    n.plots = N.plots, 
+                    lmean.k = reg.ls.rad.lk, lsd.k = lm.k.sigma, 
+                    nrep=100)
+nb.rnd <- Pois.samp(rad = reg.nb.rad, tot.area = Tot.A, 
+                    n.plots = N.plots, nrep = 100)
+nb.clump <- NB.samp(rad = reg.nb.rad, tot.area = Tot.A, 
+                    n.plots = N.plots, 
+                    lmean.k = reg.nb.rad.lk, lsd.k = lm.k.sigma, 
+                    nrep = 100)
+rad.abc <- rad.ls(S=15800, N=Tot.t, alpha = fishers.alpha(Tot.t, 15800))
+ls.abc.clump <- NB.samp(rad = rad.abc$y, tot.area = Tot.A, 
+                    n.plots = N.plots, 
+                    lmean.k = reg.ls.rad.lk, lsd.k = lm.k.sigma, 
+                    nrep=100)
 @ 
 
-
-\subsubsection*{Results}
 
 Visually, clumped sample from a LS RAD and random (Poisson) sampling
 from a TNB RAD approximate better the total population sizes:
 
 <<plot sampled RADS, echo=FALSE>>=
-plot(rad(dados$population), col="grey", log="y", xlim=c(1,5500),
+plot(rad(Dec2018$population), col="grey", log="y", xlim=c(1,5500),
      ylab = "Population size")
 lines(rad(ls.rnd), lwd=2)
 lines(rad(ls.clump), lwd=2, col="red")
 lines(rad(nb.rnd), lwd=2, col="green")
 lines(rad(nb.clump), lwd=2, col="black")
+lines(rad(ls.abc.clump), col="black")
 legend("topright", 
        c("LS, random sample", "LS, clumped sample", "NB, random sample", "NB, clumped sample"), 
        col=c("blue","red","green", "black"), lty=1, lwd=2, bty="n")
@@ -445,18 +447,17 @@ the clumped sample of LS is a best approximation, among those tested:
 
 
 <<mean squared errors, echo=FALSE, results="asis">>=
-## Mean squared deviation of log abundances
+## Mean squared deviation of log abundances that are not null
 MS.tab <- xtable(
     data.frame(
         MS= c(
-            mean((log(dados$population) - log(ls.rnd[1:nrow(dados)]))^2),
-            mean((log(dados$population) - log(nb.rnd[1:nrow(dados)]))^2),
-            mean((log(dados$population) - log(ls.clump[1:nrow(dados)]))^2)
+            MS(ls.rnd, Dec2018$population),
+            MS(nb.rnd, Dec2018$population),
+            MS(ls.clump, Dec2018$population),
+            MS(nb.clump, Dec2018$population)
         ),
-        row.names=c("LS random", "NB random", "LS clumped")
+        row.names=c("LS random", "NB random", "LS clumped", "NB clumped")
     ), digits=4)
-## Inf because of many species with zero abundance in the sample
-## mean((log(dados$population) - log(nb.clump[1:nrow(dados)]))^2)
 print(MS.tab)    
 @ 
 
@@ -474,9 +475,48 @@ print(MS.tab)
 
 These methods use the data of the proportion of plots occupied by each species, which is directly linked to species-area curves.
 
-To be updated, after the comprehensive revision by \citet{kunin2018}. In short, many of the methods I already tried 
-(e.g. beta-binomial) and an indication of the best ones. I will try those that performed better to estimate total richness,
+To be updated, after the comprehensive revision by \citet{kunin2018}. In short, this paper has improved versions of 
+many of the methods I already tried 
+(e.g. beta-binomial) and an indication of the best ones. 
+I will try those that performed better to estimate total richness,
 according these authors (see page 9, 2nd paragraph):
+
+<<shen estimate>>=
+## table of frequencies of occurrences
+Y <- data.frame(table(Dec2018$N.plots))
+Y[,1] <- as.integer(as.character(Y[,1]))
+## Estimate of alfa and beta (Eq.6)
+## To be use as starting values for the uncoditional estimation below
+ab.est <- shen.ab(Y = Y, t = N.plots, T = Tot.A, 
+                start=list(lalpha=-1, lbeta=0), method="SANN")
+#ab.est.p <- profile(ab.est)
+cf.st1 <- coef(ab.est)
+## Estimate with uncoditional likelihood (Eq.3)
+ShenHe <- shen.S( Y = Y, t = N.plots, T = Tot.A, 
+                start=c(list(lS=log(nrow(Dec2018))), as.list(cf.st1)), 
+                method="SANN")
+cf.st2 <- coef(teste)
+(S.sh <- unname(exp(cf.st2[1])))
+@
+
+<<Ulrich Ollike estimates from occupancies>>=
+eff18 <- N.plots/Tot.A
+(S.uo <- ulrich(Dec2018$N.plots, effort=eff18))
+@ 
+
+<<Hui ORC estimate>>=
+S.orc <- hui.orc(Dec2018$N.plots, effort=eff18)
+orc.cf <- coef(S.orc$model)
+x <- 1:nrow(Dec2018)
+y <- exp(orc.cf[1])*exp(orc.cf[2]*x)*(x^orc.cf[3])
+plot(rad(Dec2018$N.plots), ylim=range(c(Dec2018$N.plots, y)))
+lines(rad(y))
+x2 <- 1:S.orc$S.est
+y2 <- exp(orc.cf[1]-log(eff18))*exp(orc.cf[2]*x2)*(x2^orc.cf[3])
+plot(rad(y2), type="n")
+points(rad(Dec2018$N.plots/eff18), col="grey")
+lines(rad(y2), type="l")
+@ 
 
 \begin{itemize}
 \item The two applications from \citet{shen2008} method;
