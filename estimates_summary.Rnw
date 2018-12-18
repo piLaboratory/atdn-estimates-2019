@@ -40,9 +40,9 @@ options(formatR.arrow = TRUE, width = 90, cache=TRUE)
 \section{Data preparation}
 
 <<Data prep>>=
-Dec2018 <- read.csv2("data.csv", as.is=TRUE)
-y <- Dec2018$N.ind
-Sobs <- length(y)
+Dec2018 <- read.csv2("Populations_2018_V2b.csv", as.is=TRUE)
+N.ind <- Dec2018$N.ind
+Sobs <- length(N.ind)
 ## Total number of trees (average density x area)
 Tot.t <- 567*5.5e8
 ## Proportion of total trees in the sample
@@ -66,7 +66,7 @@ Samp.A <- 2.048e3
 Seems to overestimate the abundance of the most abundant species (see qq-plots)
  
 <<fit pln, cache=TRUE>>=
-pln <- fitpoilog(y)
+pln <- fitpoilog(N.ind)
 par(mfrow=c(2,2))
 plot(pln)
 par(mfrow=c(1,1))
@@ -79,6 +79,7 @@ The fitted PLN allows to estimate the probability value assigned to species that
 had zero abundance in the sample:
 
 <<PLN species richness estimate 2>>=
+pln.cf <- coef(pln)
 (pln.d0 <- dpoilog(0, mu = pln.cf[1], sig=pln.cf[2]))
 @ 
 
@@ -96,7 +97,7 @@ the model underestimates the larger abundances.
 
  
 <<fit ls>>=
-y.ls <- fitls(y)
+y.ls <- fitls(N.ind)
 par(mfrow=c(2,2))
 plot(y.ls)
 par(mfrow=c(1,1))
@@ -133,9 +134,9 @@ those provided by the log-series (but has much lower AIC value, see below).
  
 <<fit NB>>=
 ## With VGAM
-y.nb <- vglm(y ~ 1, posnegbinomial)
+y.nb <- vglm(N.ind ~ 1, posnegbinomial)
 ## With sads
-y.nb2 <- fitnbinom(y, start.value=c(size=0.3, mu=mean(y)))
+y.nb2 <- fitnbinom(N.ind, start.value=c(size=0.3, mu=mean(N.ind)))
 ## Comparing: 
 exp(coef(y.nb))
 coef(y.nb2)
@@ -217,7 +218,8 @@ Here I replicated the extrapolation method from the regional RAD of the
 estimated abundances for the whole Amazonia, first for the logseries projection:
 
 <<Linear extrapolation from regional RAD>>=
-(S.r.ls <- ulrich(Dec2018$population)[1])
+S.ulrich <- ulrich(Dec2018$population)
+(S.r.ls <- S.ulrich$S[1])
 @ 
 
 Which are exactly the value reported in the manuscript (\Sexpr{round(S.r.ls)} species). 
@@ -243,7 +245,7 @@ They propose that the same linear extrapolation assuming a log-normal is a lower
 Following their recipe (eq.2) such lower bound would be:
 
 <<regional rad lognormal>>=
-(S.r.ln <- ulrich(Dec2018$population)[2])
+(S.ulrich$S[2])
 @ 
 
 
@@ -263,11 +265,12 @@ reg.nb.rad <- rad.posnegbin(S = S.nb, size = cf.nb[1],
 @ 
 
 <<nbinom rad, echo=FALSE>>=
+cf.u <- S.ulrich$coefs
 plot(rad(reg.ls.rad), col="red", lwd=2, type="n",
      ylim=c(1, max(Dec2018$population)))
 points(rad(Dec2018$population), col="grey")
-curve(exp(cf.p.lm[1]+cf.p.lm[2]*x), add=TRUE)
-curve(exp(cf.p.lm[1]-d+cf.p.lm[2]*x), add=TRUE)
+curve(exp(cf.u[1]+cf.u[2]*x), add=TRUE)
+curve(exp(cf.u[1]-cf.u[3]+cf.u[2]*x), add=TRUE)
 lines(rad(reg.nb.rad), col="blue", lwd=2)
 lines(rad(reg.ls.rad), col="red", lwd=2)
 legend("topright", c("LS", "TNB", "Linear upper/lower bounds"), 
@@ -404,19 +407,23 @@ ls.rnd <- Pois.samp(rad = reg.ls.rad, tot.area = Tot.A,
                     n.plots = N.plots, nrep=100)
 ls.clump <- NB.samp(rad = reg.ls.rad, tot.area = Tot.A, 
                     n.plots = N.plots, 
-                    lmean.k = reg.ls.rad.lk, lsd.k = lm.k.sigma, 
+                    lmean.k = reg.ls.rad.lk, 
+                    lsd.k = lm.k.sigma, 
                     nrep=100)
 nb.rnd <- Pois.samp(rad = reg.nb.rad, tot.area = Tot.A, 
                     n.plots = N.plots, nrep = 100)
 nb.clump <- NB.samp(rad = reg.nb.rad, tot.area = Tot.A, 
                     n.plots = N.plots, 
-                    lmean.k = reg.nb.rad.lk, lsd.k = lm.k.sigma, 
+                    lmean.k = reg.nb.rad.lk, 
+                    lsd.k = lm.k.sigma, 
                     nrep = 100)
-rad.abc <- rad.ls(S=15800, N=Tot.t, alpha = fishers.alpha(Tot.t, 15800))
-ls.abc.clump <- NB.samp(rad = rad.abc$y, tot.area = Tot.A, 
-                    n.plots = N.plots, 
-                    lmean.k = reg.ls.rad.lk, lsd.k = lm.k.sigma, 
-                    nrep=100)
+## rad with the mean richness value obtained with ABC method (to be updated)
+S.abc <- 10883
+rad.abc <- rad.posnegbin(S=S.abc, size = cf.nb[1], prob=1-tovo.Scsi(S.abc, Sobs, k=cf.nb[1], csi.p), lower=1e-12, upper=1e20)
+nb.abc.clump <- NB.samp(rad = rad.abc$y, tot.area = Tot.A, 
+                        n.plots = N.plots, 
+                        lmean.k = predict(lm.k, data.frame(dens.ha=rad.abc$y/Tot.A)), lsd.k = lm.k.sigma, 
+                        nrep=100)
 @ 
 
 
@@ -430,7 +437,7 @@ lines(rad(ls.rnd), lwd=2)
 lines(rad(ls.clump), lwd=2, col="red")
 lines(rad(nb.rnd), lwd=2, col="green")
 lines(rad(nb.clump), lwd=2, col="black")
-lines(rad(ls.abc.clump), col="black")
+lines(rad(nb.abc.clump), col="blue", lwd=2)
 legend("topright", 
        c("LS, random sample", "LS, clumped sample", "NB, random sample", "NB, clumped sample"), 
        col=c("blue","red","green", "black"), lty=1, lwd=2, bty="n")
@@ -495,13 +502,14 @@ cf.st1 <- coef(ab.est)
 ShenHe <- shen.S( Y = Y, t = N.plots, T = Tot.A, 
                 start=c(list(lS=log(nrow(Dec2018))), as.list(cf.st1)), 
                 method="SANN")
-cf.st2 <- coef(teste)
+cf.st2 <- coef(ShenHe)
 (S.sh <- unname(exp(cf.st2[1])))
 @
 
 <<Ulrich Ollike estimates from occupancies>>=
 eff18 <- N.plots/Tot.A
-(S.uo <- ulrich(Dec2018$N.plots, effort=eff18))
+S.uo <- ulrich(Dec2018$N.plots, effort=eff18)
+S.uo$S
 @ 
 
 <<Hui ORC estimate>>=

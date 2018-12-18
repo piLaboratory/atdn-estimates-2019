@@ -330,7 +330,7 @@ NB.samp <- function(rad, tot.area, n.plots, lmean.k, lsd.k, nrep){
 sim.abc <- function(S, N, tot.area, n.plots, lmk,
                     nb.fit, LS=TRUE, obs.values, nrep = 2, ...){
     if(!is.null(nb.fit)&class(nb.fit)!= "fitsad")
-        stop("nb.fit should be an object of class fitsads")
+        stop("nb.fit should be an object of class fitsad")
     if(LS){
         ## Calculate alpha
         alpha <- fishers.alpha(N, S)
@@ -470,7 +470,7 @@ ulrich <- function(x, effort=1){
     ##S.reg2 <- abs((cf.p.lm[1]-d)/cf.p.lm[2])
     S.reg2 <- abs((2*cf.p.lm[1] + log(max(x)/effort)-2*log(max(x)))/cf.p.lm[2])    
   
-    return(c(S.reg1, S.reg2))
+    return(list(S=c(S.reg1, S.reg2), coefs=c(coef(p.lm), d=d) ))
 }
 
 #' Hui ORC model

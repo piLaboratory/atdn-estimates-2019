@@ -36,9 +36,9 @@ options(formatR.arrow = TRUE, width = 90, cache=TRUE)
 @ %def 
 
 <<Data prep>>=
-Dec2018 <- read.csv2("data.csv", as.is=TRUE)
-y <- Dec2018$N.ind
-Sobs <- length(y)
+Dec2018 <- read.csv2("Populations_2018_V2b.csv", as.is=TRUE)
+N.ind <- Dec2018$N.ind
+Sobs <- length(N.ind)
 ## Total number of trees (average density x area)
 Tot.t <- 567*5.5e8
 ## Proportion of total trees in the sample
@@ -52,7 +52,7 @@ N.plots <- 1945
 Seems to overestimate the abundance of the most abundant species (see qq-plots)
  
 <<fit pln>>=
-pln <- fitpoilog(y)
+pln <- fitpoilog(N.ind)
 par(mfrow=c(2,2))
 plot(pln)
 par(mfrow=c(1,1))
@@ -191,7 +191,7 @@ the model underestimates the larger abundances.
 
  
 <<fit ls>>=
-y.ls <- fitls(y)
+y.ls <- fitls(N.ind)
 par(mfrow=c(2,2))
 plot(y.ls)
 par(mfrow=c(1,1))
@@ -230,9 +230,9 @@ those provided by the log-series (but has much lower AIC value, see below).
  
 <<fit NB>>=
 ## With VGAM
-y.nb <- vglm(y ~ 1, posnegbinomial)
+y.nb <- vglm(N.ind ~ 1, posnegbinomial)
 ## With sads
-y.nb2 <- fitnbinom(y, start.value=c(size=0.3, mu=mean(y)))
+y.nb2 <- fitnbinom(N.ind, start.value=c(size=0.3, mu=mean(N.ind)))
 ## Comparing: 
 exp(coef(y.nb))
 coef(y.nb2)
@@ -282,24 +282,11 @@ AICtab(pln, y.nb2, y.ls, base=TRUE)
 \section*{Regional RAD}
 
 Here I replicated the extrapolation method from the regional RAD of the
-estimated abundances, first for the logseries projection:
+estimated abundances, for the logseries and lognormal projections,
+which are upper and lower-bound estimates \citep{ulrich2005}:
 
 <<Linear extrapolation from regional RAD>>=
-## Regional RAD
-pop.rad <- rad(Dec2018$population)
-## Linear regression through central 50% quantiles of the RAD
-p.lm <- lm(log(abund)~rank, data=data.frame(pop.rad), subset=rank>max(rank)*.25&rank<max(rank)*.75)
-## Regression coefficients
-cf.p.lm <- unname(coef(p.lm))
-## Logseries projection (upper bound)
-(S.reg1 <- abs(cf.p.lm[1]/cf.p.lm[2]))
-@ 
-
-And also the same extrapolation assuming a log-normal, which is lower-bound estimate:
-
-<<regional rad lognormal>>=
-d <- log(max(Dec2018$population))-cf.p.lm[1]
-(S.reg2 <- abs((cf.p.lm[1]-d)/cf.p.lm[2]))
+ulrich(Dec2018$population)
 @ 
 
 \subsection*{Regional RAD from negative binomial}
