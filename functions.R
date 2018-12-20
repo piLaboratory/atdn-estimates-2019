@@ -358,12 +358,16 @@ sim.abc <- function(S, N, tot.area, n.plots, lmk,
                        lmean.k = rad.lk, lsd.k = rad.lsk)
     lista <- list(p.samp, nb.samp)
     ## Summary statistics
-    data.frame(
+    results <- data.frame(
         S = sapply(lista, function(x) sum(x>0)),
         D = sapply(lista, D),
         lmean = sapply(lista, function(x) mean(log(x[x>0]))),
         lsd = sapply(lista, function(x) sd(log(x[x>0])))
     )
+    ## quantis <- t(sapply(lista, function(x) quantile(x[x>0],c(0.0075, 0.05, 0.15, 0.25, 0.75, 0.85, 0.933, 0.995))))
+    ## colnames(quantis) <- paste("q", 1:ncol(quantis), sep="")
+    ## results <- cbind(results,quantis)
+    return(results)
 }
 
 #' utility function: Simpson's Species-equivalent

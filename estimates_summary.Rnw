@@ -230,7 +230,7 @@ Thus, the value of Fisher's $\alpha$ for the whole Amazon is
 @ 
 
 I made a function to calculate the regional RAD which runs faster than the original code.
-With the we get the log-series RAD for the whole region (Amazon):
+Using it we get the log-series RAD for the whole region (Amazon):
 
 <<amazon LS rad>>=
 reg.ls.rad <- ceiling(
@@ -240,7 +240,7 @@ reg.ls.rad <- ceiling(
 
 \subsubsection*{Lower limit of the linear extrapolation}
 
-According to \citet{ulrich2005}, this is an upper limit to the estimation of species. 
+According to \citet{ulrich2005}, the estimate from the linear extrapolation of LS is an upper limit to the estimation of species. 
 They propose that the same linear extrapolation assuming a log-normal is a lower-bound estimate.
 Following their recipe (eq.2) such lower bound would be:
 
@@ -356,8 +356,8 @@ set to the observed density of each species in the sample.
 
 Once we estimated a value of $k$ for each species recorded, 
 we fit a linear regression of these values in function of the
-observed species densities, in log scale.
-The commands and model summary were:
+observed species densities in the sample, in log scale.
+The commands and model summary are:
 
 <<k x dens regression, cache=TRUE>>=
 ## estimating k parameter of a NB for each species 
