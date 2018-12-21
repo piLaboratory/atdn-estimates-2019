@@ -173,14 +173,14 @@ summary(S.post1)
 hist(S.post1)
 
 ## Posterior predictive check
-Y <- mclapply(sample(S.post1$unadj.values,100, replace=TRUE),
+LSclump.pc <- mclapply(sample(S.post1$unadj.values,100, replace=TRUE),
                   f1, lower=1e-20, upper=1e20, mc.cores=4)
-tmp1 <- Y[[1]][2,]
-for(i in 2:length(Y))
-    tmp1 <- rbind(tmp1, Y[[i]][2,])
+tmp1 <- LSclump.pc[[1]][2,]
+for(i in 2:length(LSclump.pc))
+    tmp1 <- rbind(tmp1, LSclump.pc[[i]][2,])
 par(mfrow=c(2,2))
 for(i in 1:4){
-    hist(tmp1[,i], xlim=range(c(tmp1[,i],target[i])), main=names(Y[[1]])[i])
+    hist(tmp1[,i], xlim=range(c(tmp1[,i],target[i])), main=names(LSclump.pc[[1]])[i])
     abline(v=target[i], col="red")
 }
 par(mfrow=c(1,1))

@@ -24,7 +24,7 @@ tovo <- function(fit, cf, S.obs, p, CI=FALSE){
         CIs <- rbind(ci, c(p.low,p.up), c(S.low,S.upp)  )
         rownames(CIs)[c(3,4)] <- c("prob", "S.est")
         cat("Estimated species richness:", S.est, "\n",
-            "95% CI:",CIs[3,2],"-",CIs[3,1], "\n")
+            "95% CI:",CIs[4,2],"-",CIs[4,1], "\n")
         return(invisible(list(S.est=S.est, CIs=CIs)))
     }
     else
@@ -239,7 +239,7 @@ est.ka <- function(mu, nzeroes, Nplots){
     (mu * nzeroes)/(Nplots - nzeroes)
     }
  
-#'Draw N samples from Negative binomial for a pair of parameters of the NB (mu and size) and the sums up these values
+#'Draws N samples from Negative binomial for a pair of parameters of the NB (mu and size) and the sums up these values
 rnbinom2 <- function(mu, size, N){
         y <- rnbinom(n = N, mu  = mu, size = size)
         sum(y)
@@ -325,8 +325,9 @@ NB.samp <- function(rad, tot.area, n.plots, lmean.k, lsd.k, nrep){
     apply(m1,1,mean)    
 }
 
-#' Simulates Poisson and NB samples from a LS rad for ABC
-#' @param
+#' Generates a LS or TNB RAd and then Simulates Poisson and NB samples from it rad
+#' (to be used in ABC)
+#' 
 sim.abc <- function(S, N, tot.area, n.plots, lmk,
                     nb.fit, LS=TRUE, obs.values, nrep = 2, ...){
     if(!is.null(nb.fit)&class(nb.fit)!= "fitsad")

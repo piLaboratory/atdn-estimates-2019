@@ -79,36 +79,33 @@
 \begin{knitrout}
 \definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
 \begin{alltt}
-\hlstd{dados} \hlkwb{<-} \hlkwd{read.csv2}\hlstd{(}\hlstr{"data.csv"}\hlstd{,} \hlkwc{as.is}\hlstd{=}\hlnum{TRUE}\hlstd{)}
-\hlstd{y} \hlkwb{<-} \hlstd{dados}\hlopt{$}\hlstd{N.ind}
-\hlstd{Sobs} \hlkwb{<-} \hlkwd{length}\hlstd{(y)}
+\hlstd{Dec2018} \hlkwb{<-} \hlkwd{read.csv2}\hlstd{(}\hlstr{"Populations_2018_V2b.csv"}\hlstd{,} \hlkwc{as.is}\hlstd{=}\hlnum{TRUE}\hlstd{)}
+\hlstd{N.ind} \hlkwb{<-} \hlstd{Dec2018}\hlopt{$}\hlstd{N.ind}
+\hlstd{Sobs} \hlkwb{<-} \hlkwd{length}\hlstd{(N.ind)}
 \hlcom{## Total number of trees (average density x area)}
 \hlstd{Tot.t} \hlkwb{<-} \hlnum{567}\hlopt{*}\hlnum{5.5e8}
 \hlcom{## Proportion of total trees in the sample}
-\hlstd{p1} \hlkwb{<-} \hlkwd{sum}\hlstd{(dados}\hlopt{$}\hlstd{N.ind)}\hlopt{/}\hlstd{Tot.t}
+\hlstd{p1} \hlkwb{<-} \hlkwd{sum}\hlstd{(Dec2018}\hlopt{$}\hlstd{N.ind)}\hlopt{/}\hlstd{Tot.t}
 \hlcom{## Total number of plots}
 \hlstd{N.plots} \hlkwb{<-} \hlnum{1945}
 \hlcom{## Total area hectares}
 \hlstd{Tot.A} \hlkwb{<-} \hlnum{5.79e8}
 \hlcom{## Sampled area ha}
 \hlstd{Samp.A} \hlkwb{<-} \hlnum{2.048e3}
-\hlcom{## Amazon RAD sent by Hans}
-\hlkwd{load}\hlstd{(}\hlstr{"steege_files/AmazonRAD.RData"}\hlstd{)}
-\hlcom{## Truncated Negative binomial }
-\hlcom{## (already generated, too slow to rerun)}
-\hlstd{nb.pred.full} \hlkwb{<-} \hlkwd{read.csv}\hlstd{(}\hlstr{"NB_RAD.csv"}\hlstd{)}\hlopt{$}\hlstd{x}
 \end{alltt}
 \end{kframe}
 \end{knitrout}
 
-\section{Poisson lognormal}
+\section{Estimates from the plots sample}
+
+\subsection*{Poisson lognormal}
 
 Seems to overestimate the abundance of the most abundant species (see qq-plots)
  
 \begin{knitrout}
 \definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
 \begin{alltt}
-\hlstd{pln} \hlkwb{<-} \hlkwd{fitpoilog}\hlstd{(y)}
+\hlstd{pln} \hlkwb{<-} \hlkwd{fitpoilog}\hlstd{(N.ind)}
 \hlkwd{par}\hlstd{(}\hlkwc{mfrow}\hlstd{=}\hlkwd{c}\hlstd{(}\hlnum{2}\hlstd{,}\hlnum{2}\hlstd{))}
 \hlkwd{plot}\hlstd{(pln)}
 \hlkwd{par}\hlstd{(}\hlkwc{mfrow}\hlstd{=}\hlkwd{c}\hlstd{(}\hlnum{1}\hlstd{,}\hlnum{1}\hlstd{))}
@@ -124,7 +121,7 @@ Seems to overestimate the abundance of the most abundant species (see qq-plots)
 \end{knitrout}
 
 
-\subsection*{Estimating species richness from PLN}
+\subsubsection*{Estimating species richness from PLN}
 
 The fitted PLN allows to estimate the probability value assigned to species that
 had zero abundance in the sample:
@@ -132,20 +129,21 @@ had zero abundance in the sample:
 \begin{knitrout}
 \definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
 \begin{alltt}
+\hlstd{pln.cf} \hlkwb{<-} \hlkwd{coef}\hlstd{(pln)}
 \hlstd{(pln.d0} \hlkwb{<-} \hlkwd{dpoilog}\hlstd{(}\hlnum{0}\hlstd{,} \hlkwc{mu} \hlstd{= pln.cf[}\hlnum{1}\hlstd{],} \hlkwc{sig}\hlstd{=pln.cf[}\hlnum{2}\hlstd{]))}
 \end{alltt}
 \begin{verbatim}
-## [1] 0.1120095
+## [1] 0.11
 \end{verbatim}
 \end{kframe}
 \end{knitrout}
 
 That is, an estimate that the recorded species are 89\%
 of the total number of species.
-This gives an estimate of 5668 species.
+This gives an estimate of 5652 species.
 
 
-\section{Log-series}
+\subsection*{Log-series}
 
 Log-series seems to overestimate the number of singletons
 and to underestimate the abundance of species with intermediary abundances
@@ -156,7 +154,7 @@ the model underestimates the larger abundances.
 \begin{knitrout}
 \definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
 \begin{alltt}
-\hlstd{y.ls} \hlkwb{<-} \hlkwd{fitls}\hlstd{(y)}
+\hlstd{y.ls} \hlkwb{<-} \hlkwd{fitls}\hlstd{(N.ind)}
 \hlkwd{par}\hlstd{(}\hlkwc{mfrow}\hlstd{=}\hlkwd{c}\hlstd{(}\hlnum{2}\hlstd{,}\hlnum{2}\hlstd{))}
 \hlkwd{plot}\hlstd{(y.ls)}
 \hlkwd{par}\hlstd{(}\hlkwc{mfrow}\hlstd{=}\hlkwd{c}\hlstd{(}\hlnum{1}\hlstd{,}\hlnum{1}\hlstd{))}
@@ -171,7 +169,7 @@ the model underestimates the larger abundances.
 
 \end{knitrout}
 
-\subsection*{Estimate of species richness}
+\subsubsection*{Estimate of species richness from LS}
 
 From the value of $\alpha$ estimated from the sample of plots:
  
@@ -182,7 +180,7 @@ From the value of $\alpha$ estimated from the sample of plots:
 \hlstd{(S.ls} \hlkwb{<-} \hlstd{alpha}\hlopt{*}\hlkwd{log}\hlstd{(}\hlnum{1} \hlopt{+} \hlstd{Tot.t}\hlopt{/}\hlstd{alpha))}
 \end{alltt}
 \begin{verbatim}
-## [1] 13809.86
+## [1] 13802
 \end{verbatim}
 \end{kframe}
 \end{knitrout}
@@ -196,28 +194,28 @@ interval for estimated total richness from these values
 \hlstd{(ls.ci} \hlkwb{<-} \hlkwd{confint}\hlstd{(y.ls))}
 \end{alltt}
 \begin{verbatim}
-##    2.5 %   97.5 % 
-## 638.9166 750.1000
+##  2.5 % 97.5 % 
+##    638    750
 \end{verbatim}
 \begin{alltt}
 \hlcom{## Estimated species richness for lower bound of alpha's IC}
 \hlstd{ls.ci[}\hlnum{1}\hlstd{]}\hlopt{*}\hlkwd{log}\hlstd{(}\hlnum{1} \hlopt{+} \hlstd{Tot.t}\hlopt{/}\hlstd{ls.ci[}\hlnum{1}\hlstd{])}
 \end{alltt}
 \begin{verbatim}
-##    2.5 % 
-## 12782.17
+## 2.5 % 
+## 12774
 \end{verbatim}
 \begin{alltt}
 \hlstd{ls.ci[}\hlnum{2}\hlstd{]}\hlopt{*}\hlkwd{log}\hlstd{(}\hlnum{1} \hlopt{+} \hlstd{Tot.t}\hlopt{/}\hlstd{ls.ci[}\hlnum{2}\hlstd{])}
 \end{alltt}
 \begin{verbatim}
-##   97.5 % 
-## 14886.17
+## 97.5 % 
+##  14878
 \end{verbatim}
 \end{kframe}
 \end{knitrout}
 
-\section{Zero-truncated Negative binomial}
+\subsection*{Zero-truncated Negative binomial}
 \label{sec:negbin}
 
 Here I use the method proposed by \citet{tovo2017}. The first step is
@@ -231,22 +229,23 @@ those provided by the log-series (but has much lower AIC value, see below).
 \definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
 \begin{alltt}
 \hlcom{## With VGAM}
-\hlstd{y.nb} \hlkwb{<-} \hlkwd{vglm}\hlstd{(y} \hlopt{~} \hlnum{1}\hlstd{, posnegbinomial)}
+\hlstd{y.nb} \hlkwb{<-} \hlkwd{vglm}\hlstd{(N.ind} \hlopt{~} \hlnum{1}\hlstd{, posnegbinomial)}
 \hlcom{## With sads}
-\hlstd{y.nb2} \hlkwb{<-} \hlkwd{fitnbinom}\hlstd{(y,} \hlkwc{start.value}\hlstd{=}\hlkwd{c}\hlstd{(}\hlkwc{size}\hlstd{=}\hlnum{0.3}\hlstd{,} \hlkwc{mu}\hlstd{=}\hlkwd{mean}\hlstd{(y)))}
+\hlstd{y.nb2} \hlkwb{<-} \hlkwd{fitnbinom}\hlstd{(N.ind,}
+                   \hlkwc{start.value}\hlstd{=}\hlkwd{c}\hlstd{(}\hlkwc{size}\hlstd{=}\hlnum{0.3}\hlstd{,} \hlkwc{mu}\hlstd{=}\hlkwd{mean}\hlstd{(N.ind)))}
 \hlcom{## Comparing: }
 \hlkwd{exp}\hlstd{(}\hlkwd{coef}\hlstd{(y.nb))}
 \end{alltt}
 \begin{verbatim}
 ## (Intercept):1 (Intercept):2 
-##   48.96347392    0.04048581
+##   52.11347189    0.04344702
 \end{verbatim}
 \begin{alltt}
 \hlkwd{coef}\hlstd{(y.nb2)}
 \end{alltt}
 \begin{verbatim}
 ##        size          mu 
-##  0.04153996 50.08844429
+##  0.04404989 52.74636711
 \end{verbatim}
 \end{kframe}
 \end{knitrout}
@@ -269,7 +268,7 @@ those provided by the log-series (but has much lower AIC value, see below).
 \end{knitrout}
 
 
-\subsection*{Estimate of  species richness}
+\subsubsection*{Estimate of  species richness}
 
 Following the recipe of \citet{tovo2017}:
 
@@ -285,7 +284,7 @@ Following the recipe of \citet{tovo2017}:
 \hlstd{(S.nb} \hlkwb{<-} \hlkwd{unname}\hlstd{(S.nb))}
 \end{alltt}
 \begin{verbatim}
-## [1] 11038.67
+## [1] 10901
 \end{verbatim}
 \end{kframe}
 \end{knitrout}
@@ -301,23 +300,23 @@ coefficients of the NB fit (see file \code{functions.R})
 \hlstd{(tovo.S} \hlkwb{<-} \hlkwd{tovo}\hlstd{(}\hlkwc{fit} \hlstd{= y.nb2,} \hlkwc{p} \hlstd{= p1,} \hlkwc{CI}\hlstd{=}\hlnum{TRUE}\hlstd{))}
 \end{alltt}
 \begin{verbatim}
-## Estimated species richness: 11038.67 
-##  95% CI: 2.73884e-09 - 2.480429e-09
+## Estimated species richness: 10901 
+##  95% CI: 10137 - 11868
 ## $S.est
-## [1] 11038.67
+## [1] 10901
 ## 
 ## $CIs
-##              2.5 %       97.5 %
-## size  2.547345e-02 5.566008e-02
-## mu    3.248973e+01 6.429281e+01
-## prob  2.480429e-09 2.738840e-09
-## S.est 1.206354e+04 1.027710e+04
+##         2.5 %  97.5 %
+## size  2.8e-02 5.9e-02
+## mu    3.6e+01 6.7e+01
+## prob  2.5e-09 2.8e-09
+## S.est 1.2e+04 1.0e+04
 \end{verbatim}
 \end{kframe}
 \end{knitrout}
 
 
-\section{Model selection}
+\subsection*{Model selection}
 
 Among the three models, TNB
 provides the best fit to the abundances in the sample:
@@ -329,10 +328,10 @@ provides the best fit to the abundances in the sample:
 \hlkwd{AICtab}\hlstd{(pln, y.nb2, y.ls,} \hlkwc{base}\hlstd{=}\hlnum{TRUE}\hlstd{)}
 \end{alltt}
 \begin{verbatim}
-##       AIC     dAIC    df
-## y.nb2 54530.9     0.0 2 
-## y.ls  54557.5    26.6 1 
-## pln   54577.6    46.6 2
+##       AIC   dAIC  df
+## y.nb2 54627     0 2 
+## y.ls  54658    31 1 
+## pln   54667    40 2
 \end{verbatim}
 \end{kframe}
 \end{knitrout}
@@ -351,58 +350,91 @@ underestimates the lower abundances in the sample:
 
 \end{knitrout}
 
-\section{Estimates based in the regional RAD}
+\section{Estimates based in the RAD of population sizes}
 
 \subsection*{Linear extrapolation from the regional RAD}
 
-Here I replicated the extrapolation method from the regional RAD of the
-estimated abundances for the whole Amazonia, first for the logseries projection:
+Here I replicated the extrapolation method from the RAD of the
+estimated abundances for the whole Amazonia first for the logseries projection:
 
 \begin{knitrout}
 \definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
 \begin{alltt}
-\hlcom{## Regional RAD}
-\hlstd{pop.rad} \hlkwb{<-} \hlkwd{rad}\hlstd{(dados}\hlopt{$}\hlstd{population)}
-\hlcom{## Linear regression through central 50% quantiles of the RAD}
-\hlstd{p.lm} \hlkwb{<-} \hlkwd{lm}\hlstd{(}\hlkwd{log}\hlstd{(abund)}\hlopt{~}\hlstd{rank,} \hlkwc{data}\hlstd{=}\hlkwd{data.frame}\hlstd{(pop.rad),}
-           \hlkwc{subset}\hlstd{=rank}\hlopt{>}\hlkwd{max}\hlstd{(rank)}\hlopt{*}\hlnum{.25}\hlopt{&}\hlstd{rank}\hlopt{<}\hlkwd{max}\hlstd{(rank)}\hlopt{*}\hlnum{.75}\hlstd{)}
-\hlcom{## Regression coefficients}
-\hlstd{cf.p.lm} \hlkwb{<-} \hlkwd{unname}\hlstd{(}\hlkwd{coef}\hlstd{(p.lm))}
-\hlcom{## Logseries projection (upper bound)}
-\hlstd{(S.reg1} \hlkwb{<-} \hlkwd{abs}\hlstd{(cf.p.lm[}\hlnum{1}\hlstd{]}\hlopt{/}\hlstd{cf.p.lm[}\hlnum{2}\hlstd{]))}
+\hlstd{S.ulrich} \hlkwb{<-} \hlkwd{ulrich}\hlstd{(Dec2018}\hlopt{$}\hlstd{population)}
+\hlstd{(S.r.ls} \hlkwb{<-} \hlstd{S.ulrich}\hlopt{$}\hlstd{S[}\hlnum{1}\hlstd{])}
 \end{alltt}
 \begin{verbatim}
-## [1] 15279.03
+## [1] 15279
 \end{verbatim}
 \end{kframe}
 \end{knitrout}
 
-Which is exactly the value reported in the manuscript (\ensuremath{1.5279\times 10^{4}} species). 
+Which are exactly the value reported in the manuscript (15279 species). 
+Thus, from this estimate the value of Fisher's $\alpha$ for the whole Amazon is
 
-According to \citet{ulrich2005}, this is an upper limit to the estimation of species. 
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlstd{(alpha.r} \hlkwb{<-} \hlkwd{fishers.alpha}\hlstd{(}\hlkwc{N} \hlstd{= Tot.t,} \hlkwc{S} \hlstd{= S.r.ls))}
+\end{alltt}
+\begin{verbatim}
+## [1] 771
+\end{verbatim}
+\end{kframe}
+\end{knitrout}
+
+And with this estimate of regional $\alpha$ we can build a RAD for the Amazon \citep{tersteege2013}.
+I made a function to calculate the regional RAD which runs faster than the original code.
+Using it we get the log-series RAD for the whole region (Amazon):
+
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlstd{reg.ls.rad} \hlkwb{<-} \hlkwd{ceiling}\hlstd{(}
+    \hlkwd{rad.ls}\hlstd{(}\hlkwc{S} \hlstd{= S.r.ls,} \hlkwc{N} \hlstd{= Tot.t,} \hlkwc{alpha} \hlstd{= alpha.r)}\hlopt{$}\hlstd{y}
+\hlstd{)}
+\end{alltt}
+\end{kframe}
+\end{knitrout}
+
+\subsubsection*{Lower limit of the linear extrapolation}
+
+According to \citet{ulrich2005}, the estimate from the linear extrapolation of LS is an upper limit to the estimation of species. 
 They propose that the same linear extrapolation assuming a log-normal is a lower-bound estimate.
 Following their recipe (eq.2) such lower bound would be:
 
 \begin{knitrout}
 \definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
 \begin{alltt}
-\hlstd{d} \hlkwb{<-} \hlkwd{log}\hlstd{(}\hlkwd{max}\hlstd{(dados}\hlopt{$}\hlstd{population))}\hlopt{-}\hlstd{cf.p.lm[}\hlnum{1}\hlstd{]}
-\hlstd{(S.reg2} \hlkwb{<-} \hlkwd{abs}\hlstd{((cf.p.lm[}\hlnum{1}\hlstd{]}\hlopt{-}\hlstd{d)}\hlopt{/}\hlstd{cf.p.lm[}\hlnum{2}\hlstd{]))}
+\hlstd{(S.ulrich}\hlopt{$}\hlstd{S[}\hlnum{2}\hlstd{])}
 \end{alltt}
 \begin{verbatim}
-## [1] 12791.71
+## [1] 12785
 \end{verbatim}
 \end{kframe}
 \end{knitrout}
 
-\subsection*{Regional RAD from TNB}
 
-Here I compare the regional RAD with RADs predicted  by 
-the zero-truncated negative binomial and the upper-bound and lower-bound estimate of species
-obtained above.
+\subsection*{Regional RAD from TNB}
 
 The RAD of negative binomial was upscaled according to \citep{tovo2017} 
 and gets to the number of species estimated by this method (section~\ref{sec:negbin}).
+I did a function that returns this upscaled RAD pretty fast
+
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlstd{reg.nb.rad} \hlkwb{<-} \hlkwd{rad.posnegbin}\hlstd{(}\hlkwc{S} \hlstd{= S.nb,} \hlkwc{size} \hlstd{= cf.nb[}\hlnum{1}\hlstd{],}
+                            \hlkwc{prob} \hlstd{=} \hlnum{1}\hlopt{-}\hlstd{csi)}\hlopt{$}\hlstd{y}
+\end{alltt}
+\end{kframe}
+\end{knitrout}
+
+Now we have the LS and TNB regional RADs 
+I will plot them with the RAD of estimated population sizes, and also
+with the upper-bound and lower-bound estimate of species
+obtained above.
+
 
 \begin{knitrout}
 \definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}
@@ -426,6 +458,10 @@ the Log-series and log-normal model \citep{ulrich2005}.
 The negative binomial has a power-bending factor that
 results in a lower estimate of total richness, below to
 the lower-limit of the linear extrapolations.
+
+The next section has uses a Bayesian approach to identify
+the regional RAD model and also the sampling model that 
+best approximates the RAD of population sizes.
 
 \section{Comparing population sizes predicted by LS and NB regional RADs}
 
@@ -494,43 +530,44 @@ set to the observed density of each species in the sample.
 
 Once we estimated a value of $k$ for each species recorded, 
 we fit a linear regression of these values in function of the
-observed species densities, in log scale.
-The commands and model summary were:
+observed species densities in the sample, in log scale.
+The commands and model summary are:
 
 \begin{knitrout}
 \definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
 \begin{alltt}
 \hlcom{## estimating k parameter of a NB for each species }
-\hlstd{dados}\hlopt{$}\hlstd{dens.ha} \hlkwb{<-} \hlstd{dados}\hlopt{$}\hlstd{N.ind}\hlopt{/}\hlstd{Samp.A}
-\hlstd{dados}\hlopt{$}\hlstd{k} \hlkwb{<-} \hlkwd{est.kv}\hlstd{(}\hlkwc{mu}\hlstd{=dados}\hlopt{$}\hlstd{dens.ha,}
-                  \hlkwc{nzeroes}\hlstd{=N.plots}\hlopt{-}\hlstd{dados}\hlopt{$}\hlstd{N.plots,}
+\hlstd{Dec2018}\hlopt{$}\hlstd{dens.ha} \hlkwb{<-} \hlstd{Dec2018}\hlopt{$}\hlstd{N.ind}\hlopt{/}\hlstd{Samp.A}
+\hlstd{Dec2018}\hlopt{$}\hlstd{k} \hlkwb{<-} \hlkwd{est.kv}\hlstd{(}\hlkwc{mu}\hlstd{=Dec2018}\hlopt{$}\hlstd{dens.ha,}
+                  \hlkwc{nzeroes}\hlstd{=N.plots}\hlopt{-}\hlstd{Dec2018}\hlopt{$}\hlstd{N.plots,}
                   \hlkwc{Nplots}\hlstd{=N.plots)}
 \hlstd{lm.k} \hlkwb{<-}\hlkwd{lm}\hlstd{(}\hlkwd{log}\hlstd{(k)}\hlopt{~}\hlkwd{log}\hlstd{(dens.ha),}
-          \hlkwc{data}\hlstd{=dados,} \hlkwc{subset}\hlstd{=k}\hlopt{<}\hlnum{1}\hlstd{)}
+          \hlkwc{data}\hlstd{=Dec2018,} \hlkwc{subset}\hlstd{=k}\hlopt{<}\hlnum{1}\hlstd{)}
 \hlcom{## Estimated regression standard error}
 \hlstd{lm.k.sigma} \hlkwb{<-} \hlkwd{summary}\hlstd{(lm.k)}\hlopt{$}\hlstd{sigma}
+\hlcom{## Model summary}
 \hlkwd{summary}\hlstd{(lm.k)}
 \end{alltt}
 \begin{verbatim}
 ## 
 ## Call:
-## lm(formula = log(k) ~ log(dens.ha), data = dados, subset = k < 
+## lm(formula = log(k) ~ log(dens.ha), data = Dec2018, subset = k < 
 ##     1)
 ## 
 ## Residuals:
 ##     Min      1Q  Median      3Q     Max 
-## -5.3919 -0.6511  0.1124  0.8366  5.1195 
+## -5.3939 -0.6564  0.1166  0.8321  5.1151 
 ## 
 ## Coefficients:
 ##              Estimate Std. Error t value Pr(>|t|)    
-## (Intercept)  -3.09985    0.04425  -70.05   <2e-16 ***
-## log(dens.ha)  0.59138    0.01067   55.42   <2e-16 ***
+## (Intercept)  -3.09932    0.04412  -70.24   <2e-16 ***
+## log(dens.ha)  0.59059    0.01065   55.45   <2e-16 ***
 ## ---
 ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 ## 
-## Residual standard error: 1.236 on 4187 degrees of freedom
-## Multiple R-squared:  0.4231,	Adjusted R-squared:  0.423 
-## F-statistic:  3071 on 1 and 4187 DF,  p-value: < 2.2e-16
+## Residual standard error: 1.234 on 4196 degrees of freedom
+## Multiple R-squared:  0.4229,	Adjusted R-squared:  0.4227 
+## F-statistic:  3074 on 1 and 4196 DF,  p-value: < 2.2e-16
 \end{verbatim}
 \end{kframe}
 \end{knitrout}
@@ -556,59 +593,230 @@ the predicted value from the linear regression above for the population
 density of the species in the RAD. The standard deviation of these
 Normal distributions was the standard error of the linear regression.
 
-\subsubsection*{Simulation scripts}
+\subsubsection*{Fit to observed population sizes}
+\label{sec:fit-observ-popul}
+
+To check which model best describes the RAD of estimated population we
+used an approximate Bayesian computation (ABC, \citet{csillery2010,csillery2012}). 
+To do that I ran 
+the simulations described above for each combination of RAD and sampling
+for 6135 values of regional richness, drawn from a uniform
+distribution between 10,000 and 20,000. In ABC this is the \emph{a priori}
+distribution, which I set between the know number of species in Amazon and
+twice it, which is higher the larger species estimate for Amazon I get.
+
+The ABC method compares summary statistics from the simulations with those observed
+in a dataset to assign (approximate) posterior probabilities to each competing model.
+I used four statistics from the simulated population RADs: number of species, inverse of Simpson's index
+(that is, Simpson's species equivalents), and mean an standard deviation of the log of abundances.
+
+The observed values of the statistics are targets against the results of each simulations is compared with an standardized
+Euclidean distance. The proportion of simulations of each model that are below a gives distance threshold estimates the
+posterior probability of the model, and thus provides a model-selection criteria based on computational simulations.
+A similar procedure is used to estimate the posterior distribution of the parameters of the simulation, which in this case
+was only the total number of species in the regional RAD from which the simulated samples were drawn.
+
+I used a rejection threshold of 0.025, which means that only the 2,5\% simulations that resulted in the smallest Euclidean
+distances to the observed values of the summary statistics were kept to build posterior distributions.
+The codes used to run ABC are in separated file (\code{abc.R}), as the simulations take some time to run.
+
+
+\subsection*{Results}
+
+ABC model selection, using a 5\% rejection threshold:
 
 \begin{knitrout}
 \definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
 \begin{alltt}
-\hlcom{## Simulation of population sizes from samples of }
-\hlcom{## the regional RADs}
-\hlstd{nrep} \hlkwb{<-} \hlnum{100} \hlcom{#number of repetitions}
-\hlcom{## Samples from LS RAD}
-\hlcom{## Matrices to store samples}
-\hlstd{tmp1} \hlkwb{<-} \hlstd{tmp2} \hlkwb{<-} \hlkwd{matrix}\hlstd{(}\hlnum{0}\hlstd{,}\hlkwc{nrow}\hlstd{=}\hlkwd{length}\hlstd{(Amazon.rad),} \hlkwc{ncol}\hlstd{=nrep)}
-\hlkwa{for}\hlstd{(j} \hlkwa{in} \hlnum{1}\hlopt{:}\hlstd{nrep)\{}
-    \hlcom{## Samples aggregation parameters for each species according to }
-    \hlcom{## the linear model + standard errors of this model}
-    \hlstd{k1} \hlkwb{<-} \hlkwd{exp}\hlstd{(}\hlkwd{rnorm}\hlstd{(}\hlkwd{length}\hlstd{(Amazon.rad),}
-                    \hlkwc{mean}\hlstd{=Amazon.rad.lk,} \hlkwc{sd}\hlstd{=lm.k.sigma))}
-    \hlcom{## Random (Poisson) sample}
-    \hlstd{y1} \hlkwb{<-} \hlkwd{mapply}\hlstd{(sim.occ,} \hlkwc{mu} \hlstd{= Amazon.rad}\hlopt{/}\hlstd{Tot.A,}
-                   \hlkwc{MoreArgs}\hlstd{=}\hlkwd{list}\hlstd{(}\hlkwc{N} \hlstd{= N.plots))}
-    \hlcom{## Clumped (negative binomial) sample}
-    \hlstd{y2} \hlkwb{<-} \hlkwd{mapply}\hlstd{(sim.occ,} \hlkwc{mu} \hlstd{= Amazon.rad}\hlopt{/}\hlstd{Tot.A,} \hlkwc{size} \hlstd{= k1,}
-                   \hlkwc{MoreArgs}\hlstd{=}\hlkwd{list}\hlstd{(}\hlkwc{N} \hlstd{= N.plots,} \hlkwc{pois.samp}\hlstd{=}\hlnum{FALSE}\hlstd{))}
-    \hlcom{## Pick the population sizes for species}
-    \hlcom{## recorded in the sample}
-    \hlstd{tmp1[}\hlnum{1}\hlopt{:}\hlkwd{sum}\hlstd{(y1),j]} \hlkwb{<-} \hlstd{Amazon.rad[y1}\hlopt{>}\hlnum{0}\hlstd{]}
-    \hlstd{tmp2[}\hlnum{1}\hlopt{:}\hlkwd{sum}\hlstd{(y2),j]} \hlkwb{<-} \hlstd{Amazon.rad[y2}\hlopt{>}\hlnum{0}\hlstd{]}
-\hlstd{\}}
-\hlcom{## Simulation of samples from TNB }
-\hlstd{tmp4} \hlkwb{<-} \hlstd{tmp3} \hlkwb{<-} \hlkwd{matrix}\hlstd{(}\hlnum{0}\hlstd{,}\hlkwc{nrow}\hlstd{=}\hlkwd{length}\hlstd{(nb.pred.full),} \hlkwc{ncol}\hlstd{=nrep)}
-\hlkwa{for}\hlstd{(j} \hlkwa{in} \hlnum{1}\hlopt{:}\hlstd{nrep)\{}
-    \hlstd{k2} \hlkwb{<-} \hlkwd{exp}\hlstd{(}\hlkwd{rnorm}\hlstd{(}\hlkwd{length}\hlstd{(nb.pred.full),}
-                    \hlkwc{mean}\hlstd{=nb.pred.full.lk,} \hlkwc{sd}\hlstd{=lm.k.sigma))}
-    \hlstd{y3} \hlkwb{<-} \hlkwd{mapply}\hlstd{(sim.occ,} \hlkwc{mu} \hlstd{= nb.pred.full}\hlopt{/}\hlstd{Tot.A,}
-                   \hlkwc{MoreArgs}\hlstd{=}\hlkwd{list}\hlstd{(}\hlkwc{N} \hlstd{= N.plots))}
-    \hlstd{y4} \hlkwb{<-} \hlkwd{mapply}\hlstd{(sim.occ,} \hlkwc{mu} \hlstd{= nb.pred.full}\hlopt{/}\hlstd{Tot.A,} \hlkwc{size} \hlstd{= k2,}
-                   \hlkwc{MoreArgs}\hlstd{=}\hlkwd{list}\hlstd{(}\hlkwc{N} \hlstd{= N.plots,} \hlkwc{pois.samp}\hlstd{=}\hlnum{FALSE}\hlstd{))}
-    \hlstd{tmp3[}\hlnum{1}\hlopt{:}\hlkwd{sum}\hlstd{(y3),j]} \hlkwb{<-} \hlstd{nb.pred.full[y3}\hlopt{>}\hlnum{0}\hlstd{]}
-    \hlstd{tmp4[}\hlnum{1}\hlopt{:}\hlkwd{sum}\hlstd{(y4),j]} \hlkwb{<-} \hlstd{nb.pred.full[y4}\hlopt{>}\hlnum{0}\hlstd{]}
-\hlstd{\}}
-\hlcom{## Mean RADs for each simulation}
-\hlstd{ls.rnd} \hlkwb{<-} \hlkwd{apply}\hlstd{(tmp1,}\hlnum{1}\hlstd{,mean)}
-\hlstd{ls.clump} \hlkwb{<-} \hlkwd{apply}\hlstd{(tmp2,}\hlnum{1}\hlstd{,mean)}
-\hlstd{nb.rnd} \hlkwb{<-} \hlkwd{apply}\hlstd{(tmp3,}\hlnum{1}\hlstd{,mean)}
-\hlstd{nb.clump} \hlkwb{<-} \hlkwd{apply}\hlstd{(tmp4,}\hlnum{1}\hlstd{,mean)}
+\hlcom{## load simulation objects to be used by ABC}
+\hlkwd{load}\hlstd{(}\hlstr{"abc_1000_to_2000_S.RData"}\hlstd{)}
+\hlcom{## Target: observed number of species, Simpson's 1/D, }
+\hlcom{## lmean, sdmean             }
+\hlstd{target} \hlkwb{<-} \hlkwd{c}\hlstd{(Sobs,}
+            \hlkwd{D}\hlstd{(Dec2018}\hlopt{$}\hlstd{population),}
+            \hlkwd{mean}\hlstd{(}\hlkwd{log}\hlstd{(Dec2018}\hlopt{$}\hlstd{population)),}
+            \hlkwd{sd}\hlstd{(}\hlkwd{log}\hlstd{(Dec2018}\hlopt{$}\hlstd{population)))}
+\hlcom{## Model selection}
+\hlstd{model.sel} \hlkwb{<-} \hlkwd{postpr}\hlstd{(}\hlkwc{target} \hlstd{= target,}
+                    \hlkwc{index}\hlstd{=sim.ids,}
+                    \hlkwc{sumstat} \hlstd{= all.sims,}
+                    \hlkwc{tol}\hlstd{=}\hlnum{0.05}\hlstd{,} \hlkwc{method}\hlstd{=}\hlstr{"rejection"}\hlstd{,}
+                    \hlkwc{corr}\hlstd{=}\hlnum{TRUE}\hlstd{)}
+\hlstd{msel.s} \hlkwb{<-} \hlkwd{summary}\hlstd{(model.sel)}
+\end{alltt}
+\begin{verbatim}
+## Call: 
+## postpr(target = target, index = sim.ids, sumstat = all.sims, 
+##     tol = 0.05, method = "rejection", corr = TRUE)
+## Data:
+##  postpr.out$values (898 posterior samples)
+## Models a priori:
+##  LSclump, LSrnd, NBclump, NBrnd
+## Models a posteriori:
+##  LSclump, LSrnd, NBclump, NBrnd
+## 
+## 
+## Proportion of accepted simulations (rejection):
+## LSclump   LSrnd NBclump   NBrnd 
+##   0.996   0.004   0.000   0.000 
+## 
+## Bayes factors:
+##         LSclump   LSrnd NBclump   NBrnd
+## LSclump   1.000 223.500     Inf     Inf
+## LSrnd     0.004   1.000     Inf     Inf
+## NBclump   0.000   0.000                
+## NBrnd     0.000   0.000
+\end{verbatim}
+\end{kframe}
+\end{knitrout}
+
+The simulation of clumped sampling of a regional Log-Series 
+provides the best approximation to the observed population sizes
+(p= 1).
+
+The next step is to use the selected model to get the
+posterior distribution of the total species richness
+in Amazon:
+
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlcom{## Posterior distribution of Species richness from the selected model}
+\hlstd{S.post1} \hlkwb{<-} \hlkwd{abc}\hlstd{(}\hlkwc{target} \hlstd{= target,}
+               \hlkwc{param}\hlstd{=}\hlkwd{data.frame}\hlstd{(}\hlkwc{S}\hlstd{=sim.y[sim.ids}\hlopt{==}\hlstr{"LSclump"}\hlstd{]),}
+               \hlkwc{sumstat} \hlstd{= all.sims[sim.ids}\hlopt{==}\hlstr{"LSclump"}\hlstd{,],}
+               \hlkwc{tol}\hlstd{=}\hlnum{0.025}\hlstd{,} \hlkwc{method}\hlstd{=}\hlstr{"rejection"}\hlstd{)}
+\hlstd{S.post1.s} \hlkwb{<-} \hlkwd{summary}\hlstd{(S.post1)}
+\end{alltt}
+\begin{verbatim}
+## Call: 
+## abc(target = target, param = data.frame(S = sim.y[sim.ids == 
+##     "LSclump"]), sumstat = all.sims[sim.ids == "LSclump", ], 
+##     tol = 0.025, method = "rejection")
+## Data:
+##  abc.out$unadj.values (143 posterior samples)
+## 
+##                  S
+## Min.:        12975
+## 2.5% Perc.:  13863
+## Median:      16152
+## Mean:        15998
+## Mode:        16429
+## 97.5% Perc.: 18036
+## Max.:        18443
+\end{verbatim}
+\begin{alltt}
+\hlkwd{hist}\hlstd{(S.post1)}
+\end{alltt}
+\end{kframe}
+
+{\centering \includegraphics[width=\maxwidth]{figure/posterior_species_richness-1} 
+
+}
+
+
+
+\end{knitrout}
+
+Which gives a mean estimate of 15998 species, which is close to
+the estimate got by the linear extrapolation from the logseries.
+The 95\% credibility interval is pretty wide 
+(13863--18036),
+but does not include the estimate from the TNB, nor the lower limit
+of the linear extrapolation method (from the lognormal).
+
+The figure below shows the RAD from the population sizes,
+and from simulated clumped samples from  the LS RAD with the estimated species richness estimated by the linear methods, 
+and the 95\% credibility LS RADs. The clumped samples were simulated 100 times and then the mean population sizes
+were used to build the simulated RADs. The number of species of the LS used in each simulations
+were the mean and the credibility intervals as above.
+
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlcom{## Predicted log(k) values for LS rad}
+\hlstd{reg.ls.rad.lk} \hlkwb{<-} \hlkwd{predict}\hlstd{(lm.k,}
+                         \hlkwc{newdata}\hlstd{=}\hlkwd{data.frame}\hlstd{(}\hlkwc{dens.ha}\hlstd{=reg.ls.rad}\hlopt{/}\hlstd{Tot.A))}
+
+\hlcom{## LS RAD with the lower CI}
+\hlstd{abc.ls.c.rad.l} \hlkwb{<-} \hlkwd{rad.ls}\hlstd{(}\hlkwc{S} \hlstd{= S.post1.s[}\hlnum{2}\hlstd{,],}
+                           \hlkwc{N} \hlstd{= Tot.t,}
+                           \hlkwc{alpha} \hlstd{=} \hlkwd{fishers.alpha}\hlstd{(Tot.t, S.post1.s[}\hlnum{2}\hlstd{,]))}\hlopt{$}\hlstd{y}
+\hlcom{## LS RAD with the upper CI}
+\hlstd{abc.ls.c.rad.u} \hlkwb{<-} \hlkwd{rad.ls}\hlstd{(}\hlkwc{S} \hlstd{= S.post1.s[}\hlnum{6}\hlstd{,],}
+                           \hlkwc{N} \hlstd{= Tot.t,}
+                           \hlkwc{alpha} \hlstd{=} \hlkwd{fishers.alpha}\hlstd{(Tot.t, S.post1.s[}\hlnum{6}\hlstd{,]))}\hlopt{$}\hlstd{y}
+\hlcom{## Simulated cluped samples}
+\hlcom{## from LS with species richness estimated from linear extrapolation}
+\hlstd{ls.clump} \hlkwb{<-} \hlkwd{NB.samp}\hlstd{(}\hlkwc{rad} \hlstd{= reg.ls.rad,} \hlkwc{tot.area} \hlstd{= Tot.A,}
+                    \hlkwc{n.plots} \hlstd{= N.plots,}
+                    \hlkwc{lmean.k} \hlstd{= reg.ls.rad.lk,}
+                    \hlkwc{lsd.k} \hlstd{= lm.k.sigma,}
+                    \hlkwc{nrep}\hlstd{=}\hlnum{100}\hlstd{)}
+\hlcom{## From LS with richeness from posterior cerdible intervals}
+\hlstd{ls.s2} \hlkwb{<-} \hlkwd{NB.samp}\hlstd{(}\hlkwc{rad} \hlstd{= abc.ls.c.rad.l,}
+                 \hlkwc{tot.area} \hlstd{= Tot.A,}
+                 \hlkwc{n.plots} \hlstd{= N.plots,}
+                 \hlkwc{lmean.k} \hlstd{=}
+                     \hlkwd{predict}\hlstd{(lm.k,}
+                             \hlkwc{newdata}\hlstd{=}\hlkwd{data.frame}\hlstd{(}\hlkwc{dens.ha}\hlstd{=abc.ls.c.rad.l}\hlopt{/}\hlstd{Tot.A)),}
+                 \hlkwc{lsd.k} \hlstd{= lm.k.sigma,}
+                 \hlkwc{nrep}\hlstd{=}\hlnum{100}\hlstd{)}
+\hlstd{ls.s3} \hlkwb{<-} \hlkwd{NB.samp}\hlstd{(}\hlkwc{rad} \hlstd{= abc.ls.c.rad.u,}
+                 \hlkwc{tot.area} \hlstd{= Tot.A,}
+                 \hlkwc{n.plots} \hlstd{= N.plots,}
+                 \hlkwc{lmean.k} \hlstd{=}
+                     \hlkwd{predict}\hlstd{(lm.k,}
+                             \hlkwc{newdata}\hlstd{=}\hlkwd{data.frame}\hlstd{(}\hlkwc{dens.ha}\hlstd{=abc.ls.c.rad.u}\hlopt{/}\hlstd{Tot.A)),}
+                 \hlkwc{lsd.k} \hlstd{= lm.k.sigma,}
+                 \hlkwc{nrep}\hlstd{=}\hlnum{100}\hlstd{)}
+\hlcom{## Plot}
+\hlkwd{plot}\hlstd{(}\hlkwd{rad}\hlstd{(Dec2018}\hlopt{$}\hlstd{population),} \hlkwc{col}\hlstd{=}\hlstr{"grey"}\hlstd{,}
+     \hlkwc{ylab} \hlstd{=} \hlstr{"Population size"}\hlstd{,} \hlkwc{xlim}\hlstd{=}\hlkwd{c}\hlstd{(}\hlnum{1}\hlstd{,}\hlkwd{sum}\hlstd{(ls.s3}\hlopt{>=}\hlnum{1}\hlstd{)))}
+
+\hlkwd{lines}\hlstd{(}\hlkwd{rad}\hlstd{(ls.clump),} \hlkwc{lwd}\hlstd{=}\hlnum{2}\hlstd{,} \hlkwc{col}\hlstd{=}\hlstr{"blue"}\hlstd{)}
+\hlkwd{lines}\hlstd{(}\hlkwd{rad}\hlstd{(ls.s2),} \hlkwc{lwd}\hlstd{=}\hlnum{2}\hlstd{,} \hlkwc{col}\hlstd{=}\hlstr{"blue"}\hlstd{,} \hlkwc{lty}\hlstd{=}\hlnum{2}\hlstd{)}
+\hlkwd{lines}\hlstd{(}\hlkwd{rad}\hlstd{(ls.s3),} \hlkwc{lwd}\hlstd{=}\hlnum{2}\hlstd{,} \hlkwc{col}\hlstd{=}\hlstr{"blue"}\hlstd{,} \hlkwc{lty}\hlstd{=}\hlnum{2}\hlstd{)}
+\end{alltt}
+\end{kframe}
+
+{\centering \includegraphics[width=\maxwidth]{figure/clumped_LS_RAD_and_CI-1} 
+
+}
+
+
+
+\end{knitrout}
+
+
+I think the plot above is enough, but for the records below
+is the old plot with the RADS simulated with clumped and random sampling
+using the richness estimates from the linear extrapolation of LS
+and from TNB.
+
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlcom{## Predicted log(k) values for LS rad}
+\hlstd{reg.ls.rad.lk} \hlkwb{<-} \hlkwd{predict}\hlstd{(lm.k,}
+                         \hlkwc{newdata}\hlstd{=}\hlkwd{data.frame}\hlstd{(}\hlkwc{dens.ha}\hlstd{=reg.ls.rad}\hlopt{/}\hlstd{Tot.A))}
+\hlcom{## Predicted log(k) values for TNB rad}
+\hlstd{reg.nb.rad.lk} \hlkwb{<-} \hlkwd{predict}\hlstd{(lm.k,}
+                           \hlkwc{newdata}\hlstd{=}\hlkwd{data.frame}\hlstd{(}\hlkwc{dens.ha}\hlstd{=reg.nb.rad}\hlopt{/}\hlstd{Tot.A))}
+\hlcom{## Simulation of population sizes from samples of each RAD}
+\hlstd{ls.rnd} \hlkwb{<-} \hlkwd{Pois.samp}\hlstd{(}\hlkwc{rad} \hlstd{= reg.ls.rad,} \hlkwc{tot.area} \hlstd{= Tot.A,}
+                    \hlkwc{n.plots} \hlstd{= N.plots,} \hlkwc{nrep}\hlstd{=}\hlnum{100}\hlstd{)}
+\hlstd{nb.rnd} \hlkwb{<-} \hlkwd{Pois.samp}\hlstd{(}\hlkwc{rad} \hlstd{= reg.nb.rad,} \hlkwc{tot.area} \hlstd{= Tot.A,}
+                    \hlkwc{n.plots} \hlstd{= N.plots,} \hlkwc{nrep} \hlstd{=} \hlnum{100}\hlstd{)}
+\hlstd{nb.clump} \hlkwb{<-} \hlkwd{NB.samp}\hlstd{(}\hlkwc{rad} \hlstd{= reg.nb.rad,} \hlkwc{tot.area} \hlstd{= Tot.A,}
+                    \hlkwc{n.plots} \hlstd{= N.plots,}
+                    \hlkwc{lmean.k} \hlstd{= reg.nb.rad.lk,}
+                    \hlkwc{lsd.k} \hlstd{= lm.k.sigma,}
+                    \hlkwc{nrep} \hlstd{=} \hlnum{100}\hlstd{)}
 \end{alltt}
 \end{kframe}
 \end{knitrout}
 
-
-\subsubsection*{Results}
-
-Visually, clumped sample from a LS RAD and random (Poisson) sampling
-from a TNB RAD approximate better the total population sizes:
 
 \begin{knitrout}
 \definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}
@@ -621,55 +829,142 @@ from a TNB RAD approximate better the total population sizes:
 
 \end{knitrout}
 
-
 The aggregation coefficients estimated from the sample clearly show that
-the species are clumped accross 1-ha plots, and so that
+the species are clumped across 1-ha plots, and so that
 Poisson sampling is not realistic. This would suffice to
 discard the TNB RAD, as they only provides a realistic fit under Poisson sampling.
-Moreover, the mean-squared errors of the log of simulated values relative
-to the log of the estimated population sizes clearly show that
-the clumped sample of LS is a best approximation, among those tested:
+The ABC model selection confirmed clumped sample of the LS RAD as the
+best approximation to the observed RAD of population sizes 
+(though this model still overestimates evenness and variance of the RAD, see
+diagnostics in the code).
 
-
-% latex table generated in R 3.5.1 by xtable 1.8-2 package
-% Sat Dec  8 23:22:26 2018
-\begin{table}[ht]
-\centering
-\begin{tabular}{rr}
-  \hline
- & MS \\ 
-  \hline
-LS random & 0.0833 \\ 
-  NB random & 0.0540 \\ 
-  LS clumped & 0.0230 \\ 
-   \hline
-\end{tabular}
-\end{table}
-
-
-
-\subsection*{My guesses, updated}
-
-\begin{itemize}
-\item TNB was the selected model for the sample, probably because it better approximates the
-  effect of clumping on the sampled SADs. Nevertheless, the simulations suggest that this best fit in the sample
-  can be explained by a clumped sampling of a regional LS RAD. Nice! So let's stick with LS. Not sure if we mention the fit to TNB in supplementary material.
-\item Still to be done, check estimates from occupancies (see next section).
-\end{itemize}
 
 \section{Parametric estimates from occupancies}
 
 These methods use the data of the proportion of plots occupied by each species, which is directly linked to species-area curves.
+The comprehensive revision by \citet{kunin2018} have improved versions of 
+many of the methods I already tried 
+(e.g. beta-binomial) and an indication of the best ones (see page 9, 2nd paragraph). 
+One of them is  the pair linear extrapolation from Logseries/lognormal from \citet{ulrich2005}, which was used 
+in the hyperdominance paper, which is nice. 
+Below the estimates from the other two, which also are
+of the same magnitude of the estimate got from the linear extrapolation of LS.
 
-To be updated, after the comprehensive revision by \citet{kunin2018}. In short, many of the methods I already tried 
-(e.g. beta-binomial) and an indication of the best ones. I will try those that performed better to estimate total richness,
-according these authors (see page 9, 2nd paragraph):
+
+\subsection*{Shen \& He method}
+\label{sec:shen--he}
+
+This method is based on the occurrence-rank curves (ORC), which is the plot
+of the number of plots each species was recorded in function of its rank.
+\citet{shen2008} propose two variants of their method, one using
+conditional likelihood functions and other using unconditional functions.
+
+I used the unconditional likelihood method,
+but using as starting values for parameters
+$\alpha$ and $\beta$ the estimates from the conditional
+likelihood (Equation 6).
+
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlcom{## table of frequencies of occurrences}
+\hlstd{Y} \hlkwb{<-} \hlkwd{data.frame}\hlstd{(}\hlkwd{table}\hlstd{(Dec2018}\hlopt{$}\hlstd{N.plots))}
+\hlstd{Y[,}\hlnum{1}\hlstd{]} \hlkwb{<-} \hlkwd{as.integer}\hlstd{(}\hlkwd{as.character}\hlstd{(Y[,}\hlnum{1}\hlstd{]))}
+\hlcom{## Estimate of alfa and beta (Eq.6)}
+\hlcom{## To be use as starting values for the uncoditional estimation below}
+\hlstd{ab.est} \hlkwb{<-} \hlkwd{shen.ab}\hlstd{(}\hlkwc{Y} \hlstd{= Y,} \hlkwc{t} \hlstd{= N.plots,} \hlkwc{T} \hlstd{= Tot.A,}
+                \hlkwc{start}\hlstd{=}\hlkwd{list}\hlstd{(}\hlkwc{lalpha}\hlstd{=}\hlopt{-}\hlnum{11}\hlstd{,} \hlkwc{lbeta}\hlstd{=}\hlnum{0}\hlstd{),} \hlkwc{method}\hlstd{=}\hlstr{"SANN"}\hlstd{)}
+\hlcom{#ab.est.p <- profile(ab.est)}
+\hlstd{cf.st1} \hlkwb{<-} \hlkwd{coef}\hlstd{(ab.est)}
+\hlcom{## Estimate with uncoditional likelihood (Eq.3)}
+\hlstd{ShenHe} \hlkwb{<-} \hlkwd{shen.S}\hlstd{(} \hlkwc{Y} \hlstd{= Y,} \hlkwc{t} \hlstd{= N.plots,} \hlkwc{T} \hlstd{= Tot.A,}
+                \hlkwc{start}\hlstd{=}\hlkwd{c}\hlstd{(}\hlkwd{list}\hlstd{(}\hlkwc{lS}\hlstd{=}\hlkwd{log}\hlstd{(}\hlkwd{nrow}\hlstd{(Dec2018))),} \hlkwd{as.list}\hlstd{(cf.st1)),}
+                \hlkwc{method}\hlstd{=}\hlstr{"SANN"}\hlstd{)}
+\hlstd{cf.st2} \hlkwb{<-} \hlkwd{coef}\hlstd{(ShenHe)}
+\hlstd{S.sh} \hlkwb{<-} \hlkwd{unname}\hlstd{(}\hlkwd{exp}\hlstd{(cf.st2[}\hlnum{1}\hlstd{]))}
+\end{alltt}
+\end{kframe}
+\end{knitrout}
+
+Estimates 17502 species.
+
+
+\subsection*{Hui's ORC model}
+\label{sec:huis-orc-model}
+
+Hui's ORC models as detailed in supplementary material \#1 in \citet{kunin2018}.
+It is based in to the 
+occurrence-rank curve (ORC), to which is fitted a bounded power law. 
+This model is then upscaled and the resulting ORC is used to estimate
+the total species richness.
+
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlstd{S.orc} \hlkwb{<-} \hlkwd{hui.orc}\hlstd{(Dec2018}\hlopt{$}\hlstd{N.plots,} \hlkwc{effort}\hlstd{=eff18)}
+\hlstd{orc.cf} \hlkwb{<-} \hlkwd{coef}\hlstd{(S.orc}\hlopt{$}\hlstd{model)}
+\end{alltt}
+\end{kframe}
+\end{knitrout}
+
+For the Amazon, the estimated bounding factor of the power law
+is very small, and the ORC model is linear in the extrapolation range.
+Thus this method gives the highest species richness estimate we got so far: 
+17790.
+Still, this estimate is within the posterior credibility interval
+got from ABC.
+
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlstd{x} \hlkwb{<-} \hlnum{1}\hlopt{:}\hlkwd{nrow}\hlstd{(Dec2018)}
+\hlstd{y} \hlkwb{<-} \hlkwd{exp}\hlstd{(orc.cf[}\hlnum{1}\hlstd{])}\hlopt{*}\hlkwd{exp}\hlstd{(orc.cf[}\hlnum{2}\hlstd{]}\hlopt{*}\hlstd{x)}\hlopt{*}\hlstd{(x}\hlopt{^}\hlstd{orc.cf[}\hlnum{3}\hlstd{])}
+\hlcom{#plot(rad(Dec2018$N.plots), ylim=range(c(Dec2018$N.plots, y)))}
+\hlcom{#lines(rad(y))}
+\hlstd{x2} \hlkwb{<-} \hlnum{1}\hlopt{:}\hlstd{S.orc}\hlopt{$}\hlstd{S.est}
+\hlstd{y2} \hlkwb{<-} \hlkwd{exp}\hlstd{(orc.cf[}\hlnum{1}\hlstd{]}\hlopt{-}\hlkwd{log}\hlstd{(eff18))}\hlopt{*}\hlkwd{exp}\hlstd{(orc.cf[}\hlnum{2}\hlstd{]}\hlopt{*}\hlstd{x2)}\hlopt{*}\hlstd{(x2}\hlopt{^}\hlstd{orc.cf[}\hlnum{3}\hlstd{])}
+\hlkwd{plot}\hlstd{(}\hlkwd{rad}\hlstd{(y2),} \hlkwc{type}\hlstd{=}\hlstr{"n"}\hlstd{)}
+\hlkwd{points}\hlstd{(}\hlkwd{rad}\hlstd{(Dec2018}\hlopt{$}\hlstd{N.plots}\hlopt{/}\hlstd{eff18),} \hlkwc{col}\hlstd{=}\hlstr{"grey"}\hlstd{)}
+\hlkwd{lines}\hlstd{(}\hlkwd{rad}\hlstd{(y2),} \hlkwc{type}\hlstd{=}\hlstr{"l"}\hlstd{)}
+\end{alltt}
+\end{kframe}
+
+{\centering \includegraphics[width=\maxwidth]{figure/ORC_plots_with_Hui_function-1} 
+
+}
+
+
+
+\end{knitrout}
+
+\section{Concluding remarks}
 
 \begin{itemize}
-\item The two applications from \citet{shen2008} method;
-\item Paired upper and lower estimates from \citet{ulrich2005}, applied to occupancy data;
-\item Hui's ORC models presented in \citet{kunin2018}.  
+\item TNB was the selected model for the sample, probably because it better approximates the
+  effect of clumping on the sampled SADs. 
+\item Nevertheless, ABC shows that the best model for the RAD of population sizes is a clumped sampling of a regional LS RAD. 
+\item ABC also provides a credibility interval of regional species richness that is wide but still informative.
+\item Nevertheless, ABC posterior estimates of S and also diagnostics (see \code{abc.R} code) 
+  shows that LS clumped sample overestimates some features of the SAD (to be discussed).
+\item The recommended estimates by the most recent review on estimates based in upscaling \citep{kunin2018} 
+  includes the linear extrapolation
+  that was already used, and two other methods that estimated values within the ABC credibility interval.
 \end{itemize}
+
+\section{R codes}
+
+\label{sec:r-codes}
+ The file \code{functions.R} has functions to :
+ \begin{enumerate}
+ \item run each method of species richness estimates;
+ \item calculate LS RAD faster than function \code{Make.RAD};
+ \item calculate TNB RAD, faster than my previous code;
+ \item simulate random and clumped samples of any RAD   
+ \end{enumerate}
+ 
+Documentation under construction in the Roxygen standard with the code of each function.
+But I think what is documented and the scripts of this report (\code{estimates\_summary.R}) provide the basic cues
+to run the estimates with other similar datasets (Renato's Mata Atlantica data, for example).
 
 
 \bibliography{/home/paulo/work/resources/bib/geral.bib}
