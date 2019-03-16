@@ -15,7 +15,7 @@
 
 
 \title{Estimates of total tree richness in Amazon - Summary}
-\author{Han Ter Steege, Paulo Inácio Prado, Renato Lima, ATDN}
+\author{Han Ter Steege, Paulo Inácio Prado, Renato Lima, Edwin Pos, ATDN}
 
 \begin{document}
 
@@ -41,19 +41,21 @@ options(formatR.arrow = TRUE, width = 90, cache=TRUE, scipen = 1, digits = 2)
 \section{Data preparation}
 
 <<Data prep>>=
-Dec2018 <- read.csv2("Populations_2018_V2b.csv", as.is=TRUE)
-N.ind <- Dec2018$N.ind
+atdn.2019 <- read.csv2("Populations_2019_V1.csv", as.is=TRUE)
+N.ind <- atdn.2019$N.ind
 Sobs <- length(N.ind)
 ## Total number of trees (average density x area)
-Tot.t <- 567*5.5e8
+## Tot.t <- 567*5.5e8
+Tot.t <- 3.06e11
 ## Proportion of total trees in the sample
-p1 <- sum(Dec2018$N.ind)/Tot.t
+p1 <- sum(atdn.2019$N.ind)/Tot.t
 ## Total number of plots
-N.plots <- 1945
+N.plots <- 1946
 ## Total area hectares
-Tot.A <- 5.79e8
+#Tot.A <- 5.79e8
+Tot.A <- 6.29e8
 ## Sampled area ha
-Samp.A <- 2.048e3
+Samp.A <- 2.038e3
 @ 
 
 \section{Estimates from the plots sample}
@@ -193,14 +195,14 @@ plot(ls.rad$abund, nb.rad$abund, log="xy",
      ylab="TNB theor. quantiles", 
      col="grey", cex=0.25)
 abline(0,1, col="blue")
-plot(rad(Dec2018$N.ind), col="grey", cex=0.5)
+plot(rad(atdn.2019$N.ind), col="grey", cex=0.5)
 lines(ls.rad)
 lines(nb.rad, col="red")
 legend("topright", c("LS", "NB"), col=c("blue","red"), 
        lty=1, bty="n")
 ls.oc <- octavpred(y.ls)
 nb.oc <- octavpred(y.nb2)
-plot(octav(Dec2018$N.ind), ylim=range(c(ls.oc$Freq, nb.oc$Freq)))
+plot(octav(atdn.2019$N.ind), ylim=range(c(ls.oc$Freq, nb.oc$Freq)))
 lines(ls.oc)
 lines(nb.oc, col="red")
 legend("topright", c("LS", "NB"), col=c("blue","red"), 
@@ -216,7 +218,7 @@ Here I replicated the extrapolation method from the RAD of the
 estimated abundances for the whole Amazonia first for the logseries projection:
 
 <<Linear extrapolation from regional RAD>>=
-S.ulrich <- ulrich(Dec2018$population)
+S.ulrich <- ulrich(atdn.2019$population)
 (S.r.ls <- S.ulrich$S[1])
 @ 
 
@@ -268,8 +270,8 @@ obtained above.
 <<nbinom rad, echo=FALSE>>=
 cf.u <- S.ulrich$coefs
 plot(rad(reg.ls.rad), col="red", lwd=2, type="n",
-     ylim=c(1, max(Dec2018$population)))
-points(rad(Dec2018$population), col="grey")
+     ylim=c(1, max(atdn.2019$population)))
+points(rad(atdn.2019$population), col="grey")
 curve(exp(cf.u[1]+cf.u[2]*x), add=TRUE)
 curve(exp(cf.u[1]-cf.u[3]+cf.u[2]*x), add=TRUE)
 lines(rad(reg.nb.rad), col="blue", lwd=2)
@@ -366,12 +368,12 @@ The commands and model summary are:
 
 <<k x dens regression, cache=TRUE>>=
 ## estimating k parameter of a NB for each species 
-Dec2018$dens.ha <- Dec2018$N.ind/Samp.A
-Dec2018$k <- est.kv(mu=Dec2018$dens.ha, 
-                  nzeroes=N.plots-Dec2018$N.plots, 
+atdn.2019$dens.ha <- atdn.2019$N.ind/Samp.A
+atdn.2019$k <- est.kv(mu=atdn.2019$dens.ha, 
+                  nzeroes=N.plots-atdn.2019$N.plots, 
                   Nplots=N.plots)
 lm.k <-lm(log(k)~log(dens.ha), 
-          data=Dec2018, subset=k<1)
+          data=atdn.2019, subset=k<1)
 ## Estimated regression standard error
 lm.k.sigma <- summary(lm.k)$sigma
 ## Model summary
@@ -381,7 +383,7 @@ summary(lm.k)
 And a plot of with the regression line is
 
 <<lok k x log density plot, echo=FALSE>>=
-plot(log(k)~log(dens.ha), data=Dec2018, 
+plot(log(k)~log(dens.ha), data=atdn.2019, 
      subset=k<1, xlab="Density (ind/ha)",
      ylab="Aggregation parameter of NB",
      col="grey")
@@ -434,9 +436,9 @@ load("abc_1000_to_2000_S.RData")
 ## Target: observed number of species, Simpson's 1/D, 
 ## lmean, sdmean             
 target <- c(Sobs, 
-            D(Dec2018$population), 
-            mean(log(Dec2018$population)), 
-            sd(log(Dec2018$population)))
+            D(atdn.2019$population), 
+            mean(log(atdn.2019$population)), 
+            sd(log(atdn.2019$population)))
 ## Model selection
 model.sel <- postpr(target = target,
                     index=sim.ids,
@@ -515,7 +517,7 @@ ls.s3 <- NB.samp(rad = abc.ls.c.rad.u,
                  lsd.k = lm.k.sigma, 
                  nrep=100)
 ## Plot
-plot(rad(Dec2018$population), col="grey",
+plot(rad(atdn.2019$population), col="grey",
      ylab = "Population size", xlim=c(1,sum(ls.s3>=1)))
 
 lines(rad(ls.clump), lwd=2, col="blue")
@@ -550,7 +552,7 @@ nb.clump <- NB.samp(rad = reg.nb.rad, tot.area = Tot.A,
 
 
 <<plot sampled RADS, echo=FALSE>>=
-plot(rad(Dec2018$population), col="grey", log="y", xlim=c(1,5500),
+plot(rad(atdn.2019$population), col="grey", log="y", xlim=c(1,5500),
      ylab = "Population size")
 lines(rad(ls.rnd), lwd=2)
 lines(rad(ls.clump), lwd=2, col="red")
@@ -598,7 +600,7 @@ likelihood (Equation 6).
 
 <<shen estimate, eval=FALSE>>=
 ## table of frequencies of occurrences
-Y <- data.frame(table(Dec2018$N.plots))
+Y <- data.frame(table(atdn.2019$N.plots))
 Y[,1] <- as.integer(as.character(Y[,1]))
 ## Estimate of alfa and beta (Eq.6)
 ## To be use as starting values for the uncoditional estimation below
@@ -608,7 +610,7 @@ ab.est <- shen.ab(Y = Y, t = N.plots, T = Tot.A,
 cf.st1 <- coef(ab.est)
 ## Estimate with uncoditional likelihood (Eq.3)
 ShenHe <- shen.S( Y = Y, t = N.plots, T = Tot.A, 
-                start=c(list(lS=log(nrow(Dec2018))), as.list(cf.st1)), 
+                start=c(list(lS=log(nrow(atdn.2019))), as.list(cf.st1)), 
                 method="SANN")
 cf.st2 <- coef(ShenHe)
 S.sh <- unname(exp(cf.st2[1]))
@@ -627,7 +629,7 @@ This model is then upscaled and the resulting ORC is used to estimate
 the total species richness.
 
 <<Hui ORC estimate>>=
-S.orc <- hui.orc(Dec2018$N.plots, effort=eff18)
+S.orc <- hui.orc(atdn.2019$N.plots, effort=eff18)
 orc.cf <- coef(S.orc$model)
 @ 
 
@@ -639,14 +641,14 @@ Still, this estimate is within the posterior credibility interval
 got from ABC.
 
 <<ORC plots with Hui function>>=
-x <- 1:nrow(Dec2018)
+x <- 1:nrow(atdn.2019)
 y <- exp(orc.cf[1])*exp(orc.cf[2]*x)*(x^orc.cf[3])
-#plot(rad(Dec2018$N.plots), ylim=range(c(Dec2018$N.plots, y)))
+#plot(rad(atdn.2019$N.plots), ylim=range(c(atdn.2019$N.plots, y)))
 #lines(rad(y))
 x2 <- 1:S.orc$S.est
 y2 <- exp(orc.cf[1]-log(eff18))*exp(orc.cf[2]*x2)*(x2^orc.cf[3])
 plot(rad(y2), type="n")
-points(rad(Dec2018$N.plots/eff18), col="grey")
+points(rad(atdn.2019$N.plots/eff18), col="grey")
 lines(rad(y2), type="l")
 @ 
 

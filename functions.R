@@ -269,18 +269,25 @@ sim.occ <- function(mu, size, N, pois.samp=TRUE){
 }
 
 #' Simulates samples of population sizes using a Poisson sample
-#' @details This function performs a simulation of which species would
-#'     be included in a Poisson sample of a regional RAD. The
-#'     population sizes of the included species are then set to the
-#'     population sizes in the RAD. This is a simulation of how
-#'     the distribution of total population sizes would look like,
-#'     assuming that the there is a method to estimate the exact
-#'     population size and only source of uncertainty is which species
-#'     will be included in the sample.
+#' 
+#' @details This function performs a simulation of which species
+#'     abundaces would be included in a Poisson sample of a regional
+#'     RAD. The population sizes of the included species are then set
+#'     to the population sizes of the 1st, 2nd .. Nth most abundant
+#'     species recorded. This is a simulation of how the distribution
+#'     of total population sizes would look like, assuming that the
+#'     there is a method to estimate the exact population sizes of the
+#'     species recorded and the only source of uncertainty is which
+#'     species will be included in the sample (that is, which species
+#'     would be detected). If nrep > 1 then the simulation is repeated
+#'     nrep times and the abundance of the 1st, 2nd ... Nth species is
+#'     taken from the mean abundances at each species rank over
+#'     repetitions.
 #' @param rad a vector with the species population sizes in the RAD to be sampled
 #' @param tot.area total area of the community to be sampled. The area unit is one plot
 #' @param n.plots number of sampling units (e.g. plots) to be drawn out of the total number of plots.
 #' @param nrep number of repetitions of the simulated sampling
+#' @return A vector of the expected abundances of the 1nd, 2nd, ... Nth species. 
 Pois.samp <- function(rad, tot.area, n.plots, nrep){
     rad <- sort(rad, decreasing=TRUE)
     m1 <- matrix(0,nrow=length(rad), ncol=nrep)
@@ -292,26 +299,35 @@ Pois.samp <- function(rad, tot.area, n.plots, nrep){
     apply(m1,1,mean)    
 }
 
-#' Simulates a Negative Binomial samples of population sizes of a  RAD
+#' Simulates a Negative Binomial samples of population sizes from a RAD
 #' @param rad a vector with the species population sizes in the RAD to be sampled
 #' @param tot.area total area of the community to be sampled. The area unit is one plot
 #' @param n.plots number of sampling units (e.g. plots) to be drawn out of the total number of plots.
-#' @param lmean.k  log of expected value of the aggregation
+#' @param lmean.k  log of expected value of the dispersion
 #'     parameter of the Negative binomial for each species in the
 #'     rad. Usually estimated from a linear regression of
-#'     log(k)~log(abundance) from a dataset of known values of k
-#' @param lsd.k log standard deviation of the lmean.k. Can be a singel
+#'     log(k)~log(abundance) from a dataset of known values of k and abundances.
+#' @param lsd.k log standard deviation of the lmean.k. Can be a single
 #'     value or a vector. Usually the standard error from a a linear regression of
-#'     log(k)~log(abundance) from a dataset of known values of k
+#'     log(k)~log(abundance) from a dataset of known values of k and abundances.
 #' @param nrep number of repetitions of the simulated sampling
-#' @details This function performs a simulation of which species would
-#'     be included in a Poisson sample of a regional RAD. The
-#'     population sizes of the included species are then set to the
-#'     population sizes in the RAD. This is a simulation of how
-#'     the distribution of total population sizes would look like,
-#'     assuming that the there is a method to estimate the exact
-#'     population size and only source of uncertainty is which species
-#'     will be included in the sample.
+#' @details This function performs a simulation of which species
+#'     abundaces would be included in a Negative Binomial sample of a
+#'     regional RAD. The population sizes of the included species are
+#'     then set to the population sizes of the 1st, 2nd .. Nth most
+#'     abundant species recorded. The expected dispersion parameter of
+#'     negative binomial sampling is allowed to vary across species,
+#'     and is assumed to have a lognormal error which is added in the
+#'     simulations. This is a simulation of how the distribution of
+#'     total population sizes would look like, assuming that the there
+#'     is a method to estimate the exact population sizes of the
+#'     species recorded and the only source of uncertainty is which
+#'     species will be included in the sample (that is, which species
+#'     would be detected). If nrep > 1 then the simulation is repeated
+#'     nrep times and the abundance of the 1st, 2nd ... Nth species is
+#'     taken from the mean abundances at each species rank over
+#'     repetitions.
+#' @return A vector of the expected abundances of the 1nd, 2nd, ... Nth species. 
 NB.samp <- function(rad, tot.area, n.plots, lmean.k, lsd.k, nrep){
     rad <- sort(rad, decreasing=TRUE)
     m1 <- matrix(0,nrow=length(rad), ncol=nrep)
@@ -325,31 +341,105 @@ NB.samp <- function(rad, tot.area, n.plots, lmean.k, lsd.k, nrep){
     apply(m1,1,mean)    
 }
 
-#' Generates a LS or TNB RAd and then Simulates Poisson and NB samples from it rad
-#' (to be used in ABC)
-#' 
-sim.abc <- function(S, N, tot.area, n.plots, lmk,
-                    nb.fit, LS=TRUE, obs.values, nrep = 2, ...){
+#' Generates a community RAD and then simulates Poisson and NB samples
+#' from it to define unobserved abundances (to be used in ABC).
+#'
+#' @details This function simulates random and clumped samples from a community
+#' that follows a theoretical model of SAD (currently logseries,
+#' truncated negative binomial and lognormal).  The expected number of
+#' individuals of each species of the community is calculated from the
+#' values of species richness (S) and total number of individuals (N)
+#' provided for logseries, plus additional parameters for the other
+#' two SADs models.  For truncated negative binomial (tnb), the user
+#' should supply a fit of tnb to an empirical vector of abundances,
+#' usually from a sample fo the community to be simulated. The
+#' parameters to simulate the abundances of the theoretical community
+#' are calculated from this object. For lognormal the user should
+#' supply the parameter 'sdlog' of this distribution model.  The
+#' vector of expected species abundances in the community is then
+#' sampled randomly and with clumping. Once the community abundance
+#' distribution is created, functions 'Pois.samp' and 'NB.samp' are
+#' applied to simulate the distribution of abundances of species that
+#' has been recorded in sample with random or clumped distribution of
+#' individuals (see help of these functions for further details).  The
+#' values of the dispersion parameter over the plots (argument
+#' 'lmean.k in "NB.samp") is taken from a linear regression (in log
+#' scale) of value of the aggregation parameter as a function of the
+#' number of individuals per sampling unit in real data. This approach
+#' requires a sample of a community (presumably the same to be
+#' simulated) from which the aggregation parameter of each species has
+#' been estimated by fitting a negative binomial distribution. Usually
+#' there is a positive linear relationship between the dispersion
+#' parameter and the expected abundance of each species in the sample.
+#' @param S positive integer, total number of species in the community
+#' to be sampled. 
+#' @param N positive integer, total number of individuals in the
+#' community to be sampled. 
+#' @param sad character, the name of the theoretical distribution
+#' model for the RAD of the community. Currently logseries ("ls"),
+#' truncated negative binomial ("tnb") or lognormal ("lnorm").
+#' @param tot.area positive real, total area coverede by the community.
+#' @param n.plots positive integer, number of sampling unities (plots)
+#' of one unity of area that is drawn from the community to make the
+#' sample.
+#' @param lmk.fit lm object, fit of a linear regression of the the
+#' aggregation parameter each species over plots (k) as a function of
+#' the mean abundance of the species per plot. Data from this
+#' regression usuaaly comes from an empiriccal sample fo plots from a
+#' real community (see details).
+#' @param nb.fit fitsad object, fit of the negative binomial model of
+#' SADs truncated at zero to a vector of species abundances in a
+#' empircal sample. 
+#' @param ...  further arguments to be passed to the functions called
+#' internally. Should include a named argument 'sdlog', with the value
+#' of the standard deviation of log values of abundances fro the
+#' lognormal model of abundance distributions, if sad = lnorm.
+#' @param nrep positive integer, number of 
+#' @return A data frame with the following summary statistics for of
+#'     the RADs of abundances of species recorded by the random and
+#'     clumped sample:
+#' \item S: number of recorded species
+#' \item D: Simpson's species equivalent for the recorded RAD (taht
+#'     is, the invers of Simpson index of equitability)
+#' \item lmean: mean of the logarithm of the recorded abundances
+#' \item lsd: standard deviation of the recorded abundances
+sim.abc <- function(S, N, sad=c("ls","tnb","lnorm"),
+                    tot.area, n.plots,
+                    lmk.fit, nb.fit, nrep = 1, ...){
+    dots <- list(...)
     if(!is.null(nb.fit)&class(nb.fit)!= "fitsad")
         stop("nb.fit should be an object of class fitsad")
-    if(LS){
+    if(!is.null(lmk.fit)&class(lmk.fit)!= "lm")
+        stop("lmk.fit should be an object of class lm")
+    sad <- match.arg(sad)
+    if(sad=="ls"){
         ## Calculate alpha
         alpha <- fishers.alpha(N, S)
         ## Generate rad
         rad <- rad.ls(S, N, alpha, ...)$y
     }
-    else{
-        S.obs <- length(nb.fit@data$x)
-        cf <- coef(nb.fit)
-        k <- cf["size"]
-        csi.p <- cf["mu"]/sum(cf)
-        csi <- tovo.Scsi(S, S.obs, k, csi.p)
-        rad <- rad.posnegbin(S, k, 1-csi, ...)$y
+    else
+        if(sad=="tnb") {
+            S.obs <- length(nb.fit@data$x)
+            cf <- coef(nb.fit)
+            k <- cf["size"]
+            csi.p <- cf["mu"]/sum(cf)
+            csi <- tovo.Scsi(S, S.obs, k, csi.p)
+            rad <- rad.posnegbin(S, k, 1-csi, ...)$y
+        }
+    else
+        if(sad=="lnorm"){
+            if(!"sdlog" %in% names(dots)) stop("please provide the sdlog parameter of the lognormal RAD, as named argument 'sdlog' ")
+            sdlog <- dots[["sdlog"]]
+            meanlog <- log(N/S) - sdlog^2/2
+            rad <- radpred(sad = "lnorm",
+                           coef = list(meanlog = meanlog, sdlog = sdlog),
+                           S = S, N = N)[,2]
         }
     ## Calculate k for each species in rad
-    rad.lk <- predict(lmk, newdata=data.frame(dens.ha=rad/tot.area))
+    rad.lk <- predict(lmk.fit, newdata=data.frame(dens.ha=rad/tot.area))
     ## standard deviation of k (from regression object)
-    rad.lsk <- summary(lmk)$sigma
+    rad.lsk <- summary(lmk.fit)$sigma
     ## Poisson sample
     p.samp <- Pois.samp(rad = rad, tot.area = tot.area,
                         n.plots = n.plots, nrep = nrep)
@@ -365,9 +455,7 @@ sim.abc <- function(S, N, tot.area, n.plots, lmk,
         lmean = sapply(lista, function(x) mean(log(x[x>0]))),
         lsd = sapply(lista, function(x) sd(log(x[x>0])))
     )
-    ## quantis <- t(sapply(lista, function(x) quantile(x[x>0],c(0.0075, 0.05, 0.15, 0.25, 0.75, 0.85, 0.933, 0.995))))
-    ## colnames(quantis) <- paste("q", 1:ncol(quantis), sep="")
-    ## results <- cbind(results,quantis)
+    rownames(results) <- c("Random", "Clumped")
     return(results)
 }
 

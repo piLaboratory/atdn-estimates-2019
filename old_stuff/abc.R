@@ -8,7 +8,7 @@ library(sads)
 ## Function to parallelize simulations
 f1 <- function(x, ...){
     y <- try(sim.abc(S = x, N = Tot.t, n.plots = N.plots, tot.area= Tot.A,
-                     nb.fit=y.nb2, lmk = lm.k, obs.values=Dec2018$population,
+                     nb.fit=y.nb2, lmk.fit = lm.k,
                      nrep = 1, ...))
     if(class(y)=="try-error")
         return(matrix(NA, nrow=2, ncol=4))
@@ -19,14 +19,18 @@ f1 <- function(x, ...){
 
 ## Number of Simulated values
 nsims <- 6135
+nsims <- 10
 ##simulated.vals <- runif(nsims, 1e4, S.orc$S.est)
 simulated.vals <- runif(nsims, 1e4, 2e4)
 ## Runs the simulations with mclapply (a bit slow, ca 400 simulations/hour with 4 cores)
-## Random sample of LS and TNB
-LS.sims <- mclapply(simulated.vals, f1, mc.cores=4, lower=1e-20, upper=1e20)
+## Samples of LS
+LS.sims <- mclapply(simulated.vals, f1, sad = "ls",  lower=1e-20, upper=1e20, mc.cores=4)
 save.image()
-## Clumped sample of LS and TNB
-NB.sims <- mclapply(simulated.vals, f1, lower=1e-20, upper=1e20, LS = FALSE, mc.cores=4)
+## Samples of TNB
+NB.sims <- mclapply(simulated.vals, f1, sad = "tnb", lower=1e-20, upper=1e20, mc.cores=4)
+save.image()
+## Samples of Log-normal
+LN.sims <- mclapply(simulated.vals, f1, sad = "lnorm", sdlog = pln.cf[2], lower=1e-20, upper=1e20, mc.cores=4)
 save.image()
 
 ## Assembles all simulation results in a matrix
@@ -45,17 +49,27 @@ j2 <- (1:length(NB.sims))[NB.index]
 ## rbind the results of the simulations to the same results matrix
 for(i in j2)
     all.sims <- rbind(all.sims, NB.sims[[i]])
+## Simulations ftom LN rad
+## Simulations from TNB rad
+## Excluding failed simulations
+LN.index <- sapply(LN.sims, function(x) !any(is.na(x)))
+j3 <- (1:length(LN.sims))[LN.index]
+## rbind the results of the simulations to the same results matrix
+for(i in j3)
+    all.sims <- rbind(all.sims, LN.sims[[i]])
 ## Vector with labels for each simulation
 sim.ids <- c(rep(c("LSrnd", "LSclump"), sum(LS.index)),
-             rep(c("NBrnd", "NBclump"), sum(NB.index)))## Simulated values for each simulation
+             rep(c("NBrnd", "NBclump"), sum(NB.index)),
+             rep(c("LNrnd", "LNclump"), sum(LN.index)))## Simulated values for each simulation
 ## Vector with the parameters used in each simulation
 ## (which is the total species richness in the regional RADs)
-sim.y <- c( rep(simulated.vals[j1],each=2),
-           rep(simulated.vals[j2],each=2))             
+sim.y <- c(rep(simulated.vals[j1],each=2),
+           rep(simulated.vals[j2],each=2),
+           rep(simulated.vals[j3],each=2))            
 ## ABC ##
 ## Model selection
 ## Target: observed number of species, lmean, sdmean and zero of Mean_square with obs values             
-target <- c(Sobs, D(Dec2018$population), mean(log(Dec2018$population)), sd(log(Dec2018$population)))
+target <- c(Sobs, D(atdn.2019$population), mean(log(atdn.2019$population)), sd(log(atdn.2019$population)))
 
 ## Quick diagnostics plots
 ## Box plots of each parget variable
@@ -69,32 +83,32 @@ par(mfrow=c(1,1))
 
 ## S in the sample x S total for each model
 par(mfrow=c(2,2))
-cores <- c(LSrnd="black", LSclump="blue", NBrnd="red", NBclump="green")
+cores <- c(LSrnd="black", LSclump="blue", NBrnd="red", NBclump="green", LNrnd="orange", LNclump="grey")
 plot(all.sims[,"S"]~sim.y, type="n")
 for(n in unique(sim.ids)){
     points(all.sims[sim.ids==n,"S"]~sim.y[sim.ids==n], col=cores[n])
 }
-abline(h=nrow(Dec2018), lty=2)
+abline(h=nrow(atdn.2019), lty=2)
 legend("topright", unique(sim.ids), pch=1,
-       col=c("black", "blue", "red", "green"), bty="n")
+       col=c("black", "blue", "red", "green", "orange", "grey"), bty="n")
 ## logmean x S
 plot(all.sims[,"lmean"]~sim.y, type="n")
 for(n in unique(sim.ids)){
     points(all.sims[sim.ids==n,"lmean"]~sim.y[sim.ids==n], col=cores[n])
 }
-abline(h=mean(log(Dec2018$population)), lty=2)
+abline(h=mean(log(atdn.2019$population)), lty=2)
 ## logsd x S
 plot(all.sims[,"lsd"]~sim.y, type="n")
 for(n in unique(sim.ids)){
     points(all.sims[sim.ids==n,"lsd"]~sim.y[sim.ids==n], col=cores[n])
 }
-abline(h=sd(log(Dec2018$population)), lty=2)
+abline(h=sd(log(atdn.2019$population)), lty=2)
 ## D x S
 plot(all.sims[,"D"]~sim.y, type="n")
 for(n in unique(sim.ids)){
     points(all.sims[sim.ids==n,"D"]~sim.y[sim.ids==n], col=cores[n])
 }
-abline(h=D(Dec2018$population), lty=2)
+abline(h=D(atdn.2019$population), lty=2)
 par(mfrow=c(1,1))
 
 ## Simulated S x logmean
@@ -102,24 +116,24 @@ par(mfrow=c(2,2))
 plot(lmean~S, data=all.sims, type="n")
 for(n in unique(sim.ids))
     points(lmean~S, data=all.sims[sim.ids==n,], cex=0.5, col=cores[n])
-points(nrow(Dec2018), mean(log(Dec2018$population)), pch=19, cex=2, col="orange")
+points(nrow(atdn.2019), mean(log(atdn.2019$population)), pch=19, cex=2, col="orange")
 legend("topright", unique(sim.ids), pch=1,
        col=c("black", "blue", "red", "green"), bty="n")
 ## Simulated S x logsd
 plot(lsd~S, data=all.sims, type="n")
 for(n in unique(sim.ids))
     points(lsd~S, data=all.sims[sim.ids==n,], cex=0.5, col=cores[n])
-points(nrow(Dec2018), sd(log(Dec2018$population)), pch=19, cex=2, col="orange")
+points(nrow(atdn.2019), sd(log(atdn.2019$population)), pch=19, cex=2, col="orange")
 ## lmean x lsd
 plot(lsd~lmean, data=all.sims, type="n")
 for(n in unique(sim.ids))
     points(lsd~lmean, data=all.sims[sim.ids==n,], cex=0.5, col=cores[n])
-points(mean(log(Dec2018$population)), sd(log(Dec2018$population)), pch=19, cex=2, col="orange")
+points(mean(log(atdn.2019$population)), sd(log(atdn.2019$population)), pch=19, cex=2, col="orange")
 ## S x D
-plot(D~S, data=all.sims, type="n", ylim=range(c(all.sims$D, D(Dec2018$population))))
+plot(D~S, data=all.sims, type="n", ylim=range(c(all.sims$D, D(atdn.2019$population))))
 for(n in unique(sim.ids))
     points(D~S, data=all.sims[sim.ids==n,], cex=0.5, col=cores[n])
-points(Sobs, D(Dec2018$population), pch=19, cex=2, col="orange")
+points(Sobs, D(atdn.2019$population), pch=19, cex=2, col="orange")
 par(mfrow=c(1,1))
 
 ## Model selection
@@ -166,15 +180,24 @@ plot(cv.ll, caption="Ridge regression")
 par(mfrow=c(1,1))
 
 ## Posterior distribution of Species richness from the selected model
+t1 <- 0.01
 S.post1 <- abc(target = target, param=data.frame(S=sim.y[sim.ids=="LSclump"]),
               sumstat = all.sims[sim.ids=="LSclump",],
-              tol=0.025, method="rejection")
+              tol=t1, method="rejection")
+S.post2 <- abc(target = target, param=data.frame(S=sim.y[sim.ids=="LSclump"]),
+              sumstat = all.sims[sim.ids=="LSclump",],
+              tol=t1, method="neuralnet", numnet = 200)
+S.post3 <- abc(target = target, param=data.frame(S=sim.y[sim.ids=="LSclump"]),
+              sumstat = all.sims[sim.ids=="LSclump",],
+              tol=t1, method="ridge", transf="log")
 summary(S.post1)
+summary(S.post2)
+summary(S.post3)
 hist(S.post1)
 
 ## Posterior predictive check
 LSclump.pc <- mclapply(sample(S.post1$unadj.values,100, replace=TRUE),
-                  f1, lower=1e-20, upper=1e20, mc.cores=4)
+                  f1, sad="ls", lower=1e-20, upper=1e20, mc.cores=4)
 tmp1 <- LSclump.pc[[1]][2,]
 for(i in 2:length(LSclump.pc))
     tmp1 <- rbind(tmp1, LSclump.pc[[i]][2,])
