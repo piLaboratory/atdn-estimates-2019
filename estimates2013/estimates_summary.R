@@ -1,32 +1,25 @@
 ## ----setup, echo=FALSE, include=FALSE------------------------------------
 library(VGAM)
 library(untb)
-#library(fitdistrplus)
 library(sads)
-library(knitr)
-#library(SPECIES)
-library(xtable)
 library(abc)
-source("functions.R")
-opts_chunk$set(fig.align = 'center', fig.show = 'hold',
-               fig.height = 6.5, warning = FALSE, message = FALSE,
-               error = FALSE, echo=TRUE)
-options(formatR.arrow = TRUE, width = 90, cache=TRUE, scipen = 1, digits = 2)
+source("../functions.R")
 
 ## ----Data prep-----------------------------------------------------------
-Dec2018 <- read.csv2("Populations_2018_V2b.csv", as.is=TRUE)
-N.ind <- Dec2018$N.ind
+atdn.2013 <- read.csv2("science_appendix2013.csv", as.is=TRUE)
+N.ind <- atdn.2013$N.ind
 Sobs <- length(N.ind)
 ## Total number of trees (average density x area)
-Tot.t <- 567*5.5e8
+Tot.t <- 3.9e11
 ## Proportion of total trees in the sample
-p1 <- sum(Dec2018$N.ind)/Tot.t
+p1 <- sum(atdn.2013$N.ind)/Tot.t
 ## Total number of plots
-N.plots <- 1945
+N.plots <- 1170
 ## Total area hectares
-Tot.A <- 5.79e8
+#Tot.A <- 5.79e8
+Tot.A <- 6.29e8
 ## Sampled area ha
-Samp.A <- 2.048e3
+Samp.A <- 1.10931e3
 
 ## ----fit pln, cache=TRUE-------------------------------------------------
 pln <- fitpoilog(N.ind)
@@ -55,14 +48,9 @@ ls.ci[1]*log(1 + Tot.t/ls.ci[1])
 ls.ci[2]*log(1 + Tot.t/ls.ci[2])
 
 ## ----fit NB, cache=TRUE--------------------------------------------------
-## With VGAM
-y.nb <- vglm(N.ind ~ 1, posnegbinomial)
 ## With sads
 y.nb2 <- fitnbinom(N.ind, 
                    start.value=c(size=0.3, mu=mean(N.ind)))
-## Comparing: 
-exp(coef(y.nb))
-coef(y.nb2)
 
 ## ----nb plots------------------------------------------------------------
 par(mfrow=c(2,2))
@@ -84,22 +72,22 @@ S.nb <- Sobs*(1-(1-csi)^cf.nb[1]) / (1-(1-csi.p)^cf.nb[1])
 AICtab(pln, y.nb2, y.ls, base=TRUE)
 
 ## ----Comparing LS and NB, echo=FALSE-------------------------------------
-par(mfrow=c(2,2))
+par(mfrow=c(1,2))
 ls.rad <- radpred(y.ls)
 nb.rad <- radpred(y.nb2)
-plot(ls.rad$abund, nb.rad$abund, log="xy",
-     xlab="Logseries theor. quantiles",
-     ylab="TNB theor. quantiles", 
-     col="grey", cex=0.25)
-abline(0,1, col="blue")
-plot(rad(Dec2018$N.ind), col="grey", cex=0.5)
+## plot(ls.rad$abund, nb.rad$abund, log="xy",
+##      xlab="Logseries theor. quantiles",
+##      ylab="TNB theor. quantiles", 
+##      col="grey", cex=0.25)
+## abline(0,1, col="blue")
+plot(rad(atdn.2013$N.ind), col="grey", cex=0.5)
 lines(ls.rad)
 lines(nb.rad, col="red")
 legend("topright", c("LS", "NB"), col=c("blue","red"), 
        lty=1, bty="n")
 ls.oc <- octavpred(y.ls)
 nb.oc <- octavpred(y.nb2)
-plot(octav(Dec2018$N.ind), ylim=range(c(ls.oc$Freq, nb.oc$Freq)))
+plot(octav(atdn.2013$N.ind), ylim=range(c(ls.oc$Freq, nb.oc$Freq)))
 lines(ls.oc)
 lines(nb.oc, col="red")
 legend("topright", c("LS", "NB"), col=c("blue","red"), 
@@ -107,7 +95,7 @@ legend("topright", c("LS", "NB"), col=c("blue","red"),
 par(mfrow=c(1,1))
 
 ## ----Linear extrapolation from regional RAD------------------------------
-S.ulrich <- ulrich(Dec2018$population)
+S.ulrich <- ulrich(atdn.2013$population)
 (S.r.ls <- S.ulrich$S[1])
 
 ## ----Amazon alpha--------------------------------------------------------
@@ -128,8 +116,8 @@ reg.nb.rad <- rad.posnegbin(S = S.nb, size = cf.nb[1],
 ## ----nbinom rad, echo=FALSE----------------------------------------------
 cf.u <- S.ulrich$coefs
 plot(rad(reg.ls.rad), col="red", lwd=2, type="n",
-     ylim=c(1, max(Dec2018$population)))
-points(rad(Dec2018$population), col="grey")
+     ylim=c(1, max(atdn.2013$population)))
+points(rad(atdn.2013$population), col="grey")
 curve(exp(cf.u[1]+cf.u[2]*x), add=TRUE)
 curve(exp(cf.u[1]-cf.u[3]+cf.u[2]*x), add=TRUE)
 lines(rad(reg.nb.rad), col="blue", lwd=2)
@@ -139,47 +127,48 @@ legend("topright", c("LS", "TNB", "Linear upper/lower bounds"),
 
 ## ----k x dens regression, cache=TRUE-------------------------------------
 ## estimating k parameter of a NB for each species 
-Dec2018$dens.ha <- Dec2018$N.ind/Samp.A
-Dec2018$k <- est.kv(mu=Dec2018$dens.ha, 
-                  nzeroes=N.plots-Dec2018$N.plots, 
+atdn.2013$dens.ha <- atdn.2013$N.ind/Samp.A
+atdn.2013$k <- est.kv(mu=atdn.2013$dens.ha, 
+                  nzeroes=N.plots-atdn.2013$N.plots, 
                   Nplots=N.plots)
 lm.k <-lm(log(k)~log(dens.ha), 
-          data=Dec2018, subset=k<1)
+          data=atdn.2013)
 ## Estimated regression standard error
 lm.k.sigma <- summary(lm.k)$sigma
 ## Model summary
 summary(lm.k)
 
 ## ----lok k x log density plot, echo=FALSE--------------------------------
-plot(log(k)~log(dens.ha), data=Dec2018, 
-     subset=k<1, xlab="Density (ind/ha)",
+plot(log(k)~log(dens.ha), data=atdn.2013, 
+     #subset=k<1,
+     xlab="Density (ind/ha)",
      ylab="Aggregation parameter of NB",
      col="grey")
 abline(lm.k, col="blue", lwd=2)
 
+## ----loads ABC simulation data-------------------------------------------
+load("abc_simulations/abc2013.RData")
+
 ## ----abc model selection-------------------------------------------------
-## load simulation objects to be used by ABC
-load("abc_1000_to_2000_S.RData")
 ## Target: observed number of species, Simpson's 1/D, 
 ## lmean, sdmean             
 target <- c(Sobs, 
-            D(Dec2018$population), 
-            mean(log(Dec2018$population)), 
-            sd(log(Dec2018$population)))
+            D(atdn.2013$population), 
+            mean(log(atdn.2013$population)), 
+            sd(log(atdn.2013$population)))
 ## Model selection
 model.sel <- postpr(target = target,
-                    index=sim.ids,
-                    sumstat = all.sims,
-                    tol=0.05, method="rejection",
+                    index=abc2019$labels,
+                    sumstat = abc2019$sims,
+                    tol=0.025, method="rejection",
                     corr=TRUE)
 msel.s <- summary(model.sel)
 
 ## ----posterior species richness------------------------------------------
 ## Posterior distribution of Species richness from the selected model
-S.post1 <- abc(target = target, 
-               param=data.frame(S=sim.y[sim.ids=="LSclump"]),
-               sumstat = all.sims[sim.ids=="LSclump",],
-               tol=0.025, method="rejection")
+S.post1 <- abc(target = target, param=data.frame(S=abc2019$params[abc2019$labels=="LSclump"]),
+              sumstat = abc2019$sims[abc2019$labels=="LSclump",],
+              tol=0.025, method="rejection")
 S.post1.s <- summary(S.post1)
 hist(S.post1)
 
@@ -196,7 +185,7 @@ abc.ls.c.rad.l <- rad.ls(S = S.post1.s[2,],
 abc.ls.c.rad.u <- rad.ls(S = S.post1.s[6,],
                            N = Tot.t, 
                            alpha = fishers.alpha(Tot.t, S.post1.s[6,]))$y
-## Simulated cluped samples
+## Simulated clumped samples
 ## from LS with species richness estimated from linear extrapolation
 ls.clump <- NB.samp(rad = reg.ls.rad, tot.area = Tot.A, 
                     n.plots = N.plots, 
@@ -221,7 +210,7 @@ ls.s3 <- NB.samp(rad = abc.ls.c.rad.u,
                  lsd.k = lm.k.sigma, 
                  nrep=100)
 ## Plot
-plot(rad(Dec2018$population), col="grey",
+plot(rad(atdn.2013$population), col="grey",
      ylab = "Population size", xlim=c(1,sum(ls.s3>=1)))
 
 lines(rad(ls.clump), lwd=2, col="blue")
@@ -247,7 +236,7 @@ nb.clump <- NB.samp(rad = reg.nb.rad, tot.area = Tot.A,
                     nrep = 100)
 
 ## ----plot sampled RADS, echo=FALSE---------------------------------------
-plot(rad(Dec2018$population), col="grey", log="y", xlim=c(1,5500),
+plot(rad(atdn.2013$population), col="grey", log="y", xlim=c(1,5500),
      ylab = "Population size")
 lines(rad(ls.rnd), lwd=2)
 lines(rad(ls.clump), lwd=2, col="red")
@@ -259,33 +248,41 @@ legend("topright",
 
 ## ----shen estimate, eval=FALSE-------------------------------------------
 ## ## table of frequencies of occurrences
-## Y <- data.frame(table(Dec2018$N.plots))
-## Y[,1] <- as.integer(as.character(Y[,1]))
-## ## Estimate of alfa and beta (Eq.6)
-## ## To be use as starting values for the uncoditional estimation below
-## ab.est <- shen.ab(Y = Y, t = N.plots, T = Tot.A,
-##                 start=list(lalpha=-11, lbeta=0), method="SANN")
-## #ab.est.p <- profile(ab.est)
-## cf.st1 <- coef(ab.est)
-## ## Estimate with uncoditional likelihood (Eq.3)
-## ShenHe <- shen.S( Y = Y, t = N.plots, T = Tot.A,
-##                 start=c(list(lS=log(nrow(Dec2018))), as.list(cf.st1)),
-##                 method="SANN")
-## cf.st2 <- coef(ShenHe)
-## S.sh <- unname(exp(cf.st2[1]))
+Y <- data.frame(table(atdn.2013$N.plots))
+Y[,1] <- as.integer(as.character(Y[,1]))
+## Estimate of alfa and beta (Eq.6)
+## To be use as starting values for the unconditional estimation below
+ab.est <- shen.ab(Y = Y, t = N.plots, T = Tot.A,
+                start=list(lalpha=-5, lbeta=3), method="SANN")
+## estimated coeficients
+cf.st1 <- coef(ab.est)
+## Estimate with uncoditional likelihood (Eq.3)
+## restricted to species richness between 1e4 and 2e4
+ShenHe <- shen.S( Y = Y, t = N.plots, T = Tot.A,
+                start=c(list(lS = log(1.5e4)), as.list(cf.st1)),
+                method="L-BFGS-B",
+                upper=c(lS=log(2e4), lalpha=Inf, lbeta=Inf),
+                lower=c(lS=log(1e3), lalpha=-Inf, lbeta=-Inf))
+cf.st2 <- coef(ShenHe)
+(S.sh <- unname(exp(cf.st2[1])))
+
+## ----Shen He confint-----------------------------------------------------
+ShenHe.prf <- profile(ShenHe, which=1) # not working
+exp(confint(ShenHe.prf))
 
 ## ----Hui ORC estimate----------------------------------------------------
-S.orc <- hui.orc(Dec2018$N.plots, effort=eff18)
+S.orc <- hui.orc(atdn.2013$N.plots, effort=Samp.A/Tot.A)
 orc.cf <- coef(S.orc$model)
-
+S.orc$S.est
 ## ----ORC plots with Hui function-----------------------------------------
-x <- 1:nrow(Dec2018)
+x <- 1:nrow(atdn.2013)
 y <- exp(orc.cf[1])*exp(orc.cf[2]*x)*(x^orc.cf[3])
-#plot(rad(Dec2018$N.plots), ylim=range(c(Dec2018$N.plots, y)))
-#lines(rad(y))
+##plot(rad(atdn.2013$N.plots), ylim=range(c(atdn.2013$N.plots, y)))
+##lines(rad(y))
+eff13 <- Samp.A/Tot.A
 x2 <- 1:S.orc$S.est
-y2 <- exp(orc.cf[1]-log(eff18))*exp(orc.cf[2]*x2)*(x2^orc.cf[3])
+y2 <- exp(orc.cf[1]-log(eff13))*exp(orc.cf[2]*x2)*(x2^orc.cf[3])
 plot(rad(y2), type="n")
-points(rad(Dec2018$N.plots/eff18), col="grey")
+points(rad(atdn.2013$N.plots/eff13), col="grey")
 lines(rad(y2), type="l")
 

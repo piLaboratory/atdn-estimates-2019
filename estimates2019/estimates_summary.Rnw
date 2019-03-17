@@ -15,6 +15,7 @@
 
 
 \title{Estimates of total tree richness in Amazon - Summary}
+\subtitle{2019 data set}
 \author{Han Ter Steege, Paulo Inácio Prado, Renato Lima, Edwin Pos, ATDN}
 
 \begin{document}
@@ -31,7 +32,7 @@ library(knitr)
 #library(SPECIES)
 library(xtable)
 library(abc)
-source("functions.R")
+source("../functions.R")
 opts_chunk$set(fig.align = 'center', fig.show = 'hold',
                fig.height = 6.5, warning = FALSE, message = FALSE,
                error = FALSE, echo=TRUE)
@@ -187,14 +188,14 @@ TNB overestimates the higher abundances, while the logseries
 underestimates the lower abundances in the sample:
 
 <<Comparing LS and NB, echo=FALSE>>=
-par(mfrow=c(2,2))
+par(mfrow=c(1,2))
 ls.rad <- radpred(y.ls)
 nb.rad <- radpred(y.nb2)
-plot(ls.rad$abund, nb.rad$abund, log="xy",
-     xlab="Logseries theor. quantiles",
-     ylab="TNB theor. quantiles", 
-     col="grey", cex=0.25)
-abline(0,1, col="blue")
+## plot(ls.rad$abund, nb.rad$abund, log="xy",
+##      xlab="Logseries theor. quantiles",
+##      ylab="TNB theor. quantiles", 
+##      col="grey", cex=0.25)
+## abline(0,1, col="blue")
 plot(rad(atdn.2019$N.ind), col="grey", cex=0.5)
 lines(ls.rad)
 lines(nb.rad, col="red")
@@ -401,11 +402,15 @@ Normal distributions was the standard error of the linear regression.
 \subsubsection*{Fit to observed population sizes}
 \label{sec:fit-observ-popul}
 
+<<loads ABC simulation data>>=
+load("abc_simulations/abc2019.RData")
+@ 
+
 To check which model best describes the RAD of estimated population we
 used an approximate Bayesian computation (ABC, \citet{csillery2010,csillery2012}). 
 To do that I ran 
 the simulations described above for each combination of RAD and sampling
-for 6135 values of regional richness, drawn from a uniform
+for 10500 values of regional richness, drawn from a uniform
 distribution between 10,000 and 20,000. In ABC this is the \emph{a priori}
 distribution, which I set between the know number of species in Amazon and
 twice it, which is higher the larger species estimate for Amazon I get.
@@ -431,8 +436,6 @@ The codes used to run ABC are in separated file (\code{abc.R}), as the simulatio
 ABC model selection, using a 5\% rejection threshold:
 
 <<abc model selection>>=
-## load simulation objects to be used by ABC
-load("abc_1000_to_2000_S.RData")
 ## Target: observed number of species, Simpson's 1/D, 
 ## lmean, sdmean             
 target <- c(Sobs, 
@@ -441,9 +444,9 @@ target <- c(Sobs,
             sd(log(atdn.2019$population)))
 ## Model selection
 model.sel <- postpr(target = target,
-                    index=sim.ids,
-                    sumstat = all.sims,
-                    tol=0.05, method="rejection",
+                    index=abc2019$labels,
+                    sumstat = abc2019$sims,
+                    tol=0.025, method="rejection",
                     corr=TRUE)
 msel.s <- summary(model.sel)
 @ 
@@ -458,10 +461,9 @@ in Amazon:
 
 <<posterior species richness>>=
 ## Posterior distribution of Species richness from the selected model
-S.post1 <- abc(target = target, 
-               param=data.frame(S=sim.y[sim.ids=="LSclump"]),
-               sumstat = all.sims[sim.ids=="LSclump",],
-               tol=0.025, method="rejection")
+S.post1 <- abc(target = target, param=data.frame(S=abc2019$params[abc2019$labels=="LSclump"]),
+              sumstat = abc2019$sims[abc2019$labels=="LSclump",],
+              tol=0.025, method="rejection")
 S.post1.s <- summary(S.post1)
 hist(S.post1)
 @ 
@@ -492,7 +494,7 @@ abc.ls.c.rad.l <- rad.ls(S = S.post1.s[2,],
 abc.ls.c.rad.u <- rad.ls(S = S.post1.s[6,],
                            N = Tot.t, 
                            alpha = fishers.alpha(Tot.t, S.post1.s[6,]))$y
-## Simulated cluped samples
+## Simulated clumped samples
 ## from LS with species richness estimated from linear extrapolation
 ls.clump <- NB.samp(rad = reg.ls.rad, tot.area = Tot.A, 
                     n.plots = N.plots, 
@@ -594,29 +596,43 @@ of the number of plots each species was recorded in function of its rank.
 conditional likelihood functions and other using unconditional functions.
 
 I used the unconditional likelihood method,
-but using as starting values for parameters
-$\alpha$ and $\beta$ the estimates from the conditional
-likelihood (Equation 6).
+but using the estimates from the conditional
+likelihood (Equation 6) as starting values for parameters
+$\alpha$ and $\beta$ .
+
+The estimates varies wildly between runs, probably because optmization
+problems or a very complex likelihood profile. 
+With sensible starting values to estimate $\alpha$ and $\beta$ with the 
+conditional likelihood and using restricted optimization for species richness
+of the unconditional likelihood the estimated richness is stable.
 
 <<shen estimate, eval=FALSE>>=
 ## table of frequencies of occurrences
 Y <- data.frame(table(atdn.2019$N.plots))
 Y[,1] <- as.integer(as.character(Y[,1]))
 ## Estimate of alfa and beta (Eq.6)
-## To be use as starting values for the uncoditional estimation below
+## To be use as starting values for the unconditional estimation below
 ab.est <- shen.ab(Y = Y, t = N.plots, T = Tot.A, 
-                start=list(lalpha=-11, lbeta=0), method="SANN")
-#ab.est.p <- profile(ab.est)
+                start=list(lalpha=-5, lbeta=3), method="SANN")
+## estimated coeficients
 cf.st1 <- coef(ab.est)
 ## Estimate with uncoditional likelihood (Eq.3)
+## restricted to species richness between 1e4 and 2e4
 ShenHe <- shen.S( Y = Y, t = N.plots, T = Tot.A, 
-                start=c(list(lS=log(nrow(atdn.2019))), as.list(cf.st1)), 
-                method="SANN")
+                start=c(list(lS = log(1.5e4)), as.list(cf.st1)),
+                method="L-BFGS-B", 
+                upper=c(lS=log(2e4), lalpha=Inf, lbeta=Inf),
+                lower=c(lS=log(1e3), lalpha=-Inf, lbeta=-Inf))
 cf.st2 <- coef(ShenHe)
-S.sh <- unname(exp(cf.st2[1]))
+(S.sh <- unname(exp(cf.st2[1])))
 @
 
-Estimates \Sexpr{round(S.sh)} species.
+Estimates \Sexpr{round(S.sh)} species, with the following confidence interval:
+
+<<Shen He confint>>=
+ShenHe.prf <- profile(ShenHe, which=1)
+exp(confint(ShenHe.prf))
+@ 
 
 
 \subsection*{Hui's ORC model}
@@ -629,7 +645,7 @@ This model is then upscaled and the resulting ORC is used to estimate
 the total species richness.
 
 <<Hui ORC estimate>>=
-S.orc <- hui.orc(atdn.2019$N.plots, effort=eff18)
+S.orc <- hui.orc(atdn.2019$N.plots, effort=Samp.A/Tot.A)
 orc.cf <- coef(S.orc$model)
 @ 
 
