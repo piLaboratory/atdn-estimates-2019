@@ -8,4 +8,4 @@
 #PBS -o /home/piklprado/amazonia_tree_richness/abc.log
 
 cd /home/piklprado/amazonia_tree_richness/2013/
-R CMD BATCH abc_run2013.R
+R CMD BATCH abc_run2013a.R

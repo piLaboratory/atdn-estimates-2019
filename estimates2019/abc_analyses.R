@@ -1,25 +1,17 @@
-source("functions.R")
+source("../functions.R")
 library(abc)
+library(parallel)
+load("../lists_with_all_objects.RData")
 
-
-## Simulations
-## Function to parallelize simulations
-f1 <- function(x, ...){
-    y <- try(sim.abc(S = x, N = Tot.t, n.plots = N.plots, tot.area= Tot.A,
-                     nb.fit=y.nb2, lmk.fit = lm.k,
-                     nrep = 1, ...))
-    if(class(y)=="try-error")
-        return(matrix(NA, nrow=2, ncol=4))
-    else
-        return(y)
-}
 
 ## Load simulation ressults (ran in a computer cluster)
-load("abc_simulations/abc2019.RData")
+load("abc_simulations/abcFinal2019.RData")
+## Use only the summary statistics of the simulations with noise in estimated tital population sizes (see abc2019run.R)
+abc2019$sims <- abc2019$sims[,5:8]
 
 ## Model selection
 ## Target: observed number of species, lmean, sdmean and zero of Mean_square with obs values             
-target <- c(Sobs, D(atdn.2019$population), mean(log(atdn.2019$population)), sd(log(atdn.2019$population)))
+target <- c(atdn.19$Sobs, D(atdn.19$data$population), mean(log(atdn.19$data$population)), sd(log(atdn.19$data$population)))
 
 ## Quick diagnostics plots
 ## Box plots of each parget variable
@@ -34,56 +26,56 @@ par(mfrow=c(1,1))
 ## S in the sample x S total for each model
 par(mfrow=c(2,2))
 cores <- c(LSrnd="black", LSclump="blue", NBrnd="red", NBclump="green", LNrnd="orange", LNclump="grey")
-plot(abc2019$sims[,"S"]~abc2019$params, type="n")
+plot(abc2019$sims[,"S2"]~abc2019$params, type="n")
 for(n in unique(abc2019$labels)){
-    points(abc2019$sims[abc2019$labels==n,"S"]~abc2019$params[abc2019$labels==n], col=cores[n])
+    points(abc2019$sims[abc2019$labels==n,"S2"]~abc2019$params[abc2019$labels==n], col=cores[n])
 }
-abline(h=nrow(atdn.2019), lty=2)
+abline(h=nrow(atdn.19$data), lty=2)
 ## logmean x S
-plot(abc2019$sims[,"lmean"]~abc2019$params, type="n")
+plot(abc2019$sims[,"lmean2"]~abc2019$params, type="n")
 for(n in unique(abc2019$labels)){
-    points(abc2019$sims[abc2019$labels==n,"lmean"]~abc2019$params[abc2019$labels==n], col=cores[n])
+    points(abc2019$sims[abc2019$labels==n,"lmean2"]~abc2019$params[abc2019$labels==n], col=cores[n])
 }
 legend("topright", unique(abc2019$labels), pch=1,
        col=c("black", "blue", "red", "green", "orange", "grey"), bty="n")
-abline(h=mean(log(atdn.2019$population)), lty=2)
+abline(h=mean(log(atdn.19$data$population)), lty=2)
 ## logsd x S
-plot(abc2019$sims[,"lsd"]~abc2019$params, type="n")
+plot(abc2019$sims[,"lsd2"]~abc2019$params, type="n")
 for(n in unique(abc2019$labels)){
-    points(abc2019$sims[abc2019$labels==n,"lsd"]~abc2019$params[abc2019$labels==n], col=cores[n])
+    points(abc2019$sims[abc2019$labels==n,"lsd2"]~abc2019$params[abc2019$labels==n], col=cores[n])
 }
-abline(h=sd(log(atdn.2019$population)), lty=2)
+abline(h=sd(log(atdn.19$data$population)), lty=2)
 ## D x S
-plot(abc2019$sims[,"D"]~abc2019$params, type="n")
+plot(abc2019$sims[,"D2"]~abc2019$params, type="n")
 for(n in unique(abc2019$labels)){
-    points(abc2019$sims[abc2019$labels==n,"D"]~abc2019$params[abc2019$labels==n], col=cores[n])
+    points(abc2019$sims[abc2019$labels==n,"D2"]~abc2019$params[abc2019$labels==n], col=cores[n])
 }
-abline(h=D(atdn.2019$population), lty=2)
+abline(h=D(atdn.19$data$population), lty=2)
 par(mfrow=c(1,1))
 
 ## Simulated S x logmean
 par(mfrow=c(2,2))
-plot(lmean~S, data=abc2019$sims, type="n")
+plot(lmean2~S2, data=abc2019$sims, type="n")
 for(n in unique(abc2019$labels))
-    points(lmean~S, data=abc2019$sims[abc2019$labels==n,], cex=0.5, col=cores[n])
-points(nrow(atdn.2019), mean(log(atdn.2019$population)), pch=19, cex=2, col="orange")
+    points(lmean2~S2, data=abc2019$sims[abc2019$labels==n,], cex=0.5, col=cores[n])
+points(nrow(atdn.19$data), mean(log(atdn.19$data$population)), pch=19, cex=2, col="orange")
 legend("topright", unique(abc2019$labels), pch=1,
        col=c("black", "blue", "red", "green", "orange", "grey"), bty="n")
 ## Simulated S x logsd
-plot(lsd~S, data=abc2019$sims, type="n")
+plot(lsd2~S2, data=abc2019$sims, type="n")
 for(n in unique(abc2019$labels))
-    points(lsd~S, data=abc2019$sims[abc2019$labels==n,], cex=0.5, col=cores[n])
-points(nrow(atdn.2019), sd(log(atdn.2019$population)), pch=19, cex=2, col="orange")
-## lmean x lsd
-plot(lsd~lmean, data=abc2019$sims, type="n")
+    points(lsd2~S2, data=abc2019$sims[abc2019$labels==n,], cex=0.5, col=cores[n])
+points(nrow(atdn.19$data), sd(log(atdn.19$data$population)), pch=19, cex=2, col="orange")
+## lmean x lsd2
+plot(lsd2~lmean2, data=abc2019$sims, type="n")
 for(n in unique(abc2019$labels))
-    points(lsd~lmean, data=abc2019$sims[abc2019$labels==n,], cex=0.5, col=cores[n])
-points(mean(log(atdn.2019$population)), sd(log(atdn.2019$population)), pch=19, cex=2, col="orange")
+    points(lsd2~lmean2, data=abc2019$sims[abc2019$labels==n,], cex=0.5, col=cores[n])
+points(mean(log(atdn.19$data$population)), sd(log(atdn.19$data$population)), pch=19, cex=2, col="orange")
 ## S x D
-plot(D~S, data=abc2019$sims, type="n", ylim=range(c(abc2019$sims$D, D(atdn.2019$population))))
+plot(D2~S2, data=abc2019$sims, type="n", ylim=range(c(abc2019$sims$D2, D(atdn.19$data$population))))
 for(n in unique(abc2019$labels))
-    points(D~S, data=abc2019$sims[abc2019$labels==n,], cex=0.5, col=cores[n])
-points(Sobs, D(atdn.2019$population), pch=19, cex=2, col="orange")
+    points(D2~S2, data=abc2019$sims[abc2019$labels==n,], cex=0.5, col=cores[n])
+points(atdn.19$Sobs, D(atdn.19$data$population), pch=19, cex=2, col="orange")
 par(mfrow=c(1,1))
 
 ## Model selection
@@ -106,8 +98,8 @@ summary(
 )
 
 summary(
-    gfit(target = target[c(1,2,4)],
-                    sumstat = abc2019$sims[abc2019$labels=="LSclump",c(1,2,4)],
+    gfit(target = target,
+                    sumstat = abc2019$sims[abc2019$labels=="LSclump",],
                     nb.replicate = 200, tol = 0.05)
     )
 
@@ -130,16 +122,15 @@ plot(cv.ll, caption="Ridge regression")
 par(mfrow=c(1,1))
 
 ## Posterior distribution of Species richness from the selected model
-t1 <- 0.05
+t1 <- 0.025
 S.post1 <- abc(target = target, param=data.frame(S=abc2019$params[abc2019$labels=="LSclump"]),
               sumstat = abc2019$sims[abc2019$labels=="LSclump",],
               tol=t1, method="rejection")
 S.post2 <- abc(target = target, param=data.frame(S=abc2019$params[abc2019$labels=="LSclump"]),
               sumstat = abc2019$sims[abc2019$labels=="LSclump",],
-              tol=t1, method="neuralnet")
+              tol=t1, method="neuralnet", numnet = 100)
 S.post3 <- abc(target = target, param=data.frame(S=abc2019$params[abc2019$labels=="LSclump"]),
-              sumstat = abc2019$sims[abc2019$labels=="LSclump",],
-              tol=t1, method="loclinear")
+              sumstat = abc2019$sims[abc2019$labels=="LSclump",],tol=t1, method="ridge")
 summary(S.post1)
 summary(S.post2)
 summary(S.post3)
@@ -147,16 +138,36 @@ par(mfrow=c(1,3))
 hist(S.post1)
 hist(S.post2)
 hist(S.post3)
+par(mfrow=c(1,1))
 
 ## Posterior predictive check
+## Function to parallelize simulations, that are used in the checks
+f1 <- function(x, ...){
+    y <- with(atdn.19,
+              try(sim.abc(S = x,
+                          N = Tot.t,
+                          n.plots = N.plots,
+                          tot.area= Tot.A,
+                          nb.fit = y.nb2,
+                          lm.sd.fit = lm.sd,
+                          lmk.fit = lm.k,
+                          nrep = 1, ...))
+              )
+    if(class(y)=="try-error")
+        return(matrix(NA, nrow=2, ncol=8))
+    else
+        return(y)
+}
+
+### Simulations and predcitive check
 LSclump.pc <- mclapply(sample(S.post1$unadj.values,100, replace=TRUE),
-                  f1, sad="ls", lower=1e-20, upper=1e20, mc.cores=4)
-tmp1 <- LSclump.pc[[1]][2,]
+                  f1, sad="ls", lower=1e-20, upper=1e20, mc.cores=3)
+tmp1 <- LSclump.pc[[1]][2,5:8]
 for(i in 2:length(LSclump.pc))
-    tmp1 <- rbind(tmp1, LSclump.pc[[i]][2,])
+    tmp1 <- rbind(tmp1, LSclump.pc[[i]][2,5:8])
 par(mfrow=c(2,2))
 for(i in 1:4){
-    hist(tmp1[,i], xlim=range(c(tmp1[,i],target[i])), main=names(LSclump.pc[[1]])[i])
+    hist(tmp1[,i], xlim=range(c(tmp1[,i],target[i])), main=names(tmp1[i]))
     abline(v=target[i], col="red")
 }
 par(mfrow=c(1,1))

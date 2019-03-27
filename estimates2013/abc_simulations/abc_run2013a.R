@@ -1,35 +1,40 @@
 source("../functions.R")
-library(abc)
-library(parallel)
-library(untb)
-library(sads)
+## library(abc)
+## library(parallel)
+## library(untb)
+## library(sads)
 load("needed_objs2013.RData")
 
 ## Simulations
 ## Function to parallelize simulations
 f1 <- function(x, ...){
-    y <- try(sim.abc(S = x, N = Tot.t, n.plots = N.plots, tot.area= Tot.A,
-                     nb.fit=y.nb2, lmk.fit = lm.k,
+    y <- try(sim.abc(S = x,
+                     N = needed.objs$Tot.t,
+                     n.plots = needed.objs$N.plots,
+                     tot.area= needed.objs$Tot.A,
+                     nb.fit = needed.objs$y.nb2,
+                     lm.sd.fit = needed.objs$lm.sd,
+                     lmk.fit = needed.objs$lm.k,
                      nrep = 1, ...))
     if(class(y)=="try-error")
-        return(matrix(NA, nrow=2, ncol=4))
+        return(matrix(NA, nrow=2, ncol=8))
     else
         return(y)
 }
 
 
 ## Number of Simulated values
-nsims <- 100
+nsims <- 5e3
 ##simulated.vals <- runif(nsims, 1e4, S.orc$S.est)
 simulated.vals <- runif(nsims, 1e4, 2e4)
 ## Samples of LS
-LS.sims <- mclapply(simulated.vals, f1, sad = "ls",  lower=1e-20, upper=1e20, mc.cores=12)
+LS.sims <- mclapply(simulated.vals, f1, sad = "ls",  lower=1e-20, upper=1e20, mc.cores=10)
 ## save.image()
 ## Samples of TNB
-NB.sims <- mclapply(simulated.vals, f1, sad = "tnb", lower=1e-20, upper=1e20, mc.cores=12)
+NB.sims <- mclapply(simulated.vals, f1, sad = "tnb", lower=1e-20, upper=1e20, mc.cores=10)
 ##save.image()
 ## Samples of Log-normal
-LN.sims <- mclapply(simulated.vals, f1, sad = "lnorm", sdlog = pln.cf[2], lower=1e-20, upper=1e20, mc.cores=12)
+LN.sims <- mclapply(simulated.vals, f1, sad = "lnorm", sdlog = needed.objs$pln.cf[2], lower=1e-20, upper=1e20, mc.cores=10)
 ##save.image()
 
 ## Assembles all simulation results in a matrix
@@ -65,5 +70,5 @@ sim.ids <- c(rep(c("LSrnd", "LSclump"), sum(LS.index)),
 sim.y <- c(rep(simulated.vals[j1],each=2),
            rep(simulated.vals[j2],each=2),
            rep(simulated.vals[j3],each=2))
-input.objs <- list(pln, pln.cf, Tot.t, N.plots, Tot.A, y.nb2, lm.k, atdn.2013)
-save(input.objs, all.sims, sim.ids, sim.y, file="ABC2013.RData")
+
+save(needed.objs, all.sims, sim.ids, sim.y, file="ABC2013.RData")

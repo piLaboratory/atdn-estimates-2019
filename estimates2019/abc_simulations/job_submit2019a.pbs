@@ -7,5 +7,5 @@
 #PBS -j oe
 #PBS -o /home/piklprado/amazonia_tree_richness/abc.log
 
-cd /home/piklprado/amazonia_tree_richness/2013/
-R CMD BATCH abc_run2013.R
+cd /home/piklprado/amazonia_tree_richness/2019/
+R CMD BATCH abc_run2019a.R
