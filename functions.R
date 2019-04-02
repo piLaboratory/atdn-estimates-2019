@@ -317,7 +317,9 @@ sim.pres <- function(mu, size, N, pois.samp=TRUE){
 #'     errors of population sizes.
 Pois.samp <- function(rad, tot.area, n.plots,
                       lmean.sd, lsd.sd, nrep = 1){
-    rad <- sort(rad, decreasing=TRUE)
+    index <- order(rad, decreasing=TRUE)
+    rad <- rad[index]
+    lmean.sd <- lmean.sd[index]
     m1 <- m2 <- matrix(0,nrow=length(rad), ncol=nrep)
     for(j in 1:nrep){
         y1 <- mapply(sim.pres, mu = rad/tot.area,
@@ -384,7 +386,9 @@ Pois.samp <- function(rad, tot.area, n.plots,
 #'     errors of population sizes.
 NB.samp <- function(rad, tot.area, n.plots, lmean.k, lsd.k, lmean.sd,
                     lsd.sd, nrep = 1){
-    rad <- sort(rad, decreasing=TRUE)
+    index <- order(rad, decreasing=TRUE)
+    rad <- rad[index]
+    lmean.sd <- lmean.sd[index]
     m1 <- m2 <- matrix(0,nrow=length(rad), ncol=nrep)
     for(j in 1:nrep){
         ## Samples aggregation parameters for each species
@@ -539,7 +543,7 @@ sim.abc <- function(S, N, sad=c("ls","tnb","lnorm"),
                        n.plots = n.plots, nrep=nrep,
                        lmean.sd = rad.lmean.sd, lsd.sd = rad.lsd.sd,
                        lmean.k = rad.lk, lsd.k = rad.lsk)
-    lista <- list(p.samp, nb.samp)
+    lista <- list(rnd.samp = p.samp, clump.samp = nb.samp)
     ## Summary statistics
     if(summary){
         results <- data.frame(
@@ -739,6 +743,7 @@ ulrich.boot <- function(..., pois.samp=TRUE, nrep = 100){
         for(i in 1:nrep)
             y[[i]] <- NB.samp(...)
     }
+    #browser()
     t1 <- sapply(y, function(x) ulrich(x[,2])$S[1,1])
     list( summary = c(mean = mean(t1),
                       ic.low = quantile(t1, 0.025),
@@ -819,11 +824,16 @@ hui.boot <- function(mu, lmean.k, lsd.k, n.samp, N.tot, pois.samp=TRUE, nrep = 1
 #'     of standard deviation of estimates of population sizes as a
 #'     function of the estimated values. Ignored if data has a vector
 #'     names 'pop.sd'.
+#' @param ulrich.bias.fit lm object, fit of linar regression Ulrich's
+#'     LSE richness estimate in function true species richness of
+#'     from samples simulated with the function
+#'     sim.abc(... summary=FALSE). See the script 'ulrich_bias.R' for
+#'     examples. 
 #' @return a list with objects needed to reproduce the results in the
 #'     paper (some of them are redundant, to be simplified).
-atdn.estimates <- function(path.to.data, abc.list,
+atdn.estimates <- function(path.to.data,
                            Tot.t, Tot.A = 6.29e8,
-                           N.plots, Samp.A, lm.sd.fit) {
+                           N.plots, Samp.A, lm.sd.fit, ulrich.bias.fit) {
     ## ----Data prep-----------------------------------------------------------
     ## loads data
     data <- read.csv2(path.to.data, as.is=TRUE)
@@ -886,7 +896,9 @@ atdn.estimates <- function(path.to.data, abc.list,
     
     ## ----Linear extrapolation from RAD of estimated population sizes ------------------------------
     S.ulrich <- ulrich(data$population)
-    S.r.ls <- S.ulrich$S[1,1]
+    ## Bias-corrected estimate
+    cf.u <- unname( coef(ulrich.bias.fit) )
+    S.r.ls <- cf.u[1] + cf.u[2]*S.ulrich$S[1,1]
     
     ## ----Amazon alpha--------------------------------------------------------
     alpha.r <- fishers.alpha(N = Tot.t, S = S.r.ls)
@@ -925,26 +937,27 @@ atdn.estimates <- function(path.to.data, abc.list,
     reg.nb.rad.lk <- predict(lm.k, 
                              newdata=data.frame(dens.ha=reg.nb.rad/Tot.A))
     ## Simulation of population sizes from samples of each RAD
-    ls.rnd <- Pois.samp(rad = reg.ls.rad, tot.area = Tot.A, 
-                        n.plots = N.plots,
-                        lmean.sd = reg.ls.rad.lsd,
-                        lsd.sd = lm.sd.sigma, nrep =20)
-    nb.rnd <- Pois.samp(rad = reg.nb.rad, tot.area = Tot.A,
-                        lmean.sd = reg.nb.rad.lsd,
-                        lsd.sd = lm.sd.sigma,
-                        n.plots = N.plots, nrep = 20)
-    ls.clump <- NB.samp(rad = reg.ls.rad, tot.area = Tot.A, 
-                        n.plots = N.plots,
-                        lmean.sd = reg.ls.rad.lsd,
-                        lsd.sd = lm.sd.sigma,
-                        lmean.k = reg.ls.rad.lk, 
-                        lsd.k = lm.k.sigma, nrep = 20)
-    nb.clump <- NB.samp(rad = reg.nb.rad, tot.area = Tot.A, 
-                        n.plots = N.plots,
-                        lmean.sd = reg.nb.rad.lsd,
-                        lsd.sd = lm.sd.sigma,
-                        lmean.k = reg.nb.rad.lk, 
-                        lsd.k = lm.k.sigma, nrep = 20)
+    ## ls.rnd <- Pois.samp(rad = reg.ls.rad, tot.area = Tot.A, 
+    ##                     n.plots = N.plots,
+    ##                     lmean.sd = reg.ls.rad.lsd,
+    ##                     lsd.sd = lm.sd.sigma, nrep =20)
+    ## nb.rnd <- Pois.samp(rad = reg.nb.rad, tot.area = Tot.A,
+    ##                     lmean.sd = reg.nb.rad.lsd,
+    ##                     lsd.sd = lm.sd.sigma,
+    ##                     n.plots = N.plots, nrep = 20)
+    ## ls.clump <- NB.samp(rad = reg.ls.rad, tot.area = Tot.A, 
+    ##                     n.plots = N.plots,
+    ##                     lmean.sd = reg.ls.rad.lsd,
+    ##                     lsd.sd = lm.sd.sigma,
+    ##                     lmean.k = reg.ls.rad.lk, 
+    ##                     lsd.k = lm.k.sigma, nrep = 20)
+    ## nb.clump <- NB.samp(rad = reg.nb.rad, tot.area = Tot.A, 
+    ##                     n.plots = N.plots,
+    ##                     lmean.sd = reg.nb.rad.lsd,
+    ##                     lsd.sd = lm.sd.sigma,
+    ##                     lmean.k = reg.nb.rad.lk, 
+    ##                     lsd.k = lm.k.sigma, nrep = 20)
+    
 ## --- LSE Bootstrap mean and CI-----------------------------------------------
     ## tmp1 <- rnorm(nrow(data)*1000,
     ##               mean = data$population,
@@ -958,31 +971,36 @@ atdn.estimates <- function(path.to.data, abc.list,
     ##     row.names = c("LSE","LNE")
     ## )
     ## rm(tmp1)
-    S.r.ls.boot <- rbind(
+    S.r.ls.boot <- 
         ulrich.boot(rad = reg.ls.rad, tot.area = Tot.A, 
                     n.plots = N.plots,
                     lmean.sd = reg.ls.rad.lsd,
-                    lsd.sd = lm.sd.sigma)$summary,
-        ulrich.boot(rad = reg.ls.rad, tot.area = Tot.A, 
-                    n.plots = N.plots,
-                    lmean.sd = reg.ls.rad.lsd,
-                    lsd.sd = lm.sd.sigma,
-                    lmean.k = reg.ls.rad.lk, 
-                    lsd.k = lm.k.sigma,
-                    pois.samp=FALSE)$summary,
-        ulrich.boot(rad = reg.nb.rad, tot.area = Tot.A, 
-                    n.plots = N.plots,
-                    lmean.sd = reg.ls.rad.lsd,
-                    lsd.sd = lm.sd.sigma)$summary,
-        ulrich.boot(rad = reg.nb.rad, tot.area = Tot.A, 
-                    n.plots = N.plots,
-                    lmean.sd = reg.ls.rad.lsd,
-                    lsd.sd = lm.sd.sigma,
-                    lmean.k = reg.ls.rad.lk, 
-                    lsd.k = lm.k.sigma,
-                    pois.samp=FALSE)$summary
-    )
-    rownames(S.r.ls.boot) <-  c("LS rnd", "LS clump", "TNB rnd", "TNB clump")
+                    lsd.sd = lm.sd.sigma)$summary
+    ## S.r.ls.boot <- rbind(
+    ##     ulrich.boot(rad = reg.ls.rad, tot.area = Tot.A, 
+    ##                 n.plots = N.plots,
+    ##                 lmean.sd = reg.ls.rad.lsd,
+    ##                 lsd.sd = lm.sd.sigma)$summary,
+    ##     ulrich.boot(rad = reg.ls.rad, tot.area = Tot.A, 
+    ##                 n.plots = N.plots,
+    ##                 lmean.sd = reg.ls.rad.lsd,
+    ##                 lsd.sd = lm.sd.sigma,
+    ##                 lmean.k = reg.ls.rad.lk, 
+    ##                 lsd.k = lm.k.sigma,
+    ##                 pois.samp=FALSE)$summary,
+    ##     ulrich.boot(rad = reg.nb.rad, tot.area = Tot.A, 
+    ##                 n.plots = N.plots,
+    ##                 lmean.sd = reg.ls.rad.lsd,
+    ##                 lsd.sd = lm.sd.sigma)$summary,
+    ##     ulrich.boot(rad = reg.nb.rad, tot.area = Tot.A, 
+    ##                 n.plots = N.plots,
+    ##                 lmean.sd = reg.ls.rad.lsd,
+    ##                 lsd.sd = lm.sd.sigma,
+    ##                 lmean.k = reg.ls.rad.lk, 
+    ##                 lsd.k = lm.k.sigma,
+    ##                 pois.samp=FALSE)$summary
+    ## )
+    ## rownames(S.r.ls.boot) <-  c("LS rnd", "LS clump", "TNB rnd", "TNB clump")
     
     cat("\n----------------------------------------------------------------------\n
                Estimates from occupancy data (Shen & He and Hui estimators)\n
@@ -994,16 +1012,16 @@ atdn.estimates <- function(path.to.data, abc.list,
     Y[,1] <- as.integer(as.character(Y[,1]))
     ## Estimate of alfa and beta (Eq.6)
     ## To be use as starting values for the unconditional estimation below
-    ab.est <- shen.ab(Y = Y, t = N.plots, T = Tot.A,
-                      start=list(lalpha=-2, lbeta=1), method="SANN")
+    ##ab.est <- shen.ab(Y = Y, t = N.plots, T = Tot.A,
+    ##                  start=list(lalpha=-2, lbeta=1), method="SANN")
     ## estimated coeficients
-    cf.st1 <- coef(ab.est)
+    ##cf.st1 <- coef(ab.est)
     ## Estimate with uncoditional likelihood (Eq.3)
     ## restricted to species richness between 1e4 and 2e4
     Shen <- #try(
         shen.S( Y = Y, t = N.plots, T = Tot.A,
                ##start=c(list(lS = log(S.ls)), as.list(cf.st1)),
-               start=list(lS = log(S.ls), lalpha=-1, lbeta=0),
+               start=list(lS = log(1.5e4), lalpha=-2, lbeta=1),
                method="L-BFGS-B",
                upper=c(lS=log(2e4), lalpha=Inf, lbeta=Inf),
                lower=c(lS=log(1e3), lalpha=-Inf, lbeta=-Inf))
@@ -1017,45 +1035,45 @@ atdn.estimates <- function(path.to.data, abc.list,
     ## Boostrap
     ## Regional RADs with Shen & He estimate of species numbers
     ## Log-series
-    Shen.ls <- rad.ls(S = S.shen, N = Tot.t,
-                      alpha = fishers.alpha(N = Tot.t, S = S.shen),
-                      lower=1e-12, upper=1e12)$y
-    ## TNB
-    Shen.tnb <- rad.posnegbin(S = S.shen, size = cf.nb[1], 
-                                 prob = 1-csi)$y
-    ## Predicted log(k) values for LS rad
-    Shen.ls.lk <- predict(lm.k, 
-                             newdata=data.frame(dens.ha=Shen.ls/Tot.A))
-    ## Predicted log(k) values for TNB rad
-    Shen.tnb.lk <- predict(lm.k, 
-                             newdata=data.frame(dens.ha=Shen.tnb/Tot.A))
-    ## Parametric bootstrap simulations: Logseries and Truncated Negative Binomial
-    ## with random and clumped sample.
-    S.Shen.boot <- rbind(
-        shen.boot(mu = Shen.ls/Tot.A, n.samp = round(Samp.A), N.tot = round(Tot.A),
-                    start=as.list(coef(Shen)), nrep = 200,
-                    method="L-BFGS-B",
-                    upper=c(lS=log(3e4), lalpha=Inf, lbeta=Inf),
-                    lower=c(lS=log(1e3), lalpha=-Inf, lbeta=-Inf))$summary,
-        shen.boot(mu = Shen.ls/Tot.A, n.samp = round(Samp.A), N.tot = round(Tot.A),
-                    start=as.list(coef(Shen)), nrep = 200,
-                    pois.samp = FALSE, lmean.k = Shen.ls.lk, lsd.k = lm.k.sigma,
-                    method="L-BFGS-B",
-                    upper=c(lS=log(3e4), lalpha=Inf, lbeta=Inf),
-                    lower=c(lS=log(1e3), lalpha=-Inf, lbeta=-Inf))$summary,
-        shen.boot(mu = Shen.tnb/Tot.A, n.samp = round(Samp.A), N.tot = round(Tot.A),
-                    start=as.list(coef(Shen)), nrep = 200,
-                    method="L-BFGS-B",
-                    upper=c(lS=log(3e4), lalpha=Inf, lbeta=Inf),
-                    lower=c(lS=log(1e3), lalpha=-Inf, lbeta=-Inf))$summary,
-        shen.boot(mu = Shen.tnb/Tot.A, n.samp = round(Samp.A), N.tot = round(Tot.A),
-                    start=as.list(coef(Shen)), nrep = 200,
-                    pois.samp = FALSE, lmean.k = Shen.tnb.lk, lsd.k = lm.k.sigma,
-                    method="L-BFGS-B",
-                    upper=c(lS=log(3e4), lalpha=Inf, lbeta=Inf),
-                    lower=c(lS=log(1e3), lalpha=-Inf, lbeta=-Inf))$summary
-    )
-    rownames(S.Shen.boot) <-  c("LS rnd", "LS clump", "TNB rnd", "TNB clump")
+    ## Shen.ls <- rad.ls(S = S.shen, N = Tot.t,
+    ##                   alpha = fishers.alpha(N = Tot.t, S = S.shen),
+    ##                   lower=1e-12, upper=1e12)$y
+    ## ## TNB
+    ## Shen.tnb <- rad.posnegbin(S = S.shen, size = cf.nb[1], 
+    ##                              prob = 1-csi)$y
+    ## ## Predicted log(k) values for LS rad
+    ## Shen.ls.lk <- predict(lm.k, 
+    ##                          newdata=data.frame(dens.ha=Shen.ls/Tot.A))
+    ## ## Predicted log(k) values for TNB rad
+    ## Shen.tnb.lk <- predict(lm.k, 
+    ##                          newdata=data.frame(dens.ha=Shen.tnb/Tot.A))
+    ## ## Parametric bootstrap simulations: Logseries and Truncated Negative Binomial
+    ## ## with random and clumped sample.
+    ## S.Shen.boot <- rbind(
+    ##     shen.boot(mu = Shen.ls/Tot.A, n.samp = round(Samp.A), N.tot = round(Tot.A),
+    ##                 start=as.list(coef(Shen)), nrep = 200,
+    ##                 method="L-BFGS-B",
+    ##                 upper=c(lS=log(3e4), lalpha=Inf, lbeta=Inf),
+    ##                 lower=c(lS=log(1e3), lalpha=-Inf, lbeta=-Inf))$summary,
+    ##     shen.boot(mu = Shen.ls/Tot.A, n.samp = round(Samp.A), N.tot = round(Tot.A),
+    ##                 start=as.list(coef(Shen)), nrep = 200,
+    ##                 pois.samp = FALSE, lmean.k = Shen.ls.lk, lsd.k = lm.k.sigma,
+    ##                 method="L-BFGS-B",
+    ##                 upper=c(lS=log(3e4), lalpha=Inf, lbeta=Inf),
+    ##                 lower=c(lS=log(1e3), lalpha=-Inf, lbeta=-Inf))$summary,
+    ##     shen.boot(mu = Shen.tnb/Tot.A, n.samp = round(Samp.A), N.tot = round(Tot.A),
+    ##                 start=as.list(coef(Shen)), nrep = 200,
+    ##                 method="L-BFGS-B",
+    ##                 upper=c(lS=log(3e4), lalpha=Inf, lbeta=Inf),
+    ##                 lower=c(lS=log(1e3), lalpha=-Inf, lbeta=-Inf))$summary,
+    ##     shen.boot(mu = Shen.tnb/Tot.A, n.samp = round(Samp.A), N.tot = round(Tot.A),
+    ##                 start=as.list(coef(Shen)), nrep = 200,
+    ##                 pois.samp = FALSE, lmean.k = Shen.tnb.lk, lsd.k = lm.k.sigma,
+    ##                 method="L-BFGS-B",
+    ##                 upper=c(lS=log(3e4), lalpha=Inf, lbeta=Inf),
+    ##                 lower=c(lS=log(1e3), lalpha=-Inf, lbeta=-Inf))$summary
+    ## )
+    ## rownames(S.Shen.boot) <-  c("LS rnd", "LS clump", "TNB rnd", "TNB clump")
 
     
     ## ----Hui ORC estimate----------------------------------------------------
@@ -1064,30 +1082,31 @@ atdn.estimates <- function(path.to.data, abc.list,
     ## Boostrap
     ## Regional RADs with Hui ORC estimate of species numbers
     ## Log-series
-    Orc.ls <- rad.ls(S = S.orc$S.est, N = Tot.t,
-                         alpha = fishers.alpha(N = Tot.t, S = S.orc$S.est))$y
-    ## TNB
-    Orc.tnb <- rad.posnegbin(S = S.orc$S.est, size = cf.nb[1], 
-                                 prob = 1-csi)$y
-    ## Predicted log(k) values for LS rad
-    Orc.ls.lk <- predict(lm.k, 
-                             newdata=data.frame(dens.ha=Orc.ls/Tot.A))
-    ## Predicted log(k) values for TNB rad
-    Orc.tnb.lk <- predict(lm.k, 
-                          newdata=data.frame(dens.ha=Orc.tnb/Tot.A))
-    ## Bootstrap means and CI's
-    S.orc.boot <- rbind(
-        hui.boot(mu = Orc.ls/Tot.A, n.samp = round(Samp.A), N.tot = round(Tot.A))$summary,
-        hui.boot(mu = Orc.ls/Tot.A, lmean.k = Orc.ls.lk, lsd.k = lm.k.sigma,
-                        n.samp = round(Samp.A), N.tot = round(Tot.A), pois.samp=FALSE)$summary,
-        hui.boot(mu = Orc.tnb/Tot.A, n.samp = round(Samp.A), N.tot = round(Tot.A))$summary,
-        hui.boot(mu = Orc.tnb/Tot.A, lmean.k = Orc.tnb.lk, lsd.k = lm.k.sigma,
-                        n.samp = round(Samp.A), N.tot = round(Tot.A), pois.samp=FALSE)$summary
-    )
-    rownames(S.orc.boot) <-  c("LS rnd", "LS clump", "TNB rnd", "TNB clump")
+    ## Orc.ls <- rad.ls(S = S.orc$S.est, N = Tot.t,
+    ##                      alpha = fishers.alpha(N = Tot.t, S = S.orc$S.est))$y
+    ## ## TNB
+    ## Orc.tnb <- rad.posnegbin(S = S.orc$S.est, size = cf.nb[1], 
+    ##                              prob = 1-csi)$y
+    ## ## Predicted log(k) values for LS rad
+    ## Orc.ls.lk <- predict(lm.k, 
+    ##                          newdata=data.frame(dens.ha=Orc.ls/Tot.A))
+    ## ## Predicted log(k) values for TNB rad
+    ## Orc.tnb.lk <- predict(lm.k, 
+    ##                       newdata=data.frame(dens.ha=Orc.tnb/Tot.A))
+    ## ## Bootstrap means and CI's
+    ## S.orc.boot <- rbind(
+    ##     hui.boot(mu = Orc.ls/Tot.A, n.samp = round(Samp.A), N.tot = round(Tot.A))$summary,
+    ##     hui.boot(mu = Orc.ls/Tot.A, lmean.k = Orc.ls.lk, lsd.k = lm.k.sigma,
+    ##                     n.samp = round(Samp.A), N.tot = round(Tot.A), pois.samp=FALSE)$summary,
+    ##     hui.boot(mu = Orc.tnb/Tot.A, n.samp = round(Samp.A), N.tot = round(Tot.A))$summary,
+    ##     hui.boot(mu = Orc.tnb/Tot.A, lmean.k = Orc.tnb.lk, lsd.k = lm.k.sigma,
+    ##                     n.samp = round(Samp.A), N.tot = round(Tot.A), pois.samp=FALSE)$summary
+    ## )
+    ## rownames(S.orc.boot) <-  c("LS rnd", "LS clump", "TNB rnd", "TNB clump")
 
     ##------------------------------------------------------------------------
     ## Save all objects generated by this function in a list
     lista <- mget(ls())
     return(lista[sapply(lista, function(x) class(x)!="function")])                                    
 }
+
