@@ -10,6 +10,12 @@ atdn.13 <- atdn.estimates(path.to.data = "science_appendix2013.csv",
                           N.plots = 1170,
                           Samp.A = 1109.31,
                           ulrich.bias.fit = ulr13.b.lm)
+## Fix NA in TNB IC
+atdn.13$tovo.S$CIs[4,1] <- 
+with(atdn.13, tovo(fit = y.nb2,
+                   cf = c(
+                       size = summary(y.nb2)@coef[1,1] - 2*summary(y.nb2)@coef[1,2],
+                       mu = tovo.S$CIs[2,1]), p = p1))
 
 ## 2013 data set with reviewed taxonomy (as 2019)
 atdn.13.tax <- atdn.estimates(path.to.data = "Populations_2013_tax_2019.csv",

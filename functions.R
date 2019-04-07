@@ -3,30 +3,65 @@ library(untb)
 library(sads)
 library(abc)
 library(parallel)
-    
+
+#' Fit to negative binomial with log-link
+fitnbinom2 <- function (x, trunc = 0, start.value, ...) {
+    dots <- list(...)
+    ##if ((any(x <= 0) & !is.null(trunc)) | any(!is.wholenumber(x))) 
+    ##    stop("All x must be positive integers")
+    if (!is.null(trunc)) {
+        if (min(x) <= trunc) 
+            stop("truncation point should be lower than the lowest data value")
+    }
+    if (missing(start.value)) {
+        muhat <- length(x)/(length(x) + mean(x))
+        sizehat <- muhat * mean(x)
+    }
+    else {
+        sizehat <- start.value[[1]]
+        muhat <- start.value[[2]]
+    }
+    if (is.null(trunc)) {
+        LL <- function(lsize, lmu) -sum(dnbinom(x, size = exp(lsize), 
+            mu = exp(lmu), log = TRUE))
+    }
+    else {
+        LL <- function(lsize, lmu) -sum(dtrunc("nbinom", x = x, 
+            coef = list(size = exp(lsize), mu = exp(lmu)), trunc = trunc, 
+            log = TRUE))
+    }
+    result <- do.call("mle2", c(list(LL, start = list(lsize = log(sizehat), 
+        lmu = log(muhat)), data = list(x = x)), dots))
+    new("fitsad", result, sad = "nbinom", #distr = distr.depr, 
+        trunc = ifelse(is.null(trunc), NaN, trunc))
+}
+
 #' Tovo et al estimate of total species richness from negative
 #'     binomial
 #' 
 #' @param fit An object of class fitsad with the fit of a truncated
 #'     negative binomial to the data. 
 #' @param cf  vector of two elements with the coefficients of fit of a
-#'     Negative Binomial do the data by fitnbinom (size, and mu). 
+#'     Negative Binomial to the data by fitnbinom (size, and mu). 
 #' @param S.obs integer, observed species richness. 
 #' @param p real positive, the proportion of the community that has
 #'     been sampled. 
-#' @param CI logic, calculate Confidence intervals based on teh Ci of
+#' @param CI logic, calculate Confidence intervals based on the 95% CI of
 #'     the estimated parameters? 
-tovo <- function(fit, cf, S.obs, p, CI=FALSE){
+tovo <- function(fit, cf, S.obs, p, CI=FALSE, loglink=FALSE){
     if(missing(S.obs))
         S.obs <- length(fit@data$x)
-    if(missing(cf))
+    if(missing(cf)){
         cf <- unname(coef(fit))
+        if(loglink)
+            cf <- exp(cf)
+        }
     csi <- tovo.csi(cf[1], cf[2], p = p, log=FALSE)
     csi.p <- cf[2] / (cf[1] + cf[2])
     ## Estimated number of species 
     S.est <- S.obs*(1-(1-csi)^cf[1]) / (1-(1-csi.p)^cf[1])
     if(CI){
-        ci <- confint(fit)
+        ci <- ifelse(loglink, exp(confint), confint(fit) )
         p.low <- 1 - tovo.csi(ci[1,1], ci[2,1], p=p, log=FALSE)
         p.up <- 1 - tovo.csi(ci[1,2], ci[2,2], p=p, log=FALSE)
         S.low <- tovo(cf=ci[,1], S.obs=S.obs, p=p)
@@ -57,7 +92,7 @@ tovo.mu <- function(size, mu, p, log=TRUE){
     uniroot(f1, c(exp(-100), exp(100)))
 }
 
-#'Tovo et al csi calulation
+#'Tovo et al csi calculation
 tovo.csi <- function(size, mu, p, log=FALSE){
     csi.p <- mu/(mu + size)
     if(log)
@@ -76,9 +111,12 @@ tovo.csi <- function(size, mu, p, log=FALSE){
 #'     binomial. 
 #' @param csi.p Csi parameter (1 - prob, see Tovo et al) estimated for
 #'     the sample. 
-tovo.Scsi <- function(S, S.obs, k, csi.p){
+tovo.Scsi <- function(S, S.obs, k, csi.p, prob = FALSE){
     C1 <- S.obs / (1-(1-csi.p)^k)
-    -((C1 - S)/C1)^(1/k) + 1
+    if(!prob)
+        return( -((C1 - S)/C1)^(1/k) + 1)
+    else
+      ((C1 - S)/C1)^(1/k)  
     }
 
 #' utility function: incomplete beta function
@@ -121,7 +159,7 @@ rad.ls <- function(S, N, alpha, npoints = round(S), ...){
 #' Continuous approximation for quantile function for TNB distribution
 qposnegbin2 <- function(p, size, prob, lower=3e-9, upper=3e9){
     f2 <- function(target){
-        f1 <- function(x) pposnegbin(x,size, prob) - target
+        f1 <- function(x) pposnegbin(x, size, prob) - target
         uniroot(f1, lower=lower, upper=upper)$root
     }
     sapply(p, f2)
@@ -201,6 +239,14 @@ ls.pred <- function(rank, N, alpha){
     alpha*(X^rank)/rank
 }
 
+#'Predicted species richness from upsacling a sampled SAD
+ls.estS <- function(rad, N){
+    y <- sort(rad[rad>0])
+    ls.fit <- fitls(y)
+    alpha <- coef(ls.fit)[[2]]
+    alpha*log(1 + N/alpha)
+    }
+
 #' estimates parameter k from NB using # of observed zeroes
 est.k <- function(mu, nzeroes, Nplots){
     f1 <- function(k) {
@@ -213,12 +259,12 @@ est.k <- function(mu, nzeroes, Nplots){
 ## Vectorized version
 est.kv <- Vectorize(est.k, c("mu", "nzeroes"))
 
-#' Simulates persence/absence of species in a sample of a RAD
+#' Simulates species occupancies in a sample of a RAD
 #'
 #' @details Given the density of a set of species per plot in a
 #'     community, this functions calculates the probability of
 #'     recording each species per plot and then simulates the number
-#'     the plots each species is recorded in sample of N plots. The
+#'     of plots each species is recorded in a sample of N plots. The
 #'     sample is simulated assuming random distribution of
 #'     conspecifics (Poisson sample) or cumpled distribution (negative
 #'     binomial sample).
@@ -409,6 +455,133 @@ NB.samp <- function(rad, tot.area, n.plots, lmean.k, lsd.k, lmean.sd,
 #' Generates a community RAD and then simulates Poisson and NB samples
 #' from it to define unobserved abundances (to be used in ABC).
 #'
+#' @details This function generates a logseries, truncated negative
+#'     binomial or lognormal species abundance distribution (SAD).  The
+#'     expected number of individuals of each species of the community
+#'     is calculated from the values of species richness (S) and total
+#'     number of individuals (N) provided for logseries, plus
+#'     additional parameters for the other two SADs models.  For
+#'     truncated negative binomial (tnb), the user should supply a fit
+#'     of tnb to an empirical vector of abundances, usually from a
+#'     sample of the community to be simulated. The parameters to
+#'     simulate the abundances of the theoretical community are
+#'     calculated from this object. For lognormal the user should
+#'     supply the parameter 'sdlog' of this distribution model.
+#' @param S positive integer, total number of species in the community
+#'     to be sampled. 
+#' @param N positive integer, total number of individuals in the
+#'     community to be sampled. 
+#' @param sad character, the name of the theoretical distribution
+#'     model for the RAD of the community. Currently logseries ("ls"),
+#'     truncated negative binomial ("tnb") or lognormal ("lnorm").
+#' @param tot.area positive real, total area coverede by the community.
+#' @param n.plots positive integer, number of sampling unities (plots)
+#' of one unity of area that is drawn from the community to make the
+#' sample.
+#' @param nb.fit fitsad object, fit of the negative binomial model of
+#'     SADs truncated at zero to a vector of species abundances in a
+#'     empirical sample.
+#' @param ...  further arguments to be passed to the functions called
+#'     internally. Should include a named argument 'sdlog', with the
+#'     value of the standard deviation of log values of abundances for
+#'     the lognormal model of abundance distributions, if sad = lnorm.
+#' @return a vector with the abundance of each of the S species
+#'     according to the SAD model chosen by argument 'sad'
+sim.rad <- function(S, N, sad=c("ls","tnb","lnorm"), nb.fit, ...){
+    dots <- list(...)
+    if(!is.null(nb.fit)&class(nb.fit)!= "fitsad")
+        stop("nb.fit should be an object of class fitsad")
+    sad <- match.arg(sad)
+    if(sad=="ls"){
+        ## Calculate alpha
+        alpha <- fishers.alpha(N, S)
+        ## Generate rad
+        rad <- rad.ls(S, N, alpha, ...)$y
+    }
+    else
+        if(sad=="tnb") {
+            S.obs <- length(nb.fit@data$x)
+            cf <- coef(nb.fit)
+            k <- cf["size"]
+            csi.p <- cf["mu"]/sum(cf)
+            prob <- tovo.Scsi(S, S.obs, k, csi.p, prob = TRUE)
+            rad <- rad.posnegbin(S = S, size = k, prob = prob, ...)$y
+        }
+    else
+        if(sad=="lnorm"){
+            if(!"sdlog" %in% names(dots)) stop("please provide the sdlog parameter of the lognormal RAD, as named argument 'sdlog' ")
+            sdlog <- dots[["sdlog"]]
+            meanlog <- log(N/S) - sdlog^2/2
+            rad <- radpred(sad = "lnorm",
+                           coef = list(meanlog = meanlog, sdlog = sdlog),
+                           S = S, N = N)[,2]
+        }
+    return(rad)
+}
+
+#' simulates Poisson and NB samples species abundance distribution.
+#'
+#' @details This function simulates random and clumped samples from a
+#'     a vector of expected species abundances in the community. The
+#'     log of values of the dispersion parameter over the plots
+#'     (argument 'lmean.k' in "NB.samp") are drawn from Gaussian the
+#'     estimates from a linear regression (in log scale) of value of
+#'     the aggregation parameter as a function of the number of
+#'     individuals per sampling unit in real data (argument
+#'     'lm.k.fit'). This approach requires a sample of a community
+#'     (presumably the same to be simulated) from which the
+#'     aggregation parameter of each species has been estimated by
+#'     fitting a negative binomial distribution. Usually there is a
+#'     positive linear relationship between the standard deviations
+#'     and estimated population sizes, and also between dispersion
+#'     parameter and the expected abundance of each species in the
+#'     sample.
+#'
+#' @param rad a vector of abundances of species to be sampled
+#' @param tot.area positive real, total area coverede by the community.
+#' @param n.plots positive integer, number of sampling unities (plots)
+#' of one unity of area that is drawn from the community to make the
+#' sample.
+#' @param lmk.fit lm object, fit of a linear regression of the log of
+#'     the aggregation parameter each species over plots (k) as a
+#'     function of the log of mean abundance of the species per plot. 
+#'     Data from this regression usually comes from an empiriccal
+#'     sample of plots from a real community (see details).
+#' @param nb.fit fitsad object, fit of the negative binomial model of
+#'     SADs truncated at zero to a vector of species abundances in a
+#'     empirical sample.
+#' @param ...  further arguments to be passed to the functions called
+#'     internally. Should include a named argument 'sdlog', with the
+#'     value of the standard deviation of log values of abundances fro
+#'     the lognormal model of abundance distributions, if sad = lnorm.
+#' @param nrep positive integer, number of repetitions of the simulation.
+#' @param summary logical, should a summary table of statistics of the simulated samples be returned?
+#' @return a list with the simulated abundances of species in the Poisson and Negative binomial samples.
+#' }
+sim.radsamp<- function(rad,
+                    tot.area, n.plots,
+                    lmk.fit, nb.fit, ...){
+    rad <- sort(rad[rad>0])
+    S <- length(rad)
+    ## Calculate expected k for each species in rad
+    rad.lk <- predict(lmk.fit, newdata=data.frame(dens.ha=rad/tot.area))
+    ## standard deviation of k (from regression object)
+    rad.lsk <- summary(lmk.fit)$sigma
+    ## simulates a value of k for each species
+    rad.k <- exp(rnorm(S, mean = rad.lk, sd = rad.lsk))
+    ## Poisson sample
+    p.samp <- apply(matrix(rpois(S*n.plots, lambda = rad/tot.area),
+                           nrow = S), 1, sum)
+    ## NB sample
+    nb.samp <- apply(matrix(rnbinom(S*n.plots, mu = rad/tot.area,
+                                    size = rad.k), nrow = S), 1, sum)
+    ## Returns a list with both type of sampling
+    list(rnd.samp = p.samp, clump.samp = nb.samp)    
+}
+
+#' Generates a community RAD and then simulates Poisson and NB samples
+#' from it to define unobserved abundances (to be used in ABC).
+#'
 #' @details This function simulates random and clumped samples from a
 #'     community that follows a theoretical model of SAD (currently
 #'     logseries, truncated negative binomial and lognormal).  The
@@ -495,36 +668,7 @@ sim.abc <- function(S, N, sad=c("ls","tnb","lnorm"),
                     tot.area, n.plots,
                     lm.sd.fit, lmk.fit, nb.fit,
                     nrep = 1, summary = TRUE, ...){
-    dots <- list(...)
-    if(!is.null(nb.fit)&class(nb.fit)!= "fitsad")
-        stop("nb.fit should be an object of class fitsad")
-    if(!is.null(lmk.fit)&class(lmk.fit)!= "lm")
-        stop("lmk.fit should be an object of class lm")
-    sad <- match.arg(sad)
-    if(sad=="ls"){
-        ## Calculate alpha
-        alpha <- fishers.alpha(N, S)
-        ## Generate rad
-        rad <- rad.ls(S, N, alpha, ...)$y
-    }
-    else
-        if(sad=="tnb") {
-            S.obs <- length(nb.fit@data$x)
-            cf <- coef(nb.fit)
-            k <- cf["size"]
-            csi.p <- cf["mu"]/sum(cf)
-            csi <- tovo.Scsi(S, S.obs, k, csi.p)
-            rad <- rad.posnegbin(S, k, 1-csi, ...)$y
-        }
-    else
-        if(sad=="lnorm"){
-            if(!"sdlog" %in% names(dots)) stop("please provide the sdlog parameter of the lognormal RAD, as named argument 'sdlog' ")
-            sdlog <- dots[["sdlog"]]
-            meanlog <- log(N/S) - sdlog^2/2
-            rad <- radpred(sad = "lnorm",
-                           coef = list(meanlog = meanlog, sdlog = sdlog),
-                           S = S, N = N)[,2]
-        }
+    rad <- sim.rad(S, N, sad, nb.fit, ...)
     ## Calculate sd of pop estimates for each species in rad
     rad.lmean.sd <- predict(lm.sd.fit, newdata=data.frame(population=rad))
     ## standard deviation of sd (from regression object)

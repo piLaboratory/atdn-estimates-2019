@@ -61,7 +61,7 @@ ls.ci[2]*log(1 + Tot.t/ls.ci[2])
 y.nb <- vglm(N.ind ~ 1, posnegbinomial)
 ## With sads
 y.nb2 <- fitnbinom(N.ind, 
-                   start.value=c(size=0.3, mu=mean(N.ind)))
+                   start.value=c(size=0.03, mu=mean(N.ind)))
 ## Comparing: 
 exp(coef(y.nb))
 coef(y.nb2)
