@@ -836,12 +836,16 @@ shen.S2 <- function(D, alpha, beta, t, T){
 #' @param x vector of species abundances in the sample
 #' @param x.sd vector of standard deviations of species abundances,
 #'     needded if 'bootstrap = TRUE'.
+#' @param lm.sd.fit lm object, fit of a linear regression of the log
+#'     of standard deviation of estimates of population sizes as a
+#'     function of log of the estimated values. Needded if 'bootstrap
+#'     = TRUE' and 'x.sd' is not provided.
 #' @param effort sampling effort, that is, the fraction of the total
 #'     area or total number of individuals included in the sample.
 #' @param boot logical, should boostrap confidence intervals of
 #'     estimated species richness be calculated?
-#' @param n.boot number of boostrap samples to calculate CI's
-ulrich <- function(x, x.sd, effort=1, boot=FALSE, n.boot = 100){
+#' @param n.boot number of boostrap samples to calculate CI's.
+ulrich <- function(x, x.sd, lm.sd.fit, effort=1, boot=FALSE, n.boot = 100){
     ## rad
     x.rad <- rad(x)
     ## Linear regression through central 50% quantiles of the RAD
@@ -859,12 +863,29 @@ ulrich <- function(x, x.sd, effort=1, boot=FALSE, n.boot = 100){
     S <- data.frame(estimate = c(S.reg1,S.reg2), boot.mean = NA, boot.CI.low = NA, boot.CI.up = NA)
     rownames(S) <- c("LSE", "LNE")
     if(boot){
-        sims <- rnorm(length(x)*n.boot, mean = x, sd = x.sd)
-        dim(sims) <- c(length(x), n.boot)
+        if( missing(x.sd) & missing(lm.sd.fit) )
+            stop("To run boostrap please provide 'x.sd' or 'lm.sd.fit'")
+        else
+            if(missing(x.sd)){
+                ## Calculate sd of pop estimates for each species in rad
+                lmean.sd <- predict(lm.sd.fit, newdata=data.frame(population=x))
+                ## standard deviation of sd (from regression object)
+                lsd.sd <- summary(lm.sd.fit)$sigma
+                ## Samples abundances sd's from a Gaussian for each bootstrap simulation
+                x.sd <- exp(rnorm(length(x)*n.boot, mean = lmean.sd, sd = lsd.sd))
+                dim(x.sd) <- c(length(x), n.boot)
+                sims <- matrix( nrow=length(x), ncol = n.boot)
+                for(i in 1:n.boot)
+                    sims[,i] <- rnorm(length(x), mean = x, sd = x.sd[,i])
+            }
+        else{
+                sims <- rnorm(length(x)*n.boot, mean = x, sd = x.sd)
+                dim(sims) <- c(length(x), n.boot)
+            }
         b1 <- apply(sims, 2, function(x) ulrich(x,  boot=FALSE)$S[,1])
         S[1,2:4] <- c(mean(b1[1,]), quantile(b1[1,], probs=c(0.025, 0.975)))
         S[2,2:4] <- c(mean(b1[2,]), quantile(b1[2,], probs=c(0.025, 0.975)))
-        }
+    }
     return(
         list(S = S, coefs=c(coef(p.lm), d=d) , lm.fit = p.lm)
         )
@@ -966,18 +987,13 @@ hui.boot <- function(mu, lmean.k, lsd.k, n.samp, N.tot, pois.samp=TRUE, nrep = 1
 #'     is, sum of plot areas)
 #' @param lm.sd.fit lm object, fit of a linear regression of the log
 #'     of standard deviation of estimates of population sizes as a
-#'     function of the estimated values. Ignored if data has a vector
+#'     function of log of the estimated values. Ignored if data has a vector
 #'     names 'pop.sd'.
-#' @param ulrich.bias.fit lm object, fit of linar regression Ulrich's
-#'     LSE richness estimate in function true species richness of
-#'     from samples simulated with the function
-#'     sim.abc(... summary=FALSE). See the script 'ulrich_bias.R' for
-#'     examples. 
 #' @return a list with objects needed to reproduce the results in the
 #'     paper (some of them are redundant, to be simplified).
 atdn.estimates <- function(path.to.data,
                            Tot.t, Tot.A = 6.29e8,
-                           N.plots, Samp.A, lm.sd.fit, ulrich.bias.fit) {
+                           N.plots, Samp.A, lm.sd.fit) {
     ## ----Data prep-----------------------------------------------------------
     ## loads data
     data <- read.csv2(path.to.data, as.is=TRUE)
@@ -1039,12 +1055,15 @@ atdn.estimates <- function(path.to.data,
     lm.sd.sigma <- summary(lm.sd)$sigma
     
     ## ----Linear extrapolation from RAD of estimated population sizes ------------------------------
-    S.ulrich <- ulrich(data$population)
-    ## Bias-corrected estimate
-    cf.u <- unname( coef(ulrich.bias.fit) )
-    S.r.ls <- cf.u[1] + cf.u[2]*S.ulrich$S[1,1]
+    if("pop.sd" %in% names(data))
+        S.ulrich <- ulrich(data$population, x.sd = data$pop.sd, boot = TRUE, n.boot = 200)
+    else
+        S.ulrich <- ulrich(data$population, lm.sd.fit = lm.sd, boot = TRUE, n.boot = 200)
+   
     
-    ## ----Amazon alpha--------------------------------------------------------
+    
+    ## ----Amazon S and alpha from LSE ---------------------------------------
+    S.r.ls <- S.ulrich$S[1,1]
     alpha.r <- fishers.alpha(N = Tot.t, S = S.r.ls)
 
     ## ----amazon LS rad-------------------------------------------------------
@@ -1080,71 +1099,7 @@ atdn.estimates <- function(path.to.data,
     ## Predicted log(k) values for TNB rad
     reg.nb.rad.lk <- predict(lm.k, 
                              newdata=data.frame(dens.ha=reg.nb.rad/Tot.A))
-    ## Simulation of population sizes from samples of each RAD
-    ## ls.rnd <- Pois.samp(rad = reg.ls.rad, tot.area = Tot.A, 
-    ##                     n.plots = N.plots,
-    ##                     lmean.sd = reg.ls.rad.lsd,
-    ##                     lsd.sd = lm.sd.sigma, nrep =20)
-    ## nb.rnd <- Pois.samp(rad = reg.nb.rad, tot.area = Tot.A,
-    ##                     lmean.sd = reg.nb.rad.lsd,
-    ##                     lsd.sd = lm.sd.sigma,
-    ##                     n.plots = N.plots, nrep = 20)
-    ## ls.clump <- NB.samp(rad = reg.ls.rad, tot.area = Tot.A, 
-    ##                     n.plots = N.plots,
-    ##                     lmean.sd = reg.ls.rad.lsd,
-    ##                     lsd.sd = lm.sd.sigma,
-    ##                     lmean.k = reg.ls.rad.lk, 
-    ##                     lsd.k = lm.k.sigma, nrep = 20)
-    ## nb.clump <- NB.samp(rad = reg.nb.rad, tot.area = Tot.A, 
-    ##                     n.plots = N.plots,
-    ##                     lmean.sd = reg.nb.rad.lsd,
-    ##                     lsd.sd = lm.sd.sigma,
-    ##                     lmean.k = reg.nb.rad.lk, 
-    ##                     lsd.k = lm.k.sigma, nrep = 20)
     
-## --- LSE Bootstrap mean and CI-----------------------------------------------
-    ## tmp1 <- rnorm(nrow(data)*1000,
-    ##               mean = data$population,
-    ##               sd = exp(rnorm(nrow(data)*1000, predict(lm.sd, newdata=data.frame(population = data$population)), lm.sd.sigma)))
-    ## tmp1 <- matrix(tmp1, ncol= 1000)
-    ## tmp1 <- apply(tmp1, 2, function(x) ulrich(x)$S[,1])
-    ## ulrich.boot <- data.frame(
-    ##     mean = apply(tmp1, 1, mean),
-    ##     IC.low = apply(tmp1, 1, quantile, 0.025),
-    ##     IC.up = apply(tmp1, 1, quantile, 0.975),
-    ##     row.names = c("LSE","LNE")
-    ## )
-    ## rm(tmp1)
-    S.r.ls.boot <- 
-        ulrich.boot(rad = reg.ls.rad, tot.area = Tot.A, 
-                    n.plots = N.plots,
-                    lmean.sd = reg.ls.rad.lsd,
-                    lsd.sd = lm.sd.sigma)$summary
-    ## S.r.ls.boot <- rbind(
-    ##     ulrich.boot(rad = reg.ls.rad, tot.area = Tot.A, 
-    ##                 n.plots = N.plots,
-    ##                 lmean.sd = reg.ls.rad.lsd,
-    ##                 lsd.sd = lm.sd.sigma)$summary,
-    ##     ulrich.boot(rad = reg.ls.rad, tot.area = Tot.A, 
-    ##                 n.plots = N.plots,
-    ##                 lmean.sd = reg.ls.rad.lsd,
-    ##                 lsd.sd = lm.sd.sigma,
-    ##                 lmean.k = reg.ls.rad.lk, 
-    ##                 lsd.k = lm.k.sigma,
-    ##                 pois.samp=FALSE)$summary,
-    ##     ulrich.boot(rad = reg.nb.rad, tot.area = Tot.A, 
-    ##                 n.plots = N.plots,
-    ##                 lmean.sd = reg.ls.rad.lsd,
-    ##                 lsd.sd = lm.sd.sigma)$summary,
-    ##     ulrich.boot(rad = reg.nb.rad, tot.area = Tot.A, 
-    ##                 n.plots = N.plots,
-    ##                 lmean.sd = reg.ls.rad.lsd,
-    ##                 lsd.sd = lm.sd.sigma,
-    ##                 lmean.k = reg.ls.rad.lk, 
-    ##                 lsd.k = lm.k.sigma,
-    ##                 pois.samp=FALSE)$summary
-    ## )
-    ## rownames(S.r.ls.boot) <-  c("LS rnd", "LS clump", "TNB rnd", "TNB clump")
     
     cat("\n----------------------------------------------------------------------\n
                Estimates from occupancy data (Shen & He and Hui estimators)\n
