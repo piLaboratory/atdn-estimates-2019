@@ -10,7 +10,7 @@ mc.cores <- 12
 ## Bias of logseries method
 ################################################################################
 ## Checking the relationship between Estimated and real S
-S1 <- round(runif(100, 1e4, 2.5e4))
+S1 <- round(runif(250, 1e4, 2.5e4))
 
 sim.ls.rad <- mclapply(S1, sim.rad, N = atdn.13$Tot.t, sad = "ls", nb.fit = atdn.13$y.nb2,
                           mc.cores = mc.cores, upper = 1e12)
@@ -25,24 +25,6 @@ sim.ls.estS <- data.frame(S = S1,
                                                          function(x) ls.estS(x$clump.samp, N = atdn.13$Tot.t),
                                                          mc.cores = mc.cores))
                              )
-## Bias at the range of the confidence interval of the observed estimate ##
-S2 <- round( runif(100, atdn.13$S.ls.ci[1], atdn.13$S.ls.ci[2]) )
-
-sim.ls.rad.ci <- mclapply(S2, sim.rad, N = atdn.13$Tot.t, sad = "ls", nb.fit = atdn.13$y.nb2,
-                          mc.cores = mc.cores, upper = 1e12)
-
-sim.ls.samp.ci <- mclapply(sim.ls.rad.ci, sim.radsamp, tot.area  = atdn.13$Tot.A,
-                           n.plots = atdn.13$N.plots, lmk.fit = atdn.13$lm.k,
-                           nb.fit = atdn.13$y.nb2, mc.cores = mc.cores)
-sim.ls.estS.ci <- data.frame(S = S2,
-                             S.est.rnd = unlist( mclapply(sim.ls.samp.ci,
-                                                         function(x) ls.estS(x$rnd.samp, N = atdn.13$Tot.t),
-                                                         mc.cores = mc.cores)),
-                             S.est.clump = unlist( mclapply(sim.ls.samp.ci,
-                                                         function(x) ls.estS(x$clump.samp, N = atdn.13$Tot.t),
-                                                         mc.cores = mc.cores))
-                             )
-
 
 ################################################################################
 ## Bias of negative binomial method
@@ -71,29 +53,12 @@ sim.tnb.estS <- data.frame(S = S3,
                               S.est.clump = sapply(sim.tnb.samp,
                                                  function(x) f3(x$clump.samp, size = 0.018) )
                               )
-## Bias at the range of the confidence interval of the observed estimate ##
-S4 <- round( runif(250, atdn.13$tovo.S$CIs[4,2], atdn.13$tovo.S$CIs[4,1]) )
-
-sim.tnb.rad.ci <- mclapply(S4, sim.rad, N = atdn.13$Tot.t, sad = "tnb",
-                                       nb.fit = atdn.13$y.nb2, mc.cores = mc.cores, upper = 1e20)
-sim.tnb.samp.ci <- mclapply(sim.tnb.rad.ci, sim.radsamp, tot.area  = atdn.13$Tot.A,
-                           n.plots = atdn.13$N.plots, lmk.fit = atdn.13$lm.k,
-                           nb.fit = atdn.13$y.nb2, mc.cores = mc.cores)
-sim.tnb.estS.ci <- data.frame(S = S4,
-                              S.est.rnd = unlist(mclapply(sim.tnb.samp.ci,
-                                                 function(x) f3(x$rnd.samp, size = 0.018) , mc.cores = mc.cores)),
-                              S.est.clump = unlist(mclapply(sim.tnb.samp.ci,
-                                                            function(x) f3(x$clump.samp, size = 0.018) , mc.cores = mc.cores))
-                              )
-
 
 # Storing in lists
 bias13 <- list(
     ls = list(rads=sim.ls.rad, samples = sim.ls.samp, estimates = sim.ls.estS),
-    ls.ci = list(rads=sim.ls.rad.ci, samples = sim.ls.samp.ci, estimates = sim.ls.estS.ci),
-    tnb = list(rads=sim.tnb.rad, samples = sim.tnb.samp, estimates = sim.tnb.estS),
-    tnb.ci = list(rads=sim.tnb.rad.ci, samples = sim.tnb.samp.ci, estimates = sim.tnb.estS.ci)
-    )
+    tnb = list(rads=sim.tnb.rad, samples = sim.tnb.samp, estimates = sim.tnb.estS)
+)
 
 save(bias13, file = "bias_ls_tnb_2013.RData")
     

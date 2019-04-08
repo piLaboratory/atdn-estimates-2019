@@ -1,0 +1,304 @@
+
+R version 3.5.2 (2018-12-20) -- "Eggshell Igloo"
+Copyright (C) 2018 The R Foundation for Statistical Computing
+Platform: x86_64-pc-linux-gnu (64-bit)
+
+R é um software livre e vem sem GARANTIA ALGUMA.
+Você pode redistribuí-lo sob certas circunstâncias.
+Digite 'license()' ou 'licence()' para detalhes de distribuição.
+
+R é um projeto colaborativo com muitos contribuidores.
+Digite 'contributors()' para obter mais informações e
+'citation()' para saber como citar o R ou pacotes do R em publicações.
+
+Digite 'demo()' para demonstrações, 'help()' para o sistema on-line de ajuda,
+ou 'help.start()' para abrir o sistema de ajuda em HTML no seu navegador.
+Digite 'q()' para sair do R.
+
+[Área de trabalho anterior carregada]
+
+> library(parallel)
+> source("../functions.R")
+Carregando pacotes exigidos: stats4
+Carregando pacotes exigidos: splines
+Carregando pacotes exigidos: bbmle
+
+Attaching package: ‘bbmle’
+
+The following object is masked from ‘package:VGAM’:
+
+    AICc
+
+
+Attaching package: ‘sads’
+
+The following objects are masked from ‘package:VGAM’:
+
+    dpareto, dzipf, ppareto, pzipf, qpareto, qzipf, rpareto, rzipf
+
+Carregando pacotes exigidos: abc.data
+Carregando pacotes exigidos: nnet
+Carregando pacotes exigidos: quantreg
+Carregando pacotes exigidos: SparseM
+
+Attaching package: ‘SparseM’
+
+The following object is masked from ‘package:base’:
+
+    backsolve
+
+Carregando pacotes exigidos: MASS
+
+Attaching package: ‘MASS’
+
+The following object is masked from ‘package:untb’:
+
+    select
+
+Carregando pacotes exigidos: locfit
+locfit 1.5-9.1 	 2013-03-22
+> load("../lists_with_all_objects.RData")
+> load("../abcSummaries.RData")
+> load("bias_ls_tnb_2013.RData")
+> load("bias_ls_tnb_2013t.RData")
+> load("bias_ls_tnb_2019.RData")
+> 
+> 
+> ## Number of cores to use
+> mc.cores <- 3
+> 
+> ## Auxiliary functions ##
+> f3 <- function(x, obj){
++     y <-  with(obj,
++                try(sim.abc(rad = x, 
++                        tot.area = Tot.A,
++                        n.plots = N.plots,
++                        lm.sd.fit = lm.sd,
++                        lmk.fit = lm.k,
++                        nrep=1,
++                        summary = FALSE))
++                )
++     if(class(y)=="try-error")
++         return(list(rnd.samp = NA,
++                     clump.samp = NA))
++     else
++         return( list(rnd.samp = y$rnd.samp$with.est.error,
++                clump.samp = y$clump.samp$with.est.error) )
++ }
+> 
+> f4 <- function(x, obj, index, ...){
++     y <- with(obj,
++          try(ulrich(x[[index]], lm.sd.fit = lm.sd , boot = TRUE, ...)$S[1,2])
++          )
++     if(class(y)=="try-error")
++         return(NA)
++     else
++         return(y)
++     }
+> 
+> ################################################################################
+> ## 2013
+> ################################################################################
+> ## Logseries rad
+> sim.ls.rad <- bias13$ls$rads
+> sim.ls.samp <- mclapply(sim.ls.rad, f3, obj = atdn.13, mc.cores=mc.cores)
+> sim.ls.estS <- data.frame(S = sapply(sim.ls.rad, length),
++                          S.est.rnd = unlist(mclapply(sim.ls.samp, f4, obj = atdn.13, index = 1, mc.cores = mc.cores)),
++                          S.est.clump = unlist(mclapply(sim.ls.samp, f4, obj = atdn.13, index = 2, mc.cores = mc.cores))
++                          )
+> ## TNB rad
+> sim.tnb.rad <- bias13$tnb$rads
+> sim.tnb.samp <- mclapply(sim.tnb.rad, f3, obj = atdn.13, mc.cores=mc.cores)
+> sim.tnb.estS <- data.frame(S = sapply(sim.tnb.rad, length),
++                          S.est.rnd = unlist(mclapply(sim.tnb.samp, f4, obj = atdn.13, index = 1, mc.cores = mc.cores)),
++                          S.est.clump = unlist(mclapply(sim.tnb.samp, f4, obj = atdn.13, index = 2, mc.cores = mc.cores))
++                          )
+> 
+> ## Stores in a list
+> bias.lse.13 <- list(
++     ls = list(rads = sim.ls.rad, samples = sim.ls.samp, estimates = sim.ls.estS),
++     tnb = list(rads = sim.tnb.rad, samples = sim.tnb.samp, estimates = sim.tnb.estS)
++ )
+> 
+> ################################################################################
+> ## 2013 with updated taxonomy
+> ################################################################################
+> ## Logseries rad
+> sim.ls.rad <- bias13t$ls$rads
+> sim.ls.samp <- mclapply(sim.ls.rad, f3, obj = atdn.13.tax, mc.cores=mc.cores)
+> sim.ls.estS <- data.frame(S = sapply(sim.ls.rad, length),
++                           S.est.rnd = unlist(mclapply(sim.ls.samp, f4, obj = atdn.13.tax, index = 1, mc.cores = mc.cores)),
++                           S.est.clump = unlist(mclapply(sim.ls.samp, f4, obj = atdn.13.tax, index = 2, mc.cores = mc.cores))
++                           )
+> ## TNB rad
+> sim.tnb.rad <- bias13t$tnb$rads
+> sim.tnb.samp <- mclapply(sim.tnb.rad, f3, obj = atdn.13.tax, mc.cores=mc.cores)
+Error in m1[1:sum(y1), j] <- rad[y1 > 0] : 
+  substituto tem comprimento zero
+Error in m1[1:sum(y1), j] <- rad[y1 > 0] : 
+  substituto tem comprimento zero
+> sim.tnb.estS <- data.frame(S = sapply(sim.tnb.rad, length),
++                            S.est.rnd = unlist(mclapply(sim.tnb.samp, f4, obj = atdn.13.tax, index = 1, mc.cores = mc.cores)),
++                            S.est.clump = unlist(mclapply(sim.tnb.samp, f4, obj = atdn.13.tax, index = 2, mc.cores = mc.cores))
++                            )
+Error in data.frame(rank = 1:length(z), abund = sort(z, decreasing = T)) : 
+  arguments imply differing number of rows: 2, 0
+Error in lm.fit(x, y, offset = offset, singular.ok = singular.ok, ...) : 
+  0 (non-NA) cases
+Error in lm.fit(x, y, offset = offset, singular.ok = singular.ok, ...) : 
+  0 (non-NA) cases
+Error in quantile.default(b1[1, ], probs = c(0.025, 0.975)) : 
+  missing values and NaN's not allowed if 'na.rm' is FALSE
+Error in data.frame(rank = 1:length(z), abund = sort(z, decreasing = T)) : 
+  arguments imply differing number of rows: 2, 0
+Error in lm.fit(x, y, offset = offset, singular.ok = singular.ok, ...) : 
+  0 (non-NA) cases
+Error in lm.fit(x, y, offset = offset, singular.ok = singular.ok, ...) : 
+  0 (non-NA) cases
+Error in quantile.default(b1[1, ], probs = c(0.025, 0.975)) : 
+  missing values and NaN's not allowed if 'na.rm' is FALSE
+Error in lm.fit(x, y, offset = offset, singular.ok = singular.ok, ...) : 
+  0 (non-NA) cases
+Error in quantile.default(b1[1, ], probs = c(0.025, 0.975)) : 
+  missing values and NaN's not allowed if 'na.rm' is FALSE
+Error in lm.fit(x, y, offset = offset, singular.ok = singular.ok, ...) : 
+  0 (non-NA) cases
+Error in lm.fit(x, y, offset = offset, singular.ok = singular.ok, ...) : 
+  0 (non-NA) cases
+Error in lm.fit(x, y, offset = offset, singular.ok = singular.ok, ...) : 
+  0 (non-NA) cases
+Error in rad(x) : objeto 'y' não encontrado
+Error in lm.fit(x, y, offset = offset, singular.ok = singular.ok, ...) : 
+  0 (non-NA) cases
+Error in lm.fit(x, y, offset = offset, singular.ok = singular.ok, ...) : 
+  0 (non-NA) cases
+Error in lm.fit(x, y, offset = offset, singular.ok = singular.ok, ...) : 
+  0 (non-NA) cases
+Error in lm.fit(x, y, offset = offset, singular.ok = singular.ok, ...) : 
+  0 (non-NA) cases
+Error in quantile.default(b1[1, ], probs = c(0.025, 0.975)) : 
+  missing values and NaN's not allowed if 'na.rm' is FALSE
+Error in lm.fit(x, y, offset = offset, singular.ok = singular.ok, ...) : 
+  0 (non-NA) cases
+Error in data.frame(rank = 1:length(z), abund = sort(z, decreasing = T)) : 
+  arguments imply differing number of rows: 2, 0
+Error in rad(x) : objeto 'y' não encontrado
+Error in data.frame(rank = 1:length(z), abund = sort(z, decreasing = T)) : 
+  arguments imply differing number of rows: 2, 0
+Error in lm.fit(x, y, offset = offset, singular.ok = singular.ok, ...) : 
+  0 (non-NA) cases
+Error in lm.fit(x, y, offset = offset, singular.ok = singular.ok, ...) : 
+  0 (non-NA) cases
+Error in lm.fit(x, y, offset = offset, singular.ok = singular.ok, ...) : 
+  0 (non-NA) cases
+Error in data.frame(rank = 1:length(z), abund = sort(z, decreasing = T)) : 
+  arguments imply differing number of rows: 2, 0
+Error in lm.fit(x, y, offset = offset, singular.ok = singular.ok, ...) : 
+  0 (non-NA) cases
+Error in quantile.default(b1[1, ], probs = c(0.025, 0.975)) : 
+  missing values and NaN's not allowed if 'na.rm' is FALSE
+Error in data.frame(rank = 1:length(z), abund = sort(z, decreasing = T)) : 
+  arguments imply differing number of rows: 2, 0
+Error in lm.fit(x, y, offset = offset, singular.ok = singular.ok, ...) : 
+  0 (non-NA) cases
+Error in lm.fit(x, y, offset = offset, singular.ok = singular.ok, ...) : 
+  0 (non-NA) cases
+Error in quantile.default(b1[1, ], probs = c(0.025, 0.975)) : 
+  missing values and NaN's not allowed if 'na.rm' is FALSE
+Error in data.frame(rank = 1:length(z), abund = sort(z, decreasing = T)) : 
+  arguments imply differing number of rows: 2, 0
+Error in quantile.default(b1[1, ], probs = c(0.025, 0.975)) : 
+  missing values and NaN's not allowed if 'na.rm' is FALSE
+Error in lm.fit(x, y, offset = offset, singular.ok = singular.ok, ...) : 
+  0 (non-NA) cases
+Error in quantile.default(b1[1, ], probs = c(0.025, 0.975)) : 
+  missing values and NaN's not allowed if 'na.rm' is FALSE
+Error in lm.fit(x, y, offset = offset, singular.ok = singular.ok, ...) : 
+  0 (non-NA) cases
+Error in data.frame(rank = 1:length(z), abund = sort(z, decreasing = T)) : 
+  arguments imply differing number of rows: 2, 0
+Error in quantile.default(b1[1, ], probs = c(0.025, 0.975)) : 
+  missing values and NaN's not allowed if 'na.rm' is FALSE
+Error in rad(x) : objeto 'y' não encontrado
+Error in lm.fit(x, y, offset = offset, singular.ok = singular.ok, ...) : 
+  0 (non-NA) cases
+Error in lm.fit(x, y, offset = offset, singular.ok = singular.ok, ...) : 
+  0 (non-NA) cases
+Error in lm.fit(x, y, offset = offset, singular.ok = singular.ok, ...) : 
+  0 (non-NA) cases
+Error in quantile.default(b1[1, ], probs = c(0.025, 0.975)) : 
+  missing values and NaN's not allowed if 'na.rm' is FALSE
+Error in lm.fit(x, y, offset = offset, singular.ok = singular.ok, ...) : 
+  0 (non-NA) cases
+Error in lm.fit(x, y, offset = offset, singular.ok = singular.ok, ...) : 
+  0 (non-NA) cases
+Error in data.frame(rank = 1:length(z), abund = sort(z, decreasing = T)) : 
+  arguments imply differing number of rows: 2, 0
+Error in rad(x) : objeto 'y' não encontrado
+Error in data.frame(rank = 1:length(z), abund = sort(z, decreasing = T)) : 
+  arguments imply differing number of rows: 2, 0
+Error in lm.fit(x, y, offset = offset, singular.ok = singular.ok, ...) : 
+  0 (non-NA) cases
+Error in lm.fit(x, y, offset = offset, singular.ok = singular.ok, ...) : 
+  0 (non-NA) cases
+Error in quantile.default(b1[1, ], probs = c(0.025, 0.975)) : 
+  missing values and NaN's not allowed if 'na.rm' is FALSE
+> 
+> ## Stores in a list
+> bias.lse.13t <- list(
++     ls = list(rads = sim.ls.rad, samples = sim.ls.samp, estimates = sim.ls.estS),
++     tnb = list(rads = sim.tnb.rad, samples = sim.tnb.samp, estimates = sim.tnb.estS)
++ )
+> 
+> ################################################################################
+> ## 2019
+> ################################################################################
+> ## Logseries rad
+> sim.ls.rad <- bias19$ls$rads
+> sim.ls.samp <- mclapply(sim.ls.rad, f3, obj = atdn.19, mc.cores=mc.cores)
+> sim.ls.estS <- data.frame(S = sapply(sim.ls.rad, length),
++                          S.est.rnd = unlist(mclapply(sim.ls.samp, f4, obj = atdn.19, index = 1, mc.cores = mc.cores)),
++                          S.est.clump = unlist(mclapply(sim.ls.samp, f4, obj = atdn.19, index = 2, mc.cores = mc.cores))
++                          )
+> ## TNB rad
+> sim.tnb.rad <- bias19$tnb$rads
+> sim.tnb.samp <- mclapply(sim.tnb.rad, f3, obj = atdn.19, mc.cores=mc.cores)
+> sim.tnb.estS <- data.frame(S = sapply(sim.tnb.rad, length),
++                          S.est.rnd = unlist(mclapply(sim.tnb.samp, f4, obj = atdn.19, index = 1, mc.cores = mc.cores)),
++                          S.est.clump = unlist(mclapply(sim.tnb.samp, f4, obj = atdn.19, index = 2, mc.cores = mc.cores))
++                          )
+Error in lm.fit(x, y, offset = offset, singular.ok = singular.ok, ...) : 
+  0 (non-NA) cases
+Error in lm.fit(x, y, offset = offset, singular.ok = singular.ok, ...) : 
+  0 (non-NA) cases
+Error in lm.fit(x, y, offset = offset, singular.ok = singular.ok, ...) : 
+  0 (non-NA) cases
+Error in lm.fit(x, y, offset = offset, singular.ok = singular.ok, ...) : 
+  0 (non-NA) cases
+Error in quantile.default(b1[1, ], probs = c(0.025, 0.975)) : 
+  missing values and NaN's not allowed if 'na.rm' is FALSE
+Error in lm.fit(x, y, offset = offset, singular.ok = singular.ok, ...) : 
+  0 (non-NA) cases
+Error in lm.fit(x, y, offset = offset, singular.ok = singular.ok, ...) : 
+  0 (non-NA) cases
+Error in lm.fit(x, y, offset = offset, singular.ok = singular.ok, ...) : 
+  0 (non-NA) cases
+Error in quantile.default(b1[1, ], probs = c(0.025, 0.975)) : 
+  missing values and NaN's not allowed if 'na.rm' is FALSE
+Error in quantile.default(b1[1, ], probs = c(0.025, 0.975)) : 
+  missing values and NaN's not allowed if 'na.rm' is FALSE
+Error in lm.fit(x, y, offset = offset, singular.ok = singular.ok, ...) : 
+  0 (non-NA) cases
+> 
+> ## Stores in a list
+> bias.lse.19 <- list(
++     ls = list(rads = sim.ls.rad, samples = sim.ls.samp, estimates = sim.ls.estS),
++     tnb = list(rads = sim.tnb.rad, samples = sim.tnb.samp, estimates = sim.tnb.estS)
++ )
+> 
+> ## Saves all objects
+> save(bias.lse.13, bias.lse.13t, bias.lse.19, file = "bias_LSE.RData")
+> 
+> proc.time()
+  usuário   sistema decorrido 
+13527.809    92.908  4870.841 

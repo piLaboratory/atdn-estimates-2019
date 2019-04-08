@@ -61,7 +61,10 @@ tovo <- function(fit, cf, S.obs, p, CI=FALSE, loglink=FALSE){
     ## Estimated number of species 
     S.est <- S.obs*(1-(1-csi)^cf[1]) / (1-(1-csi.p)^cf[1])
     if(CI){
-        ci <- ifelse(loglink, exp(confint), confint(fit) )
+        if(loglink)
+            ci <- exp(confint(fit))
+        else
+            ci <- confint(fit) 
         p.low <- 1 - tovo.csi(ci[1,1], ci[2,1], p=p, log=FALSE)
         p.up <- 1 - tovo.csi(ci[1,2], ci[2,2], p=p, log=FALSE)
         S.low <- tovo(cf=ci[,1], S.obs=S.obs, p=p)
@@ -519,7 +522,7 @@ sim.rad <- function(S, N, sad=c("ls","tnb","lnorm"), nb.fit, ...){
     return(rad)
 }
 
-#' simulates Poisson and NB samples species abundance distribution.
+#' simulates Poisson and NB samples from species abundance distribution.
 #'
 #' @details This function simulates random and clumped samples from a
 #'     a vector of expected species abundances in the community. The
@@ -575,7 +578,7 @@ sim.radsamp<- function(rad,
     ## NB sample
     nb.samp <- apply(matrix(rnbinom(S*n.plots, mu = rad/tot.area,
                                     size = rad.k), nrow = S), 1, sum)
-    ## Returns a list with both type of sampling
+    ## Returns a list with both types of sampling
     list(rnd.samp = p.samp, clump.samp = nb.samp)    
 }
 
@@ -621,9 +624,10 @@ sim.radsamp<- function(rad,
 #'     parameter and the expected abundance of each species in the
 #'     sample.
 #' @param S positive integer, total number of species in the community
-#'     to be sampled. 
+#'     to be sampled. Ignored if 'rad' is provided.
 #' @param N positive integer, total number of individuals in the
-#'     community to be sampled. 
+#'     community to be sampled. Ignored if 'rad' is provided.
+#' @param rad a vector of abundances of species to be sampled.
 #' @param sad character, the name of the theoretical distribution
 #'     model for the RAD of the community. Currently logseries ("ls"),
 #'     truncated negative binomial ("tnb") or lognormal ("lnorm").
@@ -664,11 +668,12 @@ sim.radsamp<- function(rad,
 #' \item lsd1, lsd2: standard deviation of the recorded abundances
 #' If summary = FALSE a list with the simulated abundances taken from Poisson and Negative binomial samples.
 #' }
-sim.abc <- function(S, N, sad=c("ls","tnb","lnorm"),
+sim.abc <- function(S, N, rad, sad=c("ls","tnb","lnorm"),
                     tot.area, n.plots,
                     lm.sd.fit, lmk.fit, nb.fit,
                     nrep = 1, summary = TRUE, ...){
-    rad <- sim.rad(S, N, sad, nb.fit, ...)
+    if(missing(rad))
+        rad <- sim.rad(S, N, sad, nb.fit, ...)
     ## Calculate sd of pop estimates for each species in rad
     rad.lmean.sd <- predict(lm.sd.fit, newdata=data.frame(population=rad))
     ## standard deviation of sd (from regression object)
@@ -846,6 +851,7 @@ shen.S2 <- function(D, alpha, beta, t, T){
 #'     estimated species richness be calculated?
 #' @param n.boot number of boostrap samples to calculate CI's.
 ulrich <- function(x, x.sd, lm.sd.fit, effort=1, boot=FALSE, n.boot = 100){
+    x <- x[x>0]
     ## rad
     x.rad <- rad(x)
     ## Linear regression through central 50% quantiles of the RAD
@@ -896,20 +902,25 @@ ulrich <- function(x, x.sd, lm.sd.fit, effort=1, boot=FALSE, n.boot = 100){
 #' @param pois.samp logical,  if TRUE simulates a Poisson sample of the regional RAD;
 #'     simulates a negative binomial sample with parameters passed to 'NB.samp' otherwise.
 #' @param nrep positive integer, number of boostrap simulations to be done.
-ulrich.boot <- function(..., pois.samp=TRUE, nrep = 100){
+ulrich.boot <- function(rad, tot.area, n.plots, lm.sd.fit, lm.k.fit,  pois.samp=TRUE, nrep = 100){
+    x <-  rad[rad>0]
     y <- vector(mode = "list", length = nrep)
+    lmean.sd <- predict(lm.sd.fit, newdata = data.frame(population = x))
+    lsd.sd <- summary(lm.sd.fit)$sigma
     if(pois.samp)
     {
         for(i in 1:nrep)
-            y[[i]] <- Pois.samp(...)
+            y[[i]] <- Pois.samp(x, tot.area, n.plots, lmean.sd, lsd.sd)
     }
     else
     {
+        lmean.k <- predict(lm.k.fit, newdata = data.frame(dens.ha = x/tot.area))
+        lsd.k <- summary(lm.k.fit)$sigma
         for(i in 1:nrep)
-            y[[i]] <- NB.samp(...)
+            y[[i]] <- NB.samp(x, tot.area, n.plots, lmean.k, lsd.k, lmean.sd, lsd.sd)
     }
     #browser()
-    t1 <- sapply(y, function(x) ulrich(x[,2])$S[1,1])
+    t1 <- sapply(y, function(x) ulrich(x[,2], lm.sd.fit = lm.sd.fit, boot=TRUE)$S[1,2])
     list( summary = c(mean = mean(t1),
                       ic.low = quantile(t1, 0.025),
                       ic.up = quantile(t1, 0.975)),
@@ -957,7 +968,25 @@ hui.boot <- function(mu, lmean.k, lsd.k, n.samp, N.tot, pois.samp=TRUE, nrep = 1
                       boot = t1 )
 }
 
-
+#' Calulates unbiased men and CIs from the bias simulations
+#'
+#' @param object list, an object returned from the bias analyses (see scripts in directory 'bias estimation')
+#' @param ci.vector, vector of lower and upper limits of original CI of the estimate.
+#'
+#' @return a data.frame with the mean, and limits of empirical CI corrected from bias between the estimated value and true value,
+#' assuming random and clumped sampling.
+bias.ci <- function(object, ci.vector){
+    ci <- unlist(sort(ci.vector))
+    y1 <- with(object$estimates,
+               S[S.est.rnd > ci[1] & S.est.rnd < ci[2]])
+    y2 <- with(object$estimates,
+               S[S.est.clump > ci[1] & S.est.clump < ci[2]])
+    lista <- list(y1,y2)
+    data.frame(mean = sapply(lista,mean, na.rm =TRUE),
+               IC.low = sapply(lista, quantile, 0.025, na.rm=TRUE),
+               IC.up = sapply(lista, quantile, 0.975, na.rm=TRUE),
+               row.names = c("rnd.samp", "clump.samp"))
+    }
 
 #' A function to rule them all
 #'
@@ -1049,29 +1078,28 @@ atdn.estimates <- function(path.to.data,
     ## ---- regression of sd x estimated population  -----------------
     
     if("pop.sd" %in% names(data))
-        lm.sd <- lm( log(pop.sd) ~ log (population), data = data)
+        lm.sd <- lm( log(pop.sd) ~ log(population), data = data)
     else
         lm.sd <- lm.sd.fit
+    
     lm.sd.sigma <- summary(lm.sd)$sigma
     
-    ## ----Linear extrapolation from RAD of estimated population sizes ------------------------------
+    ## ----Linear extrapolation from RAD  of estimated population sizes (LSE) ------------------------------
     if("pop.sd" %in% names(data))
         S.ulrich <- ulrich(data$population, x.sd = data$pop.sd, boot = TRUE, n.boot = 200)
     else
         S.ulrich <- ulrich(data$population, lm.sd.fit = lm.sd, boot = TRUE, n.boot = 200)
    
-    
-    
     ## ----Amazon S and alpha from LSE ---------------------------------------
     S.r.ls <- S.ulrich$S[1,1]
     alpha.r <- fishers.alpha(N = Tot.t, S = S.r.ls)
 
-    ## ----amazon LS rad-------------------------------------------------------
+    ## ----LSE regional rad-------------------------------------------------------
     reg.ls.rad <- ceiling(
         rad.ls(S = S.r.ls, N = Tot.t, alpha = alpha.r)$y
     )
 
-    ## ----TNB regionl RAD-----------------------------------------------------
+    ## ----TNB regional RAD-----------------------------------------------------
     reg.nb.rad <- rad.posnegbin(S = S.nb, size = cf.nb[1], 
                                 prob = 1-csi)$y
 
@@ -1131,77 +1159,12 @@ atdn.estimates <- function(path.to.data,
         ## ----Shen He profile-----------------------------------------------------
         ## Shen.prf <- profile(Shen, which=1)
     ##    }
-    ## Boostrap
-    ## Regional RADs with Shen & He estimate of species numbers
-    ## Log-series
-    ## Shen.ls <- rad.ls(S = S.shen, N = Tot.t,
-    ##                   alpha = fishers.alpha(N = Tot.t, S = S.shen),
-    ##                   lower=1e-12, upper=1e12)$y
-    ## ## TNB
-    ## Shen.tnb <- rad.posnegbin(S = S.shen, size = cf.nb[1], 
-    ##                              prob = 1-csi)$y
-    ## ## Predicted log(k) values for LS rad
-    ## Shen.ls.lk <- predict(lm.k, 
-    ##                          newdata=data.frame(dens.ha=Shen.ls/Tot.A))
-    ## ## Predicted log(k) values for TNB rad
-    ## Shen.tnb.lk <- predict(lm.k, 
-    ##                          newdata=data.frame(dens.ha=Shen.tnb/Tot.A))
-    ## ## Parametric bootstrap simulations: Logseries and Truncated Negative Binomial
-    ## ## with random and clumped sample.
-    ## S.Shen.boot <- rbind(
-    ##     shen.boot(mu = Shen.ls/Tot.A, n.samp = round(Samp.A), N.tot = round(Tot.A),
-    ##                 start=as.list(coef(Shen)), nrep = 200,
-    ##                 method="L-BFGS-B",
-    ##                 upper=c(lS=log(3e4), lalpha=Inf, lbeta=Inf),
-    ##                 lower=c(lS=log(1e3), lalpha=-Inf, lbeta=-Inf))$summary,
-    ##     shen.boot(mu = Shen.ls/Tot.A, n.samp = round(Samp.A), N.tot = round(Tot.A),
-    ##                 start=as.list(coef(Shen)), nrep = 200,
-    ##                 pois.samp = FALSE, lmean.k = Shen.ls.lk, lsd.k = lm.k.sigma,
-    ##                 method="L-BFGS-B",
-    ##                 upper=c(lS=log(3e4), lalpha=Inf, lbeta=Inf),
-    ##                 lower=c(lS=log(1e3), lalpha=-Inf, lbeta=-Inf))$summary,
-    ##     shen.boot(mu = Shen.tnb/Tot.A, n.samp = round(Samp.A), N.tot = round(Tot.A),
-    ##                 start=as.list(coef(Shen)), nrep = 200,
-    ##                 method="L-BFGS-B",
-    ##                 upper=c(lS=log(3e4), lalpha=Inf, lbeta=Inf),
-    ##                 lower=c(lS=log(1e3), lalpha=-Inf, lbeta=-Inf))$summary,
-    ##     shen.boot(mu = Shen.tnb/Tot.A, n.samp = round(Samp.A), N.tot = round(Tot.A),
-    ##                 start=as.list(coef(Shen)), nrep = 200,
-    ##                 pois.samp = FALSE, lmean.k = Shen.tnb.lk, lsd.k = lm.k.sigma,
-    ##                 method="L-BFGS-B",
-    ##                 upper=c(lS=log(3e4), lalpha=Inf, lbeta=Inf),
-    ##                 lower=c(lS=log(1e3), lalpha=-Inf, lbeta=-Inf))$summary
-    ## )
-    ## rownames(S.Shen.boot) <-  c("LS rnd", "LS clump", "TNB rnd", "TNB clump")
-
+    
     
     ## ----Hui ORC estimate----------------------------------------------------
     S.orc <- hui.orc(data$N.plots, effort=Samp.A/Tot.A)
     orc.cf <- coef(S.orc$model)
-    ## Boostrap
-    ## Regional RADs with Hui ORC estimate of species numbers
-    ## Log-series
-    ## Orc.ls <- rad.ls(S = S.orc$S.est, N = Tot.t,
-    ##                      alpha = fishers.alpha(N = Tot.t, S = S.orc$S.est))$y
-    ## ## TNB
-    ## Orc.tnb <- rad.posnegbin(S = S.orc$S.est, size = cf.nb[1], 
-    ##                              prob = 1-csi)$y
-    ## ## Predicted log(k) values for LS rad
-    ## Orc.ls.lk <- predict(lm.k, 
-    ##                          newdata=data.frame(dens.ha=Orc.ls/Tot.A))
-    ## ## Predicted log(k) values for TNB rad
-    ## Orc.tnb.lk <- predict(lm.k, 
-    ##                       newdata=data.frame(dens.ha=Orc.tnb/Tot.A))
-    ## ## Bootstrap means and CI's
-    ## S.orc.boot <- rbind(
-    ##     hui.boot(mu = Orc.ls/Tot.A, n.samp = round(Samp.A), N.tot = round(Tot.A))$summary,
-    ##     hui.boot(mu = Orc.ls/Tot.A, lmean.k = Orc.ls.lk, lsd.k = lm.k.sigma,
-    ##                     n.samp = round(Samp.A), N.tot = round(Tot.A), pois.samp=FALSE)$summary,
-    ##     hui.boot(mu = Orc.tnb/Tot.A, n.samp = round(Samp.A), N.tot = round(Tot.A))$summary,
-    ##     hui.boot(mu = Orc.tnb/Tot.A, lmean.k = Orc.tnb.lk, lsd.k = lm.k.sigma,
-    ##                     n.samp = round(Samp.A), N.tot = round(Tot.A), pois.samp=FALSE)$summary
-    ## )
-    ## rownames(S.orc.boot) <-  c("LS rnd", "LS clump", "TNB rnd", "TNB clump")
+    
 
     ##------------------------------------------------------------------------
     ## Save all objects generated by this function in a list

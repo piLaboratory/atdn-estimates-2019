@@ -1,50 +1,115 @@
 library(parallel)
-source("functions.R")
-load("lists_with_all_objects.RData")
-load("abcSummaries.RData")
+source("../functions.R")
+load("../lists_with_all_objects.RData")
+load("../abcSummaries.RData")
+load("bias_ls_tnb_2013.RData")
+load("bias_ls_tnb_2013t.RData")
+load("bias_ls_tnb_2019.RData")
 
 
-################################################################################
-## Bias of linear extension method for clumped sampling of logseries ##
-################################################################################
-f1 <- function(x, obj,...){
-    with(obj,
-         sim.abc(x, 
-                 N = Tot.t,
-                 sad = "ls",
-                 tot.area = Tot.A,
-                 n.plots = N.plots,
-                 lm.sd.fit = lm.sd,
-                 lmk.fit = lm.k,
-                 nb.fit =y.nb2,
-                 summary = FALSE, ...)
-         )
+## Number of cores to use
+mc.cores <- 3
+
+## Auxiliary functions ##
+f3 <- function(x, obj){
+    y <-  with(obj,
+               try(sim.abc(rad = x, 
+                       tot.area = Tot.A,
+                       n.plots = N.plots,
+                       lm.sd.fit = lm.sd,
+                       lmk.fit = lm.k,
+                       nrep=1,
+                       summary = FALSE))
+               )
+    if(class(y)=="try-error")
+        return(list(rnd.samp = NA,
+                    clump.samp = NA))
+    else
+        return( list(rnd.samp = y$rnd.samp$with.est.error,
+               clump.samp = y$clump.samp$with.est.error) )
 }
 
-f2 <- function(x, i=2) ulrich(x$clump.samp[,i])$S[1,1]
+f4 <- function(x, obj, index, ...){
+    y <- with(obj,
+         try(ulrich(x[[index]], lm.sd.fit = lm.sd , boot = TRUE, ...)$S[1,2])
+         )
+    if(class(y)=="try-error")
+        return(NA)
+    else
+        return(y)
+    }
 
+################################################################################
+## 2013
+################################################################################
+## Logseries rad
+sim.ls.rad <- bias13$ls$rads
+sim.ls.samp <- mclapply(sim.ls.rad, f3, obj = atdn.13, mc.cores=mc.cores)
+sim.ls.estS <- data.frame(S = sapply(sim.ls.rad, length),
+                         S.est.rnd = unlist(mclapply(sim.ls.samp, f4, obj = atdn.13, index = 1, mc.cores = mc.cores)),
+                         S.est.clump = unlist(mclapply(sim.ls.samp, f4, obj = atdn.13, index = 2, mc.cores = mc.cores))
+                         )
+## TNB rad
+sim.tnb.rad <- bias13$tnb$rads
+sim.tnb.samp <- mclapply(sim.tnb.rad, f3, obj = atdn.13, mc.cores=mc.cores)
+sim.tnb.estS <- data.frame(S = sapply(sim.tnb.rad, length),
+                         S.est.rnd = unlist(mclapply(sim.tnb.samp, f4, obj = atdn.13, index = 1, mc.cores = mc.cores)),
+                         S.est.clump = unlist(mclapply(sim.tnb.samp, f4, obj = atdn.13, index = 2, mc.cores = mc.cores))
+                         )
 
-### 2013
-ls.samp.13 <- mclapply(S1, f1, obj = atdn.13, upper=1e16, mc.cores = 3)
-ls.samp.13.u <- data.frame(S = S1, S.est = sapply(ls.samp.13, f2))
-plot(S ~ S.est, data = ls.samp.13.u)
-abline(0,1)
-ulr13.b.lm <- lm(S ~ S.est, data = S.est=ls.samp.13.u)
-predict(ulr13.b.lm, data.frame(S.est = atdn.13$S.ulrich$S[1,1]), interval = "confidence")
+## Stores in a list
+bias.lse.13 <- list(
+    ls = list(rads = sim.ls.rad, samples = sim.ls.samp, estimates = sim.ls.estS),
+    tnb = list(rads = sim.tnb.rad, samples = sim.tnb.samp, estimates = sim.tnb.estS)
+)
 
-## 2013 updated taxonomy
-### 2013
-ls.samp.13t <- mclapply(S1, f1, obj = atdn.13.tax, upper=1e16, mc.cores = 3)
-ls.samp.13t.u <- data.frame(S = S1, S.est = sapply(ls.samp.13t, f2))
-plot(S ~ S.est, data = ls.samp.13t.u)
-abline(0,1)
-ulr13t.b.lm <- lm(S ~ S.est, data = ls.samp.13t.u)
-predict(ulr13t.b.lm, data.frame(S.est = atdn.13.tax$S.ulrich$S[1,1]), interval = "confidence")
+################################################################################
+## 2013 with updated taxonomy
+################################################################################
+## Logseries rad
+sim.ls.rad <- bias13t$ls$rads
+sim.ls.samp <- mclapply(sim.ls.rad, f3, obj = atdn.13.tax, mc.cores=mc.cores)
+sim.ls.estS <- data.frame(S = sapply(sim.ls.rad, length),
+                          S.est.rnd = unlist(mclapply(sim.ls.samp, f4, obj = atdn.13.tax, index = 1, mc.cores = mc.cores)),
+                          S.est.clump = unlist(mclapply(sim.ls.samp, f4, obj = atdn.13.tax, index = 2, mc.cores = mc.cores))
+                          )
+## TNB rad
+sim.tnb.rad <- bias13t$tnb$rads
+sim.tnb.samp <- mclapply(sim.tnb.rad, f3, obj = atdn.13.tax, mc.cores=mc.cores)
+sim.tnb.estS <- data.frame(S = sapply(sim.tnb.rad, length),
+                           S.est.rnd = unlist(mclapply(sim.tnb.samp, f4, obj = atdn.13.tax, index = 1, mc.cores = mc.cores)),
+                           S.est.clump = unlist(mclapply(sim.tnb.samp, f4, obj = atdn.13.tax, index = 2, mc.cores = mc.cores))
+                           )
 
-### 2019
-ls.samp.19 <- mclapply(S1, f1, obj = atdn.19, upper=1e16, mc.cores = 3)
-ls.samp.19.u <- data.frame( S = S1, S.est = sapply(ls.samp.19, f2) )
-plot(S ~ S.est, data = ls.samp.19.u)
-abline(0,1)
-ulr19.b.lm <- lm(S ~ S.est, data = ls.samp.19)
-predict(ulr19.b.lm, data.frame(S.est = atdn.19$S.ulrich$S[1,1]), interval = "confidence")
+## Stores in a list
+bias.lse.13t <- list(
+    ls = list(rads = sim.ls.rad, samples = sim.ls.samp, estimates = sim.ls.estS),
+    tnb = list(rads = sim.tnb.rad, samples = sim.tnb.samp, estimates = sim.tnb.estS)
+)
+
+################################################################################
+## 2019
+################################################################################
+## Logseries rad
+sim.ls.rad <- bias19$ls$rads
+sim.ls.samp <- mclapply(sim.ls.rad, f3, obj = atdn.19, mc.cores=mc.cores)
+sim.ls.estS <- data.frame(S = sapply(sim.ls.rad, length),
+                         S.est.rnd = unlist(mclapply(sim.ls.samp, f4, obj = atdn.19, index = 1, mc.cores = mc.cores)),
+                         S.est.clump = unlist(mclapply(sim.ls.samp, f4, obj = atdn.19, index = 2, mc.cores = mc.cores))
+                         )
+## TNB rad
+sim.tnb.rad <- bias19$tnb$rads
+sim.tnb.samp <- mclapply(sim.tnb.rad, f3, obj = atdn.19, mc.cores=mc.cores)
+sim.tnb.estS <- data.frame(S = sapply(sim.tnb.rad, length),
+                         S.est.rnd = unlist(mclapply(sim.tnb.samp, f4, obj = atdn.19, index = 1, mc.cores = mc.cores)),
+                         S.est.clump = unlist(mclapply(sim.tnb.samp, f4, obj = atdn.19, index = 2, mc.cores = mc.cores))
+                         )
+
+## Stores in a list
+bias.lse.19 <- list(
+    ls = list(rads = sim.ls.rad, samples = sim.ls.samp, estimates = sim.ls.estS),
+    tnb = list(rads = sim.tnb.rad, samples = sim.tnb.samp, estimates = sim.tnb.estS)
+)
+
+## Saves all objects
+save(bias.lse.13, bias.lse.13t, bias.lse.19, file = "bias_LSE.RData")

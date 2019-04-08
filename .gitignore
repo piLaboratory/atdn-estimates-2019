@@ -17,3 +17,6 @@ figure/
 *.pdf
 *oldies/
 *Rhistory
+*Rhistory
+.Rhistory
+*.Rhistory

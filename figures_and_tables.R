@@ -1,6 +1,7 @@
 source("functions.R")
 load("lists_with_all_objects.RData")
 load("abcSummaries.RData")
+load("bias_LSE.RData")
 
 library(ggplot2)
 
@@ -87,11 +88,12 @@ segments(x0 = c(atdn.19$tovo$CIs[4,],0,0),
          lty=2)
 
 ################################################################################
-## Table with all estimates of species richness and CI's 95%
+## Tables with all estimates of species richness and CI's 95%
 ################################################################################
+## Original estimates and CI's (without bias correction) ##
 S.estimates <- expand.grid(
     dataset = c("2013", "2013 rev.", "2019"),
-    type = c("TNB", "LS", "LSE bc", "ABC"),
+    type = c("TNB", "LS", "LSE"),
     mean = NA,
     IC.low = NA,
     IC.up = NA
@@ -112,26 +114,12 @@ S.estimates[S.estimates$type=="LS"&S.estimates$dataset=="2013 rev.",3:5] <-
 S.estimates[S.estimates$type=="LS"&S.estimates$dataset=="2019",3:5] <-
     with(atdn.19, c(S.ls, S.ls.ci))
 ## Linear extension of RAD of estimated pop sizes (LSE)
-## S.estimates[S.estimates$type=="LSE"&S.estimates$dataset=="2013",3:5] <-
-##     with(atdn.13, S.r.ls.boot)
-## S.estimates[S.estimates$type=="LSE"&S.estimates$dataset=="2013 rev.",3:5] <-
-##     with(atdn.13.tax, S.r.ls.boot)
-## S.estimates[S.estimates$type=="LSE"&S.estimates$dataset=="2019",3:5] <-
-##     with(atdn.19, S.r.ls.boot)
-## Linear extension of RAD of estimated pop sizes (LSE), bias corrected
-S.estimates[S.estimates$type=="LSE bc"&S.estimates$dataset=="2013",3:5] <-
-    with(atdn.13, predict(ulrich.bias.fit, data.frame(S.est = S.r.ls.boot)))
-S.estimates[S.estimates$type=="LSE bc"&S.estimates$dataset=="2013 rev.",3:5] <-
-    with(atdn.13.tax, predict(ulrich.bias.fit, data.frame(S.est = S.r.ls.boot)))
-S.estimates[S.estimates$type=="LSE bc"&S.estimates$dataset=="2019",3:5] <-
-    with(atdn.19, predict(ulrich.bias.fit, data.frame(S.est = S.r.ls.boot)) )
-## ABC
-S.estimates[S.estimates$type=="ABC"&S.estimates$dataset=="2013",3:5] <-
-    summary(abc2013.summ$S.post1)[c(4,2,6),]
-S.estimates[S.estimates$type=="ABC"&S.estimates$dataset=="2013 rev.",3:5] <-
-    summary(abc2013t.summ$S.post1)[c(4,2,6),]
-S.estimates[S.estimates$type=="ABC"&S.estimates$dataset=="2019",3:5] <-
-    summary(abc2019.summ$S.post1)[c(4,2,6),]
+S.estimates[S.estimates$type=="LSE"&S.estimates$dataset=="2013",3:5] <-
+    with(atdn.13, S.ulrich$S[1,2:4])
+S.estimates[S.estimates$type=="LSE"&S.estimates$dataset=="2013 rev.",3:5] <-
+    with(atdn.13.tax, S.ulrich$S[1,2:4])
+S.estimates[S.estimates$type=="LSE"&S.estimates$dataset=="2019",3:5] <-
+    with(atdn.19, S.ulrich$S[1,2:4])
 ## ## Shen & He estimates
 ## S.estimates[S.estimates$type=="ShenHe"&S.estimates$dataset=="2013",3:5] <-
 ##     with(atdn.13, S.Shen.boot["LS rnd",-4])
@@ -147,28 +135,128 @@ S.estimates[S.estimates$type=="ABC"&S.estimates$dataset=="2019",3:5] <-
 ## S.estimates[S.estimates$type=="Hui"&S.estimates$dataset=="2019",3:5] <-
 ##     with(atdn.19, S.orc.boot["LS rnd",-4])
 
-    
-p1 <- S.estimates %>%
-    ggplot(aes(dataset, mean, group=type)) +
-    geom_point(aes(colour=type),size=5) +
-    geom_line(aes(colour=type)) +
-    geom_linerange(aes(ymin=IC.low, ymax=IC.up, colour=type), size=3, alpha=0.25) +
-    theme_bw()
 
-p1 + facet_wrap(~type)
+## Bias-corrected estimates ##
+S.estimates.bc <- expand.grid(
+    sampling = c("rnd", "clump"),
+    type = c("TNB", "LS", "LSE LS", "LSE TNB", "ABC"),
+    dataset = c("2013", "2013 rev.", "2019"),    
+    mean = NA,
+    IC.low = NA,
+    IC.up = NA,
+    stringsAsFactors=FALSE
+)[c(3:1,4:6)]
+## Including the values
+## Truncated negative binomial
+type <- "TNB"
+## 2013
+dataset <- "2013"
+obj <- bias13$tnb
+S.estimates.bc[S.estimates.bc$type==type&S.estimates.bc$dataset==dataset,4:6] <-
+    bias.ci(obj, ci.vector = S.estimates[S.estimates$type==type&S.estimates$dataset==dataset,4:5])
+##2013 updated
+dataset <- "2013 rev."
+obj <- bias13t$tnb
+S.estimates.bc[S.estimates.bc$type==type&S.estimates.bc$dataset==dataset,4:6] <-
+    bias.ci(obj, ci.vector = S.estimates[S.estimates$type==type&S.estimates$dataset==dataset,4:5])
+## 2019
+dataset <- "2019"
+obj <- bias19$tnb
+S.estimates.bc[S.estimates.bc$type==type&S.estimates.bc$dataset==dataset,4:6] <-
+    bias.ci(obj, ci.vector = S.estimates[S.estimates$type==type&S.estimates$dataset==dataset,4:5])
+## Logseries
+type <- "LS"
+## 2013
+dataset <- "2013"
+obj <- bias13$ls
+S.estimates.bc[S.estimates.bc$type==type&S.estimates.bc$dataset==dataset,4:6] <-
+    bias.ci(obj, ci.vector = S.estimates[S.estimates$type==type&S.estimates$dataset==dataset,4:5])
+##2013 updated
+dataset <- "2013 rev."
+obj <- bias13t$ls
+S.estimates.bc[S.estimates.bc$type==type&S.estimates.bc$dataset==dataset,4:6] <-
+    bias.ci(obj, ci.vector = S.estimates[S.estimates$type==type&S.estimates$dataset==dataset,4:5])
+## 2019
+dataset <- "2019"
+obj <- bias19$ls
+S.estimates.bc[S.estimates.bc$type==type&S.estimates.bc$dataset==dataset,4:6] <-
+    bias.ci(obj, ci.vector = S.estimates[S.estimates$type==type&S.estimates$dataset==dataset,4:5])
+## LSE (linear extension of the RAD of estimated population sizes, assuming a log-series RAD)
+type <- "LSE LS"
+## 2013
+dataset <- "2013"
+obj <- bias.lse.13$ls
+S.estimates.bc[S.estimates.bc$type==type&S.estimates.bc$dataset==dataset,4:6] <-
+    bias.ci(obj, ci.vector = S.estimates[S.estimates$type=="LSE"&S.estimates$dataset==dataset,4:5])
+##2013 updated
+dataset <- "2013 rev."
+obj <- bias.lse.13t$ls
+S.estimates.bc[S.estimates.bc$type==type&S.estimates.bc$dataset==dataset,4:6] <-
+    bias.ci(obj, ci.vector = S.estimates[S.estimates$type=="LSE"&S.estimates$dataset==dataset,4:5])
+## 2019
+dataset <- "2019"
+obj <- bias.lse.19$ls
+S.estimates.bc[S.estimates.bc$type==type&S.estimates.bc$dataset==dataset,4:6] <-
+    bias.ci(obj, ci.vector = S.estimates[S.estimates$type=="LSE"&S.estimates$dataset==dataset,4:5])
+## LSE (linear extension of the RAD of estimated population sizes, assuming a TNB RAD)
+type <- "LSE TNB"
+## 2013
+dataset <- "2013"
+obj <- bias.lse.13$tnb
+S.estimates.bc[S.estimates.bc$type==type&S.estimates.bc$dataset==dataset,4:6] <-
+    bias.ci(obj, ci.vector = S.estimates[S.estimates$type=="LSE"&S.estimates$dataset==dataset,4:5])
+##2013 updated
+dataset <- "2013 rev."
+obj <- bias.lse.13t$tnb
+S.estimates.bc[S.estimates.bc$type==type&S.estimates.bc$dataset==dataset,4:6] <-
+    bias.ci(obj, ci.vector = S.estimates[S.estimates$type=="LSE"&S.estimates$dataset==dataset,4:5])
+## 2019
+dataset <- "2019"
+obj <- bias.lse.19$tnb
+S.estimates.bc[S.estimates.bc$type==type&S.estimates.bc$dataset==dataset,4:6] <-
+    bias.ci(obj, ci.vector = S.estimates[S.estimates$type=="LSE"&S.estimates$dataset==dataset,4:5])
+## ABC (only the selected model(s) in general clumped sample)
+S.estimates.bc[S.estimates.bc$type=="ABC"&S.estimates.bc$dataset=="2013"&S.estimates.bc$sampling=="clump",4:6] <-
+    summary(abc2013.summ$S.post1)[c(4,2,6),]
+S.estimates.bc[S.estimates.bc$type=="ABC"&S.estimates.bc$dataset=="2013 rev."&S.estimates.bc$sampling=="clump",4:6] <-
+    summary(abc2013t.summ$S.post1)[c(4,2,6),]
+S.estimates.bc[S.estimates.bc$type=="ABC"&S.estimates.bc$dataset=="2019"&S.estimates.bc$sampling=="clump",4:6] <-
+    summary(abc2019.summ$S.post1)[c(4,2,6),]
 
-## Dotplot
-with(S.estimates,
-     dotchart(mean, labels = dataset, groups = type, color=2:4, pch=1,
+
+## Dotplot ##
+
+## Bias-corrected estimates (assuming clumped sampling)
+tmp1 <- S.estimates.bc[S.estimates.bc$sampling=="clump"&S.estimates.bc$type!="LSE TNB",]
+tmp1$type[tmp1$type=="LSE LS"] <- "LSE"
+tmp1$type <- factor(tmp1$type, levels=c("TNB","LS","LSE","ABC"))
+tmp1 <- tmp1[order(tmp1$type,tmp1$dataset),]
+with(tmp1,
+     dotchart(mean, labels = dataset, groups = type, color=2:4, pch=19,
               pt.cex = 1.5,
               xlim=range(c(IC.low, IC.up),na.rm=TRUE))
      )
 Ys <- 16:18 - rep(seq(0,15, by=5), each=3)
+## Adds uncorrected values
+points(S.estimates$mean, Ys[-(10:12)], col=rep(2:4,3), pch="|")
+## Adds error bars
 cores <- rep(2:4,5)
+for(i in 1:nrow(tmp1))
+    segments(x0=tmp1$IC.low[i], x1=tmp1$IC.up[i], y0=Ys[i], y1=Ys[i],
+             col=cores[i], lwd =1.5)
+
+
+## Original (biased) estimates
+with(S.estimates,
+     dotchart(mean, labels = dataset, groups = type, color=2:4, pch=1,
+              pt.cex = 1.5,
+              xlim=range(c(tmp1$IC.low, tmp1$IC.up),na.rm=TRUE))
+     )
+Ys <- 11:13 - rep(seq(0,10, by=5), each=3)
+cores <- rep(2:4,4)
 for(i in 1:nrow(S.estimates))
     segments(x0=S.estimates$IC.low[i], x1=S.estimates$IC.up[i], y0=Ys[i], y1=Ys[i],
              col=cores[i], lwd =1.5)
-
 
 ################################################################################
 ## Population rad expected by ABC ##
