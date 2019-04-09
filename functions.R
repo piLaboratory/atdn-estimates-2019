@@ -153,6 +153,8 @@ qls2 <- function(p, N, alpha, lower=3e-9, upper=3e9){
 #'     the distribution.
 rad.ls <- function(S, N, alpha, npoints = round(S), ...){
     S.r <- round(S)
+    if(missing(alpha))
+        alpha <- fishers.alpha(N = N, S = S)
     pp <- rev(ppoints(S.r))
     x <- seq(1,S.r, length=npoints)
     y <- qls2(p = pp[x], N = N, alpha = alpha, ...)
