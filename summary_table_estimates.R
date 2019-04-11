@@ -21,14 +21,14 @@ atdn.13$tovo.S$CIs[4,1] <-
 ## 2013 data set with reviewed taxonomy (as 2019)
 atdn.13.tax <- atdn.estimates(path.to.data = "Populations_2013_tax_2019.csv",
                           Tot.t = 3.9e11,
-                          Tot.A = 6.29e8,
+                          Tot.A = 5.79e8,
                           N.plots = 1153,
                           Samp.A = 1097,
                           lm.sd.fit = atdn.13$lm.sd)
 ## 2019 Data set
 atdn.19 <- atdn.estimates(path.to.data = "Populations_2019_V1.csv",
                           Tot.t = 3.06e11,
-                          Tot.A = 6.29e8,
+                          Tot.A = 5.79e8,
                           N.plots = 1946,
                           Samp.A = 2038,
                           lm.sd.fit = atdn.13$lm.sd)

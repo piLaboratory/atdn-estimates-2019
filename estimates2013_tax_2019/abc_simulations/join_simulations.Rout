@@ -1,0 +1,39 @@
+
+R version 3.5.2 (2018-12-20) -- "Eggshell Igloo"
+Copyright (C) 2018 The R Foundation for Statistical Computing
+Platform: x86_64-pc-linux-gnu (64-bit)
+
+R é um software livre e vem sem GARANTIA ALGUMA.
+Você pode redistribuí-lo sob certas circunstâncias.
+Digite 'license()' ou 'licence()' para detalhes de distribuição.
+
+R é um projeto colaborativo com muitos contribuidores.
+Digite 'contributors()' para obter mais informações e
+'citation()' para saber como citar o R ou pacotes do R em publicações.
+
+Digite 'demo()' para demonstrações, 'help()' para o sistema on-line de ajuda,
+ou 'help.start()' para abrir o sistema de ajuda em HTML no seu navegador.
+Digite 'q()' para sair do R.
+
+> ## Because computational limitations simulations for ABC of 2013 with new taxonomy
+> ## data were done in 2 pieces of 5000 replicates each.
+> ## Each simulation was ran by a separate script (abc_run2013ta.R, abc_run22013tb.R) and has a separate output
+> ## (ABC2013ta.RData, ABC2013tb.RData).
+> ## This code join the resulting objects
+> ## Load results
+> load("ABC2013tb.RData")
+> all.sims2 <- all.sims
+> sim.ids2 <- sim.ids
+> sim.y2 <- sim.y
+> load("ABC2013ta.RData")
+> 
+> ## Joining simulation inputs and resultig objects in a list
+> abc2013t <- list( sims = rbind(all.sims, all.sims2),
++                 labels = c(sim.ids, sim.ids2),
++                 params = c(sim.y, sim.y2))
+> save(abc2013t, file="abcFinal2013tax2019.RData")
+> 
+> 
+> proc.time()
+  usuário   sistema decorrido 
+    0.680     0.023     0.728 

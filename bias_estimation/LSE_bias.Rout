@@ -58,10 +58,10 @@ The following object is masked from ‘package:untb’:
 Carregando pacotes exigidos: locfit
 locfit 1.5-9.1 	 2013-03-22
 > load("../lists_with_all_objects.RData")
-> load("../abcSummaries.RData")
-> load("bias_ls_tnb_2013.RData")
-> load("bias_ls_tnb_2013t.RData")
-> load("bias_ls_tnb_2019.RData")
+> ##load("../abcSummaries.RData")
+> load("../bias_ls_tnb_2013.RData")
+> load("../bias_ls_tnb_2013t.RData")
+> load("../bias_ls_tnb_2019.RData")
 > 
 > 
 > ## Number of cores to use
@@ -135,16 +135,34 @@ locfit 1.5-9.1 	 2013-03-22
 > sim.tnb.samp <- mclapply(sim.tnb.rad, f3, obj = atdn.13.tax, mc.cores=mc.cores)
 Error in m1[1:sum(y1), j] <- rad[y1 > 0] : 
   substituto tem comprimento zero
-Error in m1[1:sum(y1), j] <- rad[y1 > 0] : 
-  substituto tem comprimento zero
 > sim.tnb.estS <- data.frame(S = sapply(sim.tnb.rad, length),
 +                            S.est.rnd = unlist(mclapply(sim.tnb.samp, f4, obj = atdn.13.tax, index = 1, mc.cores = mc.cores)),
 +                            S.est.clump = unlist(mclapply(sim.tnb.samp, f4, obj = atdn.13.tax, index = 2, mc.cores = mc.cores))
 +                            )
-Error in data.frame(rank = 1:length(z), abund = sort(z, decreasing = T)) : 
-  arguments imply differing number of rows: 2, 0
 Error in lm.fit(x, y, offset = offset, singular.ok = singular.ok, ...) : 
   0 (non-NA) cases
+Error in quantile.default(b1[1, ], probs = c(0.025, 0.975)) : 
+  missing values and NaN's not allowed if 'na.rm' is FALSE
+Error in quantile.default(b1[1, ], probs = c(0.025, 0.975)) : 
+  missing values and NaN's not allowed if 'na.rm' is FALSE
+Error in lm.fit(x, y, offset = offset, singular.ok = singular.ok, ...) : 
+  0 (non-NA) cases
+Error in lm.fit(x, y, offset = offset, singular.ok = singular.ok, ...) : 
+  0 (non-NA) cases
+Error in lm.fit(x, y, offset = offset, singular.ok = singular.ok, ...) : 
+  0 (non-NA) cases
+Error in quantile.default(b1[1, ], probs = c(0.025, 0.975)) : 
+  missing values and NaN's not allowed if 'na.rm' is FALSE
+Error in lm.fit(x, y, offset = offset, singular.ok = singular.ok, ...) : 
+  0 (non-NA) cases
+Error in lm.fit(x, y, offset = offset, singular.ok = singular.ok, ...) : 
+  0 (non-NA) cases
+Error in lm.fit(x, y, offset = offset, singular.ok = singular.ok, ...) : 
+  0 (non-NA) cases
+Error in lm.fit(x, y, offset = offset, singular.ok = singular.ok, ...) : 
+  0 (non-NA) cases
+Error in quantile.default(b1[1, ], probs = c(0.025, 0.975)) : 
+  missing values and NaN's not allowed if 'na.rm' is FALSE
 Error in lm.fit(x, y, offset = offset, singular.ok = singular.ok, ...) : 
   0 (non-NA) cases
 Error in quantile.default(b1[1, ], probs = c(0.025, 0.975)) : 
@@ -153,6 +171,14 @@ Error in data.frame(rank = 1:length(z), abund = sort(z, decreasing = T)) :
   arguments imply differing number of rows: 2, 0
 Error in lm.fit(x, y, offset = offset, singular.ok = singular.ok, ...) : 
   0 (non-NA) cases
+Error in data.frame(rank = 1:length(z), abund = sort(z, decreasing = T)) : 
+  arguments imply differing number of rows: 2, 0
+Error in lm.fit(x, y, offset = offset, singular.ok = singular.ok, ...) : 
+  0 (non-NA) cases
+Error in quantile.default(b1[1, ], probs = c(0.025, 0.975)) : 
+  missing values and NaN's not allowed if 'na.rm' is FALSE
+Error in lm.fit(x, y, offset = offset, singular.ok = singular.ok, ...) : 
+  0 (non-NA) cases
 Error in lm.fit(x, y, offset = offset, singular.ok = singular.ok, ...) : 
   0 (non-NA) cases
 Error in quantile.default(b1[1, ], probs = c(0.025, 0.975)) : 
@@ -167,80 +193,74 @@ Error in lm.fit(x, y, offset = offset, singular.ok = singular.ok, ...) :
   0 (non-NA) cases
 Error in lm.fit(x, y, offset = offset, singular.ok = singular.ok, ...) : 
   0 (non-NA) cases
+Error in lm.fit(x, y, offset = offset, singular.ok = singular.ok, ...) : 
+  0 (non-NA) cases
+Error in quantile.default(b1[1, ], probs = c(0.025, 0.975)) : 
+  missing values and NaN's not allowed if 'na.rm' is FALSE
+Error in lm.fit(x, y, offset = offset, singular.ok = singular.ok, ...) : 
+  0 (non-NA) cases
+Error in rad(x) : objeto 'y' não encontrado
+Error in quantile.default(b1[1, ], probs = c(0.025, 0.975)) : 
+  missing values and NaN's not allowed if 'na.rm' is FALSE
+Error in quantile.default(b1[1, ], probs = c(0.025, 0.975)) : 
+  missing values and NaN's not allowed if 'na.rm' is FALSE
+Error in lm.fit(x, y, offset = offset, singular.ok = singular.ok, ...) : 
+  0 (non-NA) cases
+Error in lm.fit(x, y, offset = offset, singular.ok = singular.ok, ...) : 
+  0 (non-NA) cases
+Error in quantile.default(b1[1, ], probs = c(0.025, 0.975)) : 
+  missing values and NaN's not allowed if 'na.rm' is FALSE
+Error in lm.fit(x, y, offset = offset, singular.ok = singular.ok, ...) : 
+  0 (non-NA) cases
+Error in lm.fit(x, y, offset = offset, singular.ok = singular.ok, ...) : 
+  0 (non-NA) cases
+Error in data.frame(rank = 1:length(z), abund = sort(z, decreasing = T)) : 
+  arguments imply differing number of rows: 2, 0
+Error in lm.fit(x, y, offset = offset, singular.ok = singular.ok, ...) : 
+  0 (non-NA) cases
+Error in lm.fit(x, y, offset = offset, singular.ok = singular.ok, ...) : 
+  0 (non-NA) cases
+Error in lm.fit(x, y, offset = offset, singular.ok = singular.ok, ...) : 
+  0 (non-NA) cases
+Error in quantile.default(b1[1, ], probs = c(0.025, 0.975)) : 
+  missing values and NaN's not allowed if 'na.rm' is FALSE
+Error in lm.fit(x, y, offset = offset, singular.ok = singular.ok, ...) : 
+  0 (non-NA) cases
+Error in lm.fit(x, y, offset = offset, singular.ok = singular.ok, ...) : 
+  0 (non-NA) cases
+Error in lm.fit(x, y, offset = offset, singular.ok = singular.ok, ...) : 
+  0 (non-NA) cases
+Error in data.frame(rank = 1:length(z), abund = sort(z, decreasing = T)) : 
+  arguments imply differing number of rows: 2, 0
+Error in lm.fit(x, y, offset = offset, singular.ok = singular.ok, ...) : 
+  0 (non-NA) cases
+Error in quantile.default(b1[1, ], probs = c(0.025, 0.975)) : 
+  missing values and NaN's not allowed if 'na.rm' is FALSE
+Error in lm.fit(x, y, offset = offset, singular.ok = singular.ok, ...) : 
+  0 (non-NA) cases
+Error in lm.fit(x, y, offset = offset, singular.ok = singular.ok, ...) : 
+  0 (non-NA) cases
+Error in lm.fit(x, y, offset = offset, singular.ok = singular.ok, ...) : 
+  0 (non-NA) cases
+Error in lm.fit(x, y, offset = offset, singular.ok = singular.ok, ...) : 
+  0 (non-NA) cases
+Error in lm.fit(x, y, offset = offset, singular.ok = singular.ok, ...) : 
+  0 (non-NA) cases
+Error in lm.fit(x, y, offset = offset, singular.ok = singular.ok, ...) : 
+  0 (non-NA) cases
+Error in lm.fit(x, y, offset = offset, singular.ok = singular.ok, ...) : 
+  0 (non-NA) cases
+Error in lm.fit(x, y, offset = offset, singular.ok = singular.ok, ...) : 
+  0 (non-NA) cases
+Error in data.frame(rank = 1:length(z), abund = sort(z, decreasing = T)) : 
+  arguments imply differing number of rows: 2, 0
 Error in rad(x) : objeto 'y' não encontrado
 Error in lm.fit(x, y, offset = offset, singular.ok = singular.ok, ...) : 
   0 (non-NA) cases
 Error in lm.fit(x, y, offset = offset, singular.ok = singular.ok, ...) : 
   0 (non-NA) cases
-Error in lm.fit(x, y, offset = offset, singular.ok = singular.ok, ...) : 
-  0 (non-NA) cases
-Error in lm.fit(x, y, offset = offset, singular.ok = singular.ok, ...) : 
-  0 (non-NA) cases
 Error in quantile.default(b1[1, ], probs = c(0.025, 0.975)) : 
   missing values and NaN's not allowed if 'na.rm' is FALSE
-Error in lm.fit(x, y, offset = offset, singular.ok = singular.ok, ...) : 
-  0 (non-NA) cases
-Error in data.frame(rank = 1:length(z), abund = sort(z, decreasing = T)) : 
-  arguments imply differing number of rows: 2, 0
-Error in rad(x) : objeto 'y' não encontrado
-Error in data.frame(rank = 1:length(z), abund = sort(z, decreasing = T)) : 
-  arguments imply differing number of rows: 2, 0
-Error in lm.fit(x, y, offset = offset, singular.ok = singular.ok, ...) : 
-  0 (non-NA) cases
-Error in lm.fit(x, y, offset = offset, singular.ok = singular.ok, ...) : 
-  0 (non-NA) cases
-Error in lm.fit(x, y, offset = offset, singular.ok = singular.ok, ...) : 
-  0 (non-NA) cases
-Error in data.frame(rank = 1:length(z), abund = sort(z, decreasing = T)) : 
-  arguments imply differing number of rows: 2, 0
-Error in lm.fit(x, y, offset = offset, singular.ok = singular.ok, ...) : 
-  0 (non-NA) cases
-Error in quantile.default(b1[1, ], probs = c(0.025, 0.975)) : 
-  missing values and NaN's not allowed if 'na.rm' is FALSE
-Error in data.frame(rank = 1:length(z), abund = sort(z, decreasing = T)) : 
-  arguments imply differing number of rows: 2, 0
-Error in lm.fit(x, y, offset = offset, singular.ok = singular.ok, ...) : 
-  0 (non-NA) cases
-Error in lm.fit(x, y, offset = offset, singular.ok = singular.ok, ...) : 
-  0 (non-NA) cases
-Error in quantile.default(b1[1, ], probs = c(0.025, 0.975)) : 
-  missing values and NaN's not allowed if 'na.rm' is FALSE
-Error in data.frame(rank = 1:length(z), abund = sort(z, decreasing = T)) : 
-  arguments imply differing number of rows: 2, 0
-Error in quantile.default(b1[1, ], probs = c(0.025, 0.975)) : 
-  missing values and NaN's not allowed if 'na.rm' is FALSE
-Error in lm.fit(x, y, offset = offset, singular.ok = singular.ok, ...) : 
-  0 (non-NA) cases
-Error in quantile.default(b1[1, ], probs = c(0.025, 0.975)) : 
-  missing values and NaN's not allowed if 'na.rm' is FALSE
-Error in lm.fit(x, y, offset = offset, singular.ok = singular.ok, ...) : 
-  0 (non-NA) cases
-Error in data.frame(rank = 1:length(z), abund = sort(z, decreasing = T)) : 
-  arguments imply differing number of rows: 2, 0
-Error in quantile.default(b1[1, ], probs = c(0.025, 0.975)) : 
-  missing values and NaN's not allowed if 'na.rm' is FALSE
-Error in rad(x) : objeto 'y' não encontrado
-Error in lm.fit(x, y, offset = offset, singular.ok = singular.ok, ...) : 
-  0 (non-NA) cases
-Error in lm.fit(x, y, offset = offset, singular.ok = singular.ok, ...) : 
-  0 (non-NA) cases
-Error in lm.fit(x, y, offset = offset, singular.ok = singular.ok, ...) : 
-  0 (non-NA) cases
-Error in quantile.default(b1[1, ], probs = c(0.025, 0.975)) : 
-  missing values and NaN's not allowed if 'na.rm' is FALSE
-Error in lm.fit(x, y, offset = offset, singular.ok = singular.ok, ...) : 
-  0 (non-NA) cases
-Error in lm.fit(x, y, offset = offset, singular.ok = singular.ok, ...) : 
-  0 (non-NA) cases
-Error in data.frame(rank = 1:length(z), abund = sort(z, decreasing = T)) : 
-  arguments imply differing number of rows: 2, 0
-Error in rad(x) : objeto 'y' não encontrado
-Error in data.frame(rank = 1:length(z), abund = sort(z, decreasing = T)) : 
-  arguments imply differing number of rows: 2, 0
-Error in lm.fit(x, y, offset = offset, singular.ok = singular.ok, ...) : 
-  0 (non-NA) cases
-Error in lm.fit(x, y, offset = offset, singular.ok = singular.ok, ...) : 
-  0 (non-NA) cases
 Error in quantile.default(b1[1, ], probs = c(0.025, 0.975)) : 
   missing values and NaN's not allowed if 'na.rm' is FALSE
 > 
@@ -267,10 +287,34 @@ Error in quantile.default(b1[1, ], probs = c(0.025, 0.975)) :
 +                          S.est.rnd = unlist(mclapply(sim.tnb.samp, f4, obj = atdn.19, index = 1, mc.cores = mc.cores)),
 +                          S.est.clump = unlist(mclapply(sim.tnb.samp, f4, obj = atdn.19, index = 2, mc.cores = mc.cores))
 +                          )
+Error in quantile.default(b1[1, ], probs = c(0.025, 0.975)) : 
+  missing values and NaN's not allowed if 'na.rm' is FALSE
+Error in lm.fit(x, y, offset = offset, singular.ok = singular.ok, ...) : 
+  0 (non-NA) cases
+Error in quantile.default(b1[1, ], probs = c(0.025, 0.975)) : 
+  missing values and NaN's not allowed if 'na.rm' is FALSE
+Error in quantile.default(b1[1, ], probs = c(0.025, 0.975)) : 
+  missing values and NaN's not allowed if 'na.rm' is FALSE
+Error in lm.fit(x, y, offset = offset, singular.ok = singular.ok, ...) : 
+  0 (non-NA) cases
+Error in quantile.default(b1[1, ], probs = c(0.025, 0.975)) : 
+  missing values and NaN's not allowed if 'na.rm' is FALSE
+Error in lm.fit(x, y, offset = offset, singular.ok = singular.ok, ...) : 
+  0 (non-NA) cases
+Error in quantile.default(b1[1, ], probs = c(0.025, 0.975)) : 
+  missing values and NaN's not allowed if 'na.rm' is FALSE
+Error in lm.fit(x, y, offset = offset, singular.ok = singular.ok, ...) : 
+  0 (non-NA) cases
+Error in quantile.default(b1[1, ], probs = c(0.025, 0.975)) : 
+  missing values and NaN's not allowed if 'na.rm' is FALSE
+Error in quantile.default(b1[1, ], probs = c(0.025, 0.975)) : 
+  missing values and NaN's not allowed if 'na.rm' is FALSE
 Error in lm.fit(x, y, offset = offset, singular.ok = singular.ok, ...) : 
   0 (non-NA) cases
 Error in lm.fit(x, y, offset = offset, singular.ok = singular.ok, ...) : 
   0 (non-NA) cases
+Error in quantile.default(b1[1, ], probs = c(0.025, 0.975)) : 
+  missing values and NaN's not allowed if 'na.rm' is FALSE
 Error in lm.fit(x, y, offset = offset, singular.ok = singular.ok, ...) : 
   0 (non-NA) cases
 Error in lm.fit(x, y, offset = offset, singular.ok = singular.ok, ...) : 
@@ -283,12 +327,10 @@ Error in lm.fit(x, y, offset = offset, singular.ok = singular.ok, ...) :
   0 (non-NA) cases
 Error in lm.fit(x, y, offset = offset, singular.ok = singular.ok, ...) : 
   0 (non-NA) cases
-Error in quantile.default(b1[1, ], probs = c(0.025, 0.975)) : 
-  missing values and NaN's not allowed if 'na.rm' is FALSE
-Error in quantile.default(b1[1, ], probs = c(0.025, 0.975)) : 
-  missing values and NaN's not allowed if 'na.rm' is FALSE
 Error in lm.fit(x, y, offset = offset, singular.ok = singular.ok, ...) : 
   0 (non-NA) cases
+Error in quantile.default(b1[1, ], probs = c(0.025, 0.975)) : 
+  missing values and NaN's not allowed if 'na.rm' is FALSE
 > 
 > ## Stores in a list
 > bias.lse.19 <- list(
@@ -301,4 +343,4 @@ Error in lm.fit(x, y, offset = offset, singular.ok = singular.ok, ...) :
 > 
 > proc.time()
   usuário   sistema decorrido 
-13527.809    92.908  4870.841 
+ 4013.529    39.207  1447.229 

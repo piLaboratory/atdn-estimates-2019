@@ -1,10 +1,10 @@
 library(parallel)
 source("../functions.R")
 load("../lists_with_all_objects.RData")
-load("../abcSummaries.RData")
-load("bias_ls_tnb_2013.RData")
-load("bias_ls_tnb_2013t.RData")
-load("bias_ls_tnb_2019.RData")
+##load("../abcSummaries.RData")
+load("../bias_ls_tnb_2013.RData")
+load("../bias_ls_tnb_2013t.RData")
+load("../bias_ls_tnb_2019.RData")
 
 
 ## Number of cores to use

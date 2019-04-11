@@ -126,12 +126,12 @@ summary(cv.modsel)
 model.sel <- postpr(target = target,
                     index=abc2013t$labels,
                     sumstat = abc2013t$sims,
-                    tol=0.025, method="rejection",
+                    tol=0.01, method="rejection",
                     corr=TRUE)
 summary(model.sel)
 ## Selected model(s)
 index <-
-    abc2013t$labels=="LSrnd"|abc2013t$labels=="LSclump"|abc2013t$labels=="NBrnd"
+    abc2013t$labels=="LSrnd"|abc2013t$labels=="LSclump"
 
 
 ## Goodness of fit the models
@@ -158,7 +158,7 @@ summary(cv.rej)
 ## Posterior distribution of Species richness from the selected model
 S.post1 <- abc(target = target, param=data.frame(S=abc2013t$params[index]),
               sumstat = abc2013t$sims[index,],
-              tol=0.05, method="rejection")
+              tol=0.01, method="rejection")
 
 summary(S.post1)
 hist(S.post1)
@@ -177,7 +177,7 @@ load("abcFinal2019.RData")
 ## Use only the summary statistics of the simulations with noise in
 ## estimated total population sizes (see abc2019run.R) 
 abc2019$sims <- abc2019$sims[,5:8]
-abc2019$sims <- abc2019$sims[,c(5,7)]
+
 
 ## Model selection
 ## Target: observed number of species, lmean, sdmean of log abundances 
@@ -252,6 +252,7 @@ abc2019.summ <- list(target=target,
                    cv.modsel=cv.modsel, model.sel=model.sel,
                    index=index, gof=gof,
                    sgof=sgof, p.legend=p.legend,
-                   cv.nn=cv.nn, S.post1=S.post1)
+                   ##cv.nn=cv.nn,
+                   S.post1=S.post1)
 
 save(abc2013.summ, abc2013t.summ, abc2019.summ, file="abcSummaries.RData")

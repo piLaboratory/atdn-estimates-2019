@@ -1,6 +1,6 @@
 
-R version 3.5.2 (2018-12-20) -- "Eggshell Igloo"
-Copyright (C) 2018 The R Foundation for Statistical Computing
+R version 3.5.3 (2019-03-11) -- "Great Truth"
+Copyright (C) 2019 The R Foundation for Statistical Computing
 Platform: x86_64-pc-linux-gnu (64-bit)
 
 R is free software and comes with ABSOLUTELY NO WARRANTY.
@@ -71,17 +71,17 @@ locfit 1.5-9.1 	 2013-03-22
 > ## Checking the relationship between Estimated and real S
 > S1 <- round(runif(250, 1e4, 2.5e4))
 > 
-> sim.ls.rad <- mclapply(S1, sim.rad, N = atdn.13$Tot.t, sad = "ls", nb.fit = atdn.13$y.nb2,
+> sim.ls.rad <- mclapply(S1, sim.rad, N = atdn.19$Tot.t, sad = "ls", nb.fit = atdn.19$y.nb2,
 +                           mc.cores = mc.cores, upper = 1e12)
-> sim.ls.samp <- mclapply(sim.ls.rad, sim.radsamp, tot.area  = atdn.13$Tot.A,
-+                            n.plots = atdn.13$N.plots, lmk.fit = atdn.13$lm.k,
-+                            nb.fit = atdn.13$y.nb2, mc.cores = mc.cores)
+> sim.ls.samp <- mclapply(sim.ls.rad, sim.radsamp, tot.area  = atdn.19$Tot.A,
++                            n.plots = atdn.19$N.plots, lmk.fit = atdn.19$lm.k,
++                            nb.fit = atdn.19$y.nb2, mc.cores = mc.cores)
 > sim.ls.estS <- data.frame(S = S1,
 +                              S.est.rnd = unlist( mclapply(sim.ls.samp,
-+                                                          function(x) ls.estS(x$rnd.samp, N = atdn.13$Tot.t),
++                                                          function(x) ls.estS(x$rnd.samp, N = atdn.19$Tot.t),
 +                                                          mc.cores = mc.cores)),
 +                              S.est.clump = unlist( mclapply(sim.ls.samp,
-+                                                          function(x) ls.estS(x$clump.samp, N = atdn.13$Tot.t),
++                                                          function(x) ls.estS(x$clump.samp, N = atdn.19$Tot.t),
 +                                                          mc.cores = mc.cores))
 +                              )
 > 
@@ -91,7 +91,7 @@ locfit 1.5-9.1 	 2013-03-22
 > f3 <- function(x, size, loglink=TRUE){
 +     x <- sort(x[x>0])
 +     result <- try(tovo(fitnbinom2(x, start.value=c(size=size, mu=mean(x))),
-+                        p=sum(x)/atdn.13$Tot.t, loglink=loglink))
++                        p=sum(x)/atdn.19$Tot.t, loglink=loglink))
 +     if(class(result)=="try-error")
 +         return(NA)
 +     else
@@ -99,12 +99,12 @@ locfit 1.5-9.1 	 2013-03-22
 + }
 > 
 > ## Bias over a wide range species richness
-> S3 <- round(runif(100, 1e4, 2e4))
-> sim.tnb.rad <- mclapply(S3, sim.rad, N = atdn.13$Tot.t, sad = "tnb",
-+                                        nb.fit = atdn.13$y.nb2, mc.cores = mc.cores, upper = 1e20)
-> sim.tnb.samp <- mclapply(sim.tnb.rad, sim.radsamp, tot.area  = atdn.13$Tot.A,
-+                            n.plots = atdn.13$N.plots, lmk.fit = atdn.13$lm.k,
-+                            nb.fit = atdn.13$y.nb2, mc.cores = mc.cores)
+> S3 <- round(runif(100, 5e3, 1.85e4))
+> sim.tnb.rad <- mclapply(S3, sim.rad, N = atdn.19$Tot.t, sad = "tnb",
++                                        nb.fit = atdn.19$y.nb2, mc.cores = mc.cores, upper = 1e50)
+> sim.tnb.samp <- mclapply(sim.tnb.rad, sim.radsamp, tot.area  = atdn.19$Tot.A,
++                            n.plots = atdn.19$N.plots, lmk.fit = atdn.19$lm.k,
++                            nb.fit = atdn.19$y.nb2, mc.cores = mc.cores)
 > sim.tnb.estS <- data.frame(S = S3,
 +                               S.est.rnd = unlist(mclapply(sim.tnb.samp,
 +                                                           function(x) f3(x$rnd.samp, size = 0.018),
@@ -112,16 +112,17 @@ locfit 1.5-9.1 	 2013-03-22
 +                               S.est.clump = sapply(sim.tnb.samp,
 +                                                  function(x) f3(x$clump.samp, size = 0.018) )
 +                               )
+There were 27 warnings (use warnings() to see them)
 > 
 > # Storing in lists
-> bias13 <- list(
+> bias19 <- list(
 +     ls = list(rads=sim.ls.rad, samples = sim.ls.samp, estimates = sim.ls.estS),
-+     tnb = list(rads=sim.tnb.rad, samples = sim.tnb.samp, estimates = sim.tnb.estS)
-+ )
++     tnb= list(rads=sim.tnb.rad, samples = sim.tnb.samp, estimates = sim.tnb.estS)
++     )
 > 
-> save(bias13, file = "bias_ls_tnb_2013.RData")
+> save(bias19, file = "bias_ls_tnb_2019.RData")
 >     
 > 
 > proc.time()
-    user   system  elapsed 
-8457.092  529.100 3409.979 
+     user    system   elapsed 
+12378.196   729.092  1995.436 

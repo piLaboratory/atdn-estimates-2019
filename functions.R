@@ -1,5 +1,6 @@
 library(VGAM)
 library(untb)
+library(vegan)
 library(sads)
 library(abc)
 library(parallel)
@@ -970,7 +971,7 @@ hui.boot <- function(mu, lmean.k, lsd.k, n.samp, N.tot, pois.samp=TRUE, nrep = 1
                       boot = t1 )
 }
 
-#' Calulates unbiased men and CIs from the bias simulations
+#' Calculates unbiased mean and CIs from the bias simulations
 #'
 #' @param object list, an object returned from the bias analyses (see scripts in directory 'bias estimation')
 #' @param ci.vector, vector of lower and upper limits of original CI of the estimate.
@@ -990,13 +991,54 @@ bias.ci <- function(object, ci.vector){
                row.names = c("rnd.samp", "clump.samp"))
     }
 
+#' Finds number of species that accumulates a percentile of individuals
+#' @param x vector of population sizes.
+#' @param N.tot total number of individuals. If missing calculations are done on 'sum(x)'.
+#' @param p percentile value.
+nDom <- function(x, N.tot, p){
+    if(missing(N.tot))
+       N.tot <- sum(x)
+    y <- cumsum(sort(x[x>0], decreasing = TRUE))
+    min(which (y >= N.tot*p))
+    }
+
+#' Bootstrap estimate of number of hyperdominants
+#' @param x vector of estimated species abundances
+#' @param N.tot estimated total number of individuals (which can be larger than sum(x)).
+#' @param x.sd vector of standard deviations of estimated species abundances.
+#' @param lm.sd.fit lm object, fit of a linear regression of the log
+#'     of standard deviation of estimates of population sizes as a
+#'     function of log of the estimated values. Needded if 'x.sd' is not provided.
+#' @param percentile cumulative percentile of total number of stems that define hyperdominants. 
+#' @param n.boot number of boostrap samples to calculate CI's.
+HD.boot <- function(x, N.tot, x.sd, lm.sd.fit, p = 0.5, n.boot= 1000){
+    y <- x[x>0]
+    if(missing(x.sd)){
+        lsd.mean <- predict(lm.sd.fit, data.frame(population = y))
+        lsd.sd <- summary(lm.sd.fit)$sigma
+        sim.sds <- exp ( rnorm (n = length(lsd.mean)*n.boot, mean = lsd.mean, sd = lsd.sd) )
+    }
+    else
+        sim.sds <- x.sd[x>0]
+    sim.ab <- rnorm(length(y)*n.boot, mean = y, sd = sim.sds)
+    dim(sim.ab) <- c(length(y), n.boot)
+    t1 <- apply(sim.ab, 2, nDom, N.tot = N.tot, p = p)
+    list ( summary = c(obs = nDom(x, N.tot = N.tot, p =p),
+                       mean = mean(t1),
+                       sd = sd(t1),
+                       IC.low = quantile(t1, 0.025),
+                       IC.up = quantile(t1, 0.975)),
+          boot = t1) 
+}
+
+
 #' A function to rule them all
 #'
 #' Run all the calculations used in Steege et al 2019
 #'
 #' @details this is just a concatenation of commands that generate all
 #'     objects necessary to reproduce the results.  This is not a
-#'     generic function and works properly only with the data
+#'     generic function and it works properly only with the data
 #'     structures and functions prepared for the paper, with many
 #'     idiosyncrasies.
 #' 
@@ -1019,7 +1061,7 @@ bias.ci <- function(object, ci.vector){
 #' @param lm.sd.fit lm object, fit of a linear regression of the log
 #'     of standard deviation of estimates of population sizes as a
 #'     function of log of the estimated values. Ignored if data has a vector
-#'     names 'pop.sd'.
+#'     named 'pop.sd' with the sd's of the estimated population sizes.
 #' @return a list with objects needed to reproduce the results in the
 #'     paper (some of them are redundant, to be simplified).
 atdn.estimates <- function(path.to.data,
@@ -1036,6 +1078,8 @@ atdn.estimates <- function(path.to.data,
     ## Number os species in the sample
     Sobs <- length(N.ind)
 
+    
+    
     cat("\n----------------------------------------------------------------------\n
                          Fitting SADs models to plot data \n
          ----------------------------------------------------------------------\n\n")
@@ -1074,9 +1118,8 @@ atdn.estimates <- function(path.to.data,
 
 
     cat("\n----------------------------------------------------------------------\n
-                       Estimates from total population sizes\n
+                         Boostrap number of Hyper-dominants \n
          ----------------------------------------------------------------------\n\n")
-
     ## ---- regression of sd x estimated population  -----------------
     
     if("pop.sd" %in% names(data))
@@ -1085,6 +1128,18 @@ atdn.estimates <- function(path.to.data,
         lm.sd <- lm.sd.fit
     
     lm.sd.sigma <- summary(lm.sd)$sigma
+
+    ##--Boostrap estimates fo hyperdominance------------------------------------------
+    
+    if("pop.sd" %in% names(data))
+        HD <- HD.boot(x = data$population, x.sd = data$pop.sd, N.tot = Tot.t)
+    else
+        HD <- HD.boot(x = data$population, lm.sd.fit = lm.sd, N.tot = Tot.t)
+
+
+    cat("\n----------------------------------------------------------------------\n
+                       Estimates from total population sizes\n
+         ----------------------------------------------------------------------\n\n")
     
     ## ----Linear extrapolation from RAD  of estimated population sizes (LSE) ------------------------------
     if("pop.sd" %in% names(data))
@@ -1130,7 +1185,18 @@ atdn.estimates <- function(path.to.data,
     reg.nb.rad.lk <- predict(lm.k, 
                              newdata=data.frame(dens.ha=reg.nb.rad/Tot.A))
     
-    
+
+    cat("\n----------------------------------------------------------------------\n
+               Non-parametric estimations (Chao1 and ACE)\n
+         ----------------------------------------------------------------------\n\n")
+    Chao <- estimateR (data$N.ind)
+    Chao <- c(Chao[1:3],
+              S.chao1.low = Chao[2] - 2*Chao[3],
+              S.chao1.up = Chao[2] + 2*Chao[3],
+              Chao[4:5],
+              S.ACE.low = Chao[4] - 2*Chao[5],
+              S.ACE.up = Chao[4] + 2*Chao[5])
+    names(Chao)[c(4:5, 8:9)] <- c("S.chao1.low", "S.chao1.up", "S.ACE.low","S.ACE.up")
     cat("\n----------------------------------------------------------------------\n
                Estimates from occupancy data (Shen & He and Hui estimators)\n
          ----------------------------------------------------------------------\n\n")
@@ -1162,13 +1228,14 @@ atdn.estimates <- function(path.to.data,
         ## Shen.prf <- profile(Shen, which=1)
     ##    }
     
-    
     ## ----Hui ORC estimate----------------------------------------------------
     S.orc <- hui.orc(data$N.plots, effort=Samp.A/Tot.A)
     orc.cf <- coef(S.orc$model)
     
 
     ##------------------------------------------------------------------------
+
+    
     ## Save all objects generated by this function in a list
     lista <- mget(ls())
     return(lista[sapply(lista, function(x) class(x)!="function")])                                    

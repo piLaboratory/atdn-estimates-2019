@@ -6,6 +6,7 @@ load("bias_ls_tnb_2013t.RData")
 load("bias_ls_tnb_2019.RData")
 load("bias_LSE.RData")
 load("bias_msel.RData")
+load("bias_chao.RData")
 
 ################################################################################
 ## Model selection table for ls, tnb, poilog models for each dataset
@@ -38,7 +39,7 @@ tab.cf <- rbind(
     )
 colnames(tab.cf) <- paste(colnames(tab.cf), rep(c("2013","2013t","2019"),each=2))
 rownames(tab.cf)[rownames(tab.cf)==""] <- "alpha"
-write.csv(tab.cf, row.names=FALSE, file = "figs_and_tables/model_coefficients.csv")
+write.csv(tab.cf, file = "figs_and_tables/model_coefficients.csv")
 
 ################################################################################
 ## ABC posterior probabilities for each model for each dataset
@@ -59,12 +60,12 @@ write.csv(tab.abc, row.names=FALSE, file = "figs_and_tables/abc_post_table.csv")
 ## Table with original estimates and CI's (without bias correction) ##
 S.estimates <- expand.grid(
     dataset = c("2013", "2013 updated", "2019"),
-    type = c("TNB", "LS", "LSE"),
+    type = c("CHAO", "TNB", "LS", "LSE"),
     mean = NA,
     IC.low = NA,
     IC.up = NA
 )
-## Add a missing column of sampling in simulations (to compatibility with the neste table)
+## Add a missing column of sampling in simulations (to compatibility with the next table)
 S.estimates$sampling <- NA
 S.estimates <- S.estimates[,c(1:2,6,3:5)]
 ## Including the values
@@ -89,6 +90,13 @@ S.estimates[S.estimates$type=="LSE"&S.estimates$dataset=="2013 updated",4:6] <-
     with(atdn.13.tax, S.ulrich$S[1,2:4])
 S.estimates[S.estimates$type=="LSE"&S.estimates$dataset=="2019",4:6] <-
     with(atdn.19, S.ulrich$S[1,2:4])
+## Chao 1
+S.estimates[S.estimates$type=="CHAO"&S.estimates$dataset=="2013",4:6] <-
+    with(atdn.13, Chao[c(2,4:5)])
+S.estimates[S.estimates$type=="CHAO"&S.estimates$dataset=="2013 updated",4:6] <-
+    with(atdn.13.tax, Chao[c(2,4:5)])
+S.estimates[S.estimates$type=="CHAO"&S.estimates$dataset=="2019",4:6] <-
+    with(atdn.19, Chao[c(2,4:5)])
 ## ## Shen & He estimates
 ## S.estimates[S.estimates$type=="ShenHe"&S.estimates$dataset=="2013",4:6] <-
 ##     with(atdn.13, S.Shen.boot["LS rnd",-4])
@@ -107,7 +115,7 @@ S.estimates[S.estimates$type=="LSE"&S.estimates$dataset=="2019",4:6] <-
 ## Table of Bias-corrected estimates ##
 S.estimates.bc <- expand.grid(
     sampling = c("rnd", "clump"),
-    type = c("TNB", "LS", "LSE LS", "LSE TNB", "ABC"),
+    type = c("TNB", "LS", "LSE LS", "LSE TNB", "CHAO", "ABC"),
     dataset = c("2013", "2013 updated", "2019"),    
     mean = NA,
     IC.low = NA,
@@ -183,7 +191,24 @@ dataset <- "2019"
 obj <- bias.lse.19$tnb
 S.estimates.bc[S.estimates.bc$type==type&S.estimates.bc$dataset==dataset,4:6] <-
     bias.ci(obj, ci.vector = S.estimates[S.estimates$type=="LSE"&S.estimates$dataset==dataset,4:5])
-## ABC (only the selected model(s) in general clumped sample)
+## CHAO
+type <- "CHAO"
+## 2013
+dataset <- "2013"
+obj <- bias.chao.13$ls
+S.estimates.bc[S.estimates.bc$type==type&S.estimates.bc$dataset==dataset,4:6] <-
+    bias.ci(obj, ci.vector = S.estimates[S.estimates$type=="CHAO"&S.estimates$dataset==dataset,4:5])
+##2013 updated
+dataset <- "2013 updated"
+obj <- bias.chao.13t$ls
+S.estimates.bc[S.estimates.bc$type==type&S.estimates.bc$dataset==dataset,4:6] <-
+    bias.ci(obj, ci.vector = S.estimates[S.estimates$type=="CHAO"&S.estimates$dataset==dataset,4:5])
+## 2019
+dataset <- "2019"
+obj <- bias.chao.19$ls
+S.estimates.bc[S.estimates.bc$type==type&S.estimates.bc$dataset==dataset,4:6] <-
+    bias.ci(obj, ci.vector = S.estimates[S.estimates$type=="CHAO"&S.estimates$dataset==dataset,4:5])
+## ABC (only the selected model(s), in general clumped sample)
 S.estimates.bc[S.estimates.bc$type=="ABC"&S.estimates.bc$dataset=="2013"&S.estimates.bc$sampling=="clump",4:6] <-
     summary(abc2013.summ$S.post1)[c(4,2,6),]
 S.estimates.bc[S.estimates.bc$type=="ABC"&S.estimates.bc$dataset=="2013 updated"&S.estimates.bc$sampling=="clump",4:6] <-
@@ -200,16 +225,16 @@ write.csv(S.estimates.all, row.names=FALSE, file = "figs_and_tables/estimates_S_
 ## Figures with relationship estimated x true values of Species Richness
 ################################################################################
 
-pdf("figs_and_tables/estSxS_ls_tnb.pdf", width = 9, height = 7)
+pdf("figs_and_tables/estSxS_ls_tnb.pdf", width = 12, height = 12)
 nf <- layout(
     matrix(
-        c( c(1,2:10),c(1,11:19), c(1,20:28), c(1,rep(29,9)) ),
-        nrow = 4,
+        c( c(1,2:10),c(1,11:19), c(1,20:28), c(1, 29:37), c(1,rep(38,9)) ),
+        nrow = 5,
         ncol = 10,
         byrow = TRUE
     ),
-    widths = c(1, rep(c(0.3,0.3,3),3)),
-    heights= c(3,3,3,1))
+    widths = c(1, rep(c(0.3,0.3,3),4)),
+    heights= c(3,3,3,3,1))
 ## Logseries #
 ## 2013
 par(las = 0, mar=c(0,4,0,0), cex.axis=1.25)
@@ -275,7 +300,7 @@ segments(x0 = c(atdn.19$S.ls.ci),
        y1 = c(atdn.19$S.ls.ci),
        lty=2)
 par(las = 1)
-mtext("LS", side = 4, line = 1.1, cex = 1.25)
+mtext("LS", side = 4, line = 1.1, cex = 1.1)
 par(las = 0)
 ## TNB
 par(mar = c(3, 0, 2, 0))
@@ -340,7 +365,7 @@ segments(x0 = c(atdn.19$tovo.S$CIs[4,]),
        y1 = c(atdn.19$tovo.S$CIs[4,]),
        lty=2)
 par(las = 1)
-mtext("TNB", side = 4, line = 0.5, cex = 1.25)
+mtext("TNB", side = 4, line = 0.5, cex = 1.1)
 par(las = 0)
 ## LSE
 par(mar = c(3, 0, 2, 0))
@@ -403,7 +428,71 @@ segments(x0 = unlist(atdn.19$S.ulrich$S[1,3:4]),
        y1 = unlist(atdn.19$S.ulrich$S[1,3:4]),
        lty=2)
 par(las = 1)
-mtext("LSE", side = 4, line = 0.5, cex = 1.25)
+mtext("LSE", side = 4, line = 0.5, cex = 1.1)
+par(las = 0)
+## CHAO #
+## 2013
+par(mar = c(3, 0, 2, 0))
+with(subset(bias.chao.13$ls$estimates, S.est.clump>atdn.13$Chao[4] & S.est.clump<atdn.13$Chao[5]),
+     boxplot(S, axes=FALSE, ylim = c(5e3,1.6e4), border="red"))
+with(subset(bias.chao.13$ls$estimates, S.est.rnd>atdn.13$Chao[4] & S.est.rnd<atdn.13$Chao[5]),
+     boxplot(S, axes=FALSE, ylim = c(5e3,1.6e4), border="blue"))
+par(mar = c(3, 2, 2, 4))
+plot(S ~ S.est.rnd, data = bias.chao.13$ls$estimates, ylim = c(5e3,1.6e4),
+     xlim = atdn.13$Chao[4:5]*c(.95,1.05), col="blue", ylab = "", xlab = "", type="n", main = "")
+rect(atdn.13$Chao[4],0,atdn.13$Chao[5],max(bias.chao.13$ls$estimates$S),col="lightgrey", border=NA)
+box()
+axis(1)
+points(S ~ S.est.rnd, data = bias.chao.13$ls$estimates, col="blue")
+points(S ~ S.est.clump, data = bias.chao.13$ls$estimates, col="red")
+abline(0,1)
+segments(x0 = c(atdn.13$Chao[4:5]),
+       y0 = c(atdn.13$Chao[4:5]),
+       x1 = c(0,0),
+       y1 = c(atdn.13$Chao[4:5]),
+       lty=2)
+## 2013 updated taxonomy
+par(mar = c(3, 0, 2, 0))
+with(subset(bias.chao.13t$ls$estimates, S.est.clump>atdn.13.tax$Chao[4] & S.est.clump<atdn.13.tax$Chao[5]),
+     boxplot(S, axes=FALSE, ylim = c(5e3,1.6e4), border="red"))
+with(subset(bias.chao.13t$ls$estimates, S.est.rnd>atdn.13.tax$Chao[4] & S.est.rnd<atdn.13.tax$Chao[5]),
+     boxplot(S, axes=FALSE, ylim = c(5e3,1.6e4), border="blue"))
+par(mar = c(3, 2, 2, 4))
+plot(S ~ S.est.rnd, data = bias.chao.13t$ls$estimates, ylim = c(5e3,1.6e4),
+     xlim = atdn.13.tax$Chao[4:5]*c(.95,1.05), col="blue", ylab = "", xlab = "", type="n", main = "")
+rect(atdn.13.tax$Chao[4],0,atdn.13.tax$Chao[5],max(bias.chao.13t$ls$estimates$S),col="lightgrey", border=NA)
+box()
+axis(1)
+points(S ~ S.est.rnd, data = bias.chao.13t$ls$estimates, col="blue")
+points(S ~ S.est.clump, data = bias.chao.13t$ls$estimates, col="red")
+abline(0,1)
+segments(x0 = c(atdn.13.tax$Chao[4:5]),
+       y0 = c(atdn.13.tax$Chao[4:5]),
+       x1 = c(0,0),
+       y1 = c(atdn.13.tax$Chao[4:5]),
+       lty=2)
+## 2019
+par(mar = c(3, 0, 2, 0))
+with(subset(bias.chao.19$ls$estimates, S.est.clump>atdn.19$Chao[4] & S.est.clump<atdn.19$Chao[5]),
+     boxplot(S, axes=FALSE, ylim = c(5e3,1.6e4), border="red"))
+with(subset(bias.chao.19$ls$estimates, S.est.rnd>atdn.19$Chao[4] & S.est.rnd<atdn.19$Chao[5]),
+     boxplot(S, axes=FALSE, ylim = c(5e3,1.6e4), border="blue"))
+par(mar = c(3, 2, 2, 4))
+plot(S ~ S.est.rnd, data = bias.chao.19$ls$estimates, ylim = c(5e3,1.6e4),
+     xlim = atdn.19$Chao[4:5]*c(.95,1.05), col="blue", ylab = "", xlab = "", type="n", main = "")
+rect(atdn.19$Chao[4],0,atdn.19$Chao[5],max(bias.chao.19$ls$estimates$S),col="lightgrey", border=NA)
+box()
+axis(1)
+points(S ~ S.est.rnd, data = bias.chao.19$ls$estimates, col="blue")
+points(S ~ S.est.clump, data = bias.chao.19$ls$estimates, col="red")
+abline(0,1)
+segments(x0 = c(atdn.19$Chao[4:5]),
+       y0 = c(atdn.19$Chao[4:5]),
+       x1 = c(0,0),
+       y1 = c(atdn.19$Chao[4:5]),
+       lty=2)
+par(las = 1)
+mtext("CHAO", side = 4, line = 0.1, cex = 1)
 par(las = 0)
 ## X axis
 par(mar=c(2,0,1,0))
@@ -423,17 +512,17 @@ par(cex.main = 1.5,
 ## Bias-corrected estimates (assuming clumped sampling) ##
 tmp1 <- S.estimates.bc[S.estimates.bc$sampling=="clump"&S.estimates.bc$type!="LSE TNB",]
 tmp1$type[tmp1$type=="LSE LS"] <- "LSE"
-tmp1$type <- factor(tmp1$type, levels=c("TNB","LS","LSE","ABC"))
+tmp1$type <- factor(tmp1$type, levels=c("CHAO","TNB","LS","LSE","ABC"))
 tmp1 <- tmp1[order(tmp1$type,tmp1$dataset),]
 with(tmp1,
-     dotchart(mean, labels = dataset, groups = type, color=2:4, pch=19,
+     dotchart(mean, labels = dataset, groups = type, color=2:4, pch=1,
               pt.cex = 1.5,
               xlab = "Estimated species richness",
               xlim=range(c(IC.low, IC.up),na.rm=TRUE))
      )
-Ys <- 16:18 - rep(seq(0,15, by=5), each=3)
-## Adds uncorrected values
-points(S.estimates$mean, Ys[-(10:12)], col=rep(2:4,3), pch="|")
+Ys <- 21:23 - rep(seq(0,20, by=5), each=3)
+## ## Adds uncorrected values
+## points(S.estimates$mean, Ys[-(10:12)], col=rep(2:4,3), pch="|")
 ## Adds error bars
 cores <- rep(2:4,5)
 for(i in 1:nrow(tmp1))
@@ -449,12 +538,12 @@ par(cex.main = 1.5,
     font.lab = 2,
     cex.axis = 1.25)
 with(S.estimates,
-     dotchart(mean, labels = dataset, groups = type, color=2:4, pch=19,
+     dotchart(mean, labels = dataset, groups = type, color=2:4, pch=1,
               pt.cex = 1.5,
-              xlim=range(c(tmp1$IC.low, tmp1$IC.up),na.rm=TRUE),
+              xlim=range(c(S.estimates$IC.low, S.estimates$IC.up),na.rm=TRUE),
               xlab = "Estimated species richness")
      )
-Ys <- 11:13 - rep(seq(0,10, by=5), each=3)
+Ys <- 16:18 - rep(seq(0,15, by=5), each=3)
 cores <- rep(2:4,4)
 for(i in 1:nrow(S.estimates))
     segments(x0=S.estimates$IC.low[i], x1=S.estimates$IC.up[i], y0=Ys[i], y1=Ys[i],
@@ -468,7 +557,7 @@ f11 <- function(x, type, ...){
     with(tmp3,
          dotchart(mean, labels = sampling, groups = factor(dataset),
                   color=2:4,
-                  pch=19,
+                  pch=1,
                   pt.cex = 1.5,
                   xlim=range(c(IC.low, IC.up),na.rm=TRUE),
                   ...
@@ -487,15 +576,16 @@ tmp2$type[tmp2$type=="LSE LS"] <- "LSE"
 tmp2$sampling[is.na(tmp2$sampling)] <- "Not corrected"
 tmp2 <- tmp2[order(tmp2$dataset,tmp2$sampling),]
 
-pdf("figs_and_tables/bias_corrected_estimates_rnd_clump_dotchart.pdf", width = 12, height = 3.5)
+pdf("figs_and_tables/bias_corrected_estimates_rnd_clump_dotchart.pdf", width = 9, height = 9)
 par(cex.main = 1.5,
     cex.lab = 1.25,
     font.lab = 2,
     cex.axis = 1.5,
-    mfrow = c(1,3))
+    mfrow = c(2,2))
 f11(tmp2, "LS", xlab = "Estimated species richness", main= "Logseries")
 f11(tmp2, "TNB", xlab = "Estimated species richness", main= "Truncated Negative Binomial")
 f11(tmp2, "LSE", xlab = "Estimated species richness", main= "RAD linear extension")
+f11(tmp2, "CHAO", xlab = "Estimated species richness", main= "CHAO")
 dev.off()
 
 
@@ -666,29 +756,33 @@ dev.off()
 ################################################################################
 ## Population RAD and regional LS
 ################################################################################
+## Species richness estimates and CI's to use: from ABC
 S1 <- unlist(S.estimates.all[S.estimates.all$type=="ABC"&S.estimates.all$dataset=="2019"&S.estimates.all$sampling=="clump",4:6])
+## Simulated regional rads
 ls.m <- rad.ls(S = S1[1], N = atdn.19$Tot.t)
 ls.low <- rad.ls(S = S1[2], N = atdn.19$Tot.t)
 ls.up <- rad.ls(S = S1[3], N = atdn.19$Tot.t)
-## N Hyperdominants
-hyp.m <- with(ls.m, min(x[cumsum(y)>=sum(y)/2]))
-hyp.low <- with(ls.low, min(x[cumsum(y)>=sum(y)/2]))
-hyp.up <- with(ls.up, min(x[cumsum(y)>=sum(y)/2]))
-
+## Simulated population sizes
+abc19.sim.pop <- with(atdn.19,
+                            lapply(S1, sim.abc, N = Tot.t, sad = "ls", tot.area = Tot.A, n.plots = N.plots,
+                                   lm.sd.fit = lm.sd, lmk.fit = lm.k, nb.fit = y.nb2, summary = FALSE))
+## Hyperdominants
+hd <- round(atdn.19$HD$summary[c(2,4:5)])
+## The figure
 pdf("figs_and_tables/pop_rad_with_predicted_rad.pdf")
-par(bty = "l", lwd = 2)
+ par(bty = "l", lwd = 2)
 plot(rad(atdn.19$data$population), xlim = c(1, S1[3]),
      ##ylim=c(min(c(ls.m$y, ls.up$y, ls.low$y)), max(atdn.19$data$population)),
      ylim = c(0.5, max(atdn.19$data$population)),
      axes=FALSE , #yaxs="i",
-     col=rep(c("red","darkgrey"), c(hyp.m, length(atdn.19$data$population)-hyp.m)),
+     col=rep(c("red","darkgrey"), c(hd[1], length(atdn.19$data$population)-hd[1])),
      cex.lab = 1.25, font.lab = 2, cex.axis = 1.2)
 axis(1, at=c(1, seq(2500,17500, by=2500)))
 axis(2)
 lines(rad(ls.m$y), col="darkblue")
 lines(rad(ls.low$y), lty=2, col="darkblue")
 lines(rad(ls.up$y), lty=2, col="darkblue")
-text(2e4, 1e9, paste("Nr of hyperdominant species = ",hyp.m," (",hyp.low," - ",hyp.up,")", sep=""), font=2, pos=2)
+text(2e4, 1e9, paste("Nr of hyperdominant species = ",hd[1]," (",hd[2]," - ",hd[3],")", sep=""), font=2, pos=2)
 text(2e4, 0.25e9, paste("Estimated tree species = ",round(S1[1])," (",round(S1[2])," - ",round(S1[3]),")", sep=""), font=2, pos=2)
 par(fig=c(0.09,0.49,0.05,0.50),
     mgp = c(2.5,0.5,0),
@@ -720,7 +814,7 @@ tnb.r <- radpred(atdn.19$y.nb2)
 pln.r <- radpred(atdn.19$pln)
 
 ##The figures
-pdf("figs_and_tables/sads_fit_to_samples.pdf" width=12, height=12)
+pdf("figs_and_tables/sads_fit_to_samples.pdf", width=12, height=12)
 par(mar = c(5, 5, 4, 2) + 0.1,
     mgp = c(3.25, 1, 0),
     oma=c(3,3,0,0),

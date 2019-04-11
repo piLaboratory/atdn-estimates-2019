@@ -3,7 +3,7 @@ source("../functions.R")
 ## library(parallel)
 ## library(untb)
 ## library(sads)
-load("../lists_with_all_objects.RData")
+load("needed_objs2013_tax.RData")
 
 ## Simulations
 ## Function to parallelize simulations
@@ -71,4 +71,4 @@ sim.y <- c(rep(simulated.vals[j1],each=2),
            rep(simulated.vals[j2],each=2),
            rep(simulated.vals[j3],each=2))
 
-save(all.sims, sim.ids, sim.y, file="ABC2019b.RData")
+save(needed.objs, all.sims, sim.ids, sim.y, file="ABC2013tb.RData")

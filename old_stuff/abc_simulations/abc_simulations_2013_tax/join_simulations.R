@@ -8,11 +8,13 @@ load("ABC2013tb.RData")
 all.sims2 <- all.sims
 sim.ids2 <- sim.ids
 sim.y2 <- sim.y
+needed.objs2 <- needed.objs
 load("ABC2013ta.RData")
 
 ## Joining simulation inputs and resultig objects in a list
 abc2013t <- list( sims = rbind(all.sims, all.sims2),
                 labels = c(sim.ids, sim.ids2),
-                params = c(sim.y, sim.y2))
+                params = c(sim.y, sim.y2),
+                input.objs = c(needed.objs, needed.objs2))
 save(abc2013t, file="abcFinal2013tax2019.RData")
 

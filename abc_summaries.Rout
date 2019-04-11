@@ -1,0 +1,643 @@
+
+R version 3.5.2 (2018-12-20) -- "Eggshell Igloo"
+Copyright (C) 2018 The R Foundation for Statistical Computing
+Platform: x86_64-pc-linux-gnu (64-bit)
+
+R é um software livre e vem sem GARANTIA ALGUMA.
+Você pode redistribuí-lo sob certas circunstâncias.
+Digite 'license()' ou 'licence()' para detalhes de distribuição.
+
+R é um projeto colaborativo com muitos contribuidores.
+Digite 'contributors()' para obter mais informações e
+'citation()' para saber como citar o R ou pacotes do R em publicações.
+
+Digite 'demo()' para demonstrações, 'help()' para o sistema on-line de ajuda,
+ou 'help.start()' para abrir o sistema de ajuda em HTML no seu navegador.
+Digite 'q()' para sair do R.
+
+[Área de trabalho anterior carregada]
+
+> source("functions.R")
+Carregando pacotes exigidos: stats4
+Carregando pacotes exigidos: splines
+Carregando pacotes exigidos: permute
+Carregando pacotes exigidos: lattice
+This is vegan 2.5-3
+
+Attaching package: ‘vegan’
+
+The following object is masked from ‘package:VGAM’:
+
+    calibrate
+
+Carregando pacotes exigidos: bbmle
+
+Attaching package: ‘bbmle’
+
+The following object is masked from ‘package:VGAM’:
+
+    AICc
+
+
+Attaching package: ‘sads’
+
+The following objects are masked from ‘package:VGAM’:
+
+    dpareto, dzipf, ppareto, pzipf, qpareto, qzipf, rpareto, rzipf
+
+Carregando pacotes exigidos: abc.data
+Carregando pacotes exigidos: nnet
+Carregando pacotes exigidos: quantreg
+Carregando pacotes exigidos: SparseM
+
+Attaching package: ‘SparseM’
+
+The following object is masked from ‘package:base’:
+
+    backsolve
+
+Carregando pacotes exigidos: MASS
+
+Attaching package: ‘MASS’
+
+The following object is masked from ‘package:untb’:
+
+    select
+
+Carregando pacotes exigidos: locfit
+locfit 1.5-9.1 	 2013-03-22
+> library(abc)
+> library(parallel)
+> load("lists_with_all_objects.RData")
+> 
+> 
+> ################################################################################
+> ## 2013 original data##
+> ################################################################################
+> load("abcFinal2013.RData")
+> ## Use only the summary statistics of the simulations with noise in
+> ## estimated total population sizes (see abc2019run.R) 
+> abc2013$sims <- abc2013$sims[,5:8]
+> 
+> ## Model selection
+> ## Target: observed number of species, Simpson's species-equivalents,
+> ## mean and sd of log abundances
+> target <- c( atdn.13$Sobs,
++             D(atdn.13$data$population),
++             mean(log(atdn.13$data$population)),
++             sd(log(atdn.13$data$population))
++             )
+> 
+> ## Diagnostics plots
+> ## Box plots of each target variable
+> par(mfrow=c(1,2))
+> for(i in 1:ncol(abc2013$sims)){
++     boxplot(abc2013$sims[,i]~abc2013$labels,
++             main=colnames(abc2013$sims)[i], log="y")
++     abline(h=target[i], lty=2, col="blue")
++     }
+> par(mfrow=c(1,1))
+> 
+> 
+> ## Model selection ##
+> 
+> ## Cross-validation
+> cv.modsel <- cv4postpr(abc2013$labels, abc2013$sims,
++                        nval=100, tol= c(0.05, 0.025, 0.01),
++                        method="rejection")
+> summary(cv.modsel)
+Confusion matrix based on 100 samples for each model.
+
+$tol0.01
+        LNclump LNrnd LSclump LSrnd NBclump NBrnd
+LNclump      92     8       0     0       0     0
+LNrnd        25    75       0     0       0     0
+LSclump       0     0      91     9       0     0
+LSrnd         0     0       6    94       0     0
+NBclump       0     0       3     0      90     7
+NBrnd         0     0       3     1       7    89
+
+$tol0.025
+        LNclump LNrnd LSclump LSrnd NBclump NBrnd
+LNclump      85    15       0     0       0     0
+LNrnd        33    67       0     0       0     0
+LSclump       0     0      90    10       0     0
+LSrnd         0     0       9    91       0     0
+NBclump       0     0       6     0      80    14
+NBrnd         0     0       6     2      15    77
+
+$tol0.05
+        LNclump LNrnd LSclump LSrnd NBclump NBrnd
+LNclump      93     7       0     0       0     0
+LNrnd        47    53       0     0       0     0
+LSclump       0     0      86    14       0     0
+LSrnd         0     0       9    91       0     0
+NBclump       0     0      12     1      64    23
+NBrnd         0     0       8     2      37    53
+
+
+Mean model posterior probabilities (rejection)
+
+$tol0.01
+        LNclump  LNrnd LSclump  LSrnd NBclump  NBrnd
+LNclump  0.6415 0.3585  0.0000 0.0000  0.0000 0.0000
+LNrnd    0.3930 0.6070  0.0000 0.0000  0.0000 0.0000
+LSclump  0.0000 0.0000  0.7313 0.2634  0.0016 0.0037
+LSrnd    0.0000 0.0000  0.2428 0.7554  0.0001 0.0017
+NBclump  0.0000 0.0000  0.0228 0.0017  0.5231 0.4524
+NBrnd    0.0000 0.0000  0.0231 0.0100  0.4566 0.5103
+
+$tol0.025
+        LNclump  LNrnd LSclump  LSrnd NBclump  NBrnd
+LNclump  0.5752 0.4248  0.0000 0.0000  0.0000 0.0000
+LNrnd    0.4450 0.5550  0.0000 0.0000  0.0000 0.0000
+LSclump  0.0000 0.0000  0.6102 0.3826  0.0022 0.0050
+LSrnd    0.0000 0.0000  0.3800 0.6174  0.0004 0.0023
+NBclump  0.0000 0.0000  0.0432 0.0116  0.4790 0.4662
+NBrnd    0.0000 0.0000  0.0414 0.0165  0.4669 0.4751
+
+$tol0.05
+        LNclump  LNrnd LSclump  LSrnd NBclump  NBrnd
+LNclump  0.5425 0.4575  0.0000 0.0000  0.0000 0.0000
+LNrnd    0.4790 0.5210  0.0000 0.0000  0.0000 0.0000
+LSclump  0.0000 0.0000  0.5303 0.4577  0.0043 0.0077
+LSrnd    0.0000 0.0000  0.4616 0.5322  0.0015 0.0047
+NBclump  0.0000 0.0000  0.0697 0.0359  0.4486 0.4458
+NBrnd    0.0000 0.0000  0.0570 0.0349  0.4527 0.4554
+
+> 
+> ## Model selection
+> model.sel <- postpr(target = target,
++                     index=abc2013$labels,
++                     sumstat = abc2013$sims,
++                     tol=0.01, method="rejection",
++                     corr=TRUE)
+> summary(model.sel)
+Call: 
+postpr(target = target, index = abc2013$labels, sumstat = abc2013$sims, 
+    tol = 0.01, method = "rejection", corr = TRUE)
+Data:
+ postpr.out$values (600 posterior samples)
+Models a priori:
+ LNclump, LNrnd, LSclump, LSrnd, NBclump, NBrnd
+Models a posteriori:
+ LNclump, LNrnd, LSclump, LSrnd, NBclump, NBrnd
+
+Proportion of accepted simulations (rejection):
+LNclump   LNrnd LSclump   LSrnd NBclump   NBrnd 
+ 0.0000  0.0000  0.7100  0.2883  0.0017  0.0000 
+
+Bayes factors:
+         LNclump    LNrnd  LSclump    LSrnd  NBclump    NBrnd
+LNclump                     0.0000   0.0000   0.0000         
+LNrnd                       0.0000   0.0000   0.0000         
+LSclump      Inf      Inf   1.0000   2.4624 426.0000      Inf
+LSrnd        Inf      Inf   0.4061   1.0000 173.0000      Inf
+NBclump      Inf      Inf   0.0023   0.0058   1.0000      Inf
+NBrnd                       0.0000   0.0000   0.0000         
+
+
+> ## Selected model(s)
+> index <- abc2013$labels=="LSclump"
+> 
+> ## Goodness of fit of the selected model
+> nrep <- 200
+> gof <- gfit(target = target,
++             sumstat = abc2013$sims[index,],
++             nb.replicate = nrep, tol = 0.025)
+> sgof <- summary(gof)
+> p.legend <- ifelse(sgof$pvalue==0,
++                    paste("p < 1/",nrep,sep=""),
++                    paste("p =",sgof$pvalue))
+> plot(gof)
+> mtext(p.legend)
+> 
+> 
+> ## Parameter estimation ##
+> ## Cross validation
+> cv.rej <- cv4abc(param = data.frame(S=abc2013$params[index]),
++        sumstat = abc2013$sims[index,],
++        tols=c(0.05, 0.025, 0.01), nval=100, method="rejection")
+> summary(cv.rej)
+Prediction error based on a cross-validation sample of 100
+
+                S
+0.01  0.004396232
+0.025 0.005056464
+0.05  0.005471399
+> 
+> ## Posterior distribution of Species richness from the selected model
+> S.post1 <- abc(target = target, param=data.frame(S=abc2013$params[index]),
++               sumstat = abc2013$sims[index,],
++               tol=0.01, method="rejection", numnet=100)
+> summary(S.post1)
+Call: 
+abc(target = target, param = data.frame(S = abc2013$params[index]), 
+    sumstat = abc2013$sims[index, ], tol = 0.01, method = "rejection", 
+    numnet = 100)
+Data:
+ abc.out$unadj.values (100 posterior samples)
+
+                    S
+Min.:        12569.02
+2.5% Perc.:  14662.68
+Median:      17809.49
+Mean:        17673.31
+Mode:        17980.15
+97.5% Perc.: 19895.79
+Max.:        19960.18
+> hist(S.post1)
+> 
+> ## stores all relevant objects in a list
+> abc2013.summ <- list(target=target,
++                    cv.modsel=cv.modsel, model.sel=model.sel,
++                    index=index, gof=gof,
++                    sgof=sgof, p.legend=p.legend,
++                    cv.rej=cv.rej, S.post1=S.post1)
+> 
+> 
+> ################################################################################
+> ## 2013 revised taxonomy ##
+> ################################################################################
+> load("abcFinal2013tax2019.RData")
+> ## Use only the summary statistics of the simulations with noise in
+> ## estimated total population sizes (see abc2019run.R) 
+> abc2013t$sims <- abc2013t$sims[,5:8]
+> 
+> ## Model selection
+> ## Target: observed number of species, Simpson's species equivalent,
+> ## mean and sd of log abundances
+> 
+> target <- c( atdn.13.tax$Sobs,
++             D(atdn.13.tax$data$population),
++             mean(log(atdn.13.tax$data$population)),
++             sd(log(atdn.13.tax$data$population))
++             )
+> 
+> ## Diagnostics plots
+> ## Box plots of each target variable
+> par(mfrow=c(2,2))
+> for(i in 1:ncol(abc2013t$sims)){
++     boxplot(abc2013t$sims[,i]~abc2013t$labels,
++             main=colnames(abc2013t$sims)[i], log="y")
++     abline(h=target[i], lty=2, col="blue")
++     }
+> par(mfrow=c(1,1))
+> 
+> 
+> ## Model selection ##
+> 
+> ## Cross-validation
+> cv.modsel <- cv4postpr(abc2013t$labels, abc2013t$sims,
++                        nval=100, tol= c(0.05, 0.025, 0.01),
++                        method="rejection")
+> summary(cv.modsel)
+Confusion matrix based on 100 samples for each model.
+
+$tol0.01
+        LNclump LNrnd LSclump LSrnd NBclump NBrnd
+LNclump      92     8       0     0       0     0
+LNrnd        14    86       0     0       0     0
+LSclump       0     0      89    11       0     0
+LSrnd         0     0      10    90       0     0
+NBclump       0     0       0     0      69    31
+NBrnd         0     0       2     0      39    59
+
+$tol0.025
+        LNclump LNrnd LSclump LSrnd NBclump NBrnd
+LNclump      88    12       0     0       0     0
+LNrnd        24    76       0     0       0     0
+LSclump       0     0      87    13       0     0
+LSrnd         0     0      13    87       0     0
+NBclump       0     0       6     0      74    20
+NBrnd         0     0       9     3      62    26
+
+$tol0.05
+        LNclump LNrnd LSclump LSrnd NBclump NBrnd
+LNclump      84    16       0     0       0     0
+LNrnd        38    62       0     0       0     0
+LSclump       0     0      85    15       0     0
+LSrnd         0     0      14    86       0     0
+NBclump       0     0      14     3      76     7
+NBrnd         0     0      10     6      73    11
+
+
+Mean model posterior probabilities (rejection)
+
+$tol0.01
+        LNclump  LNrnd LSclump  LSrnd NBclump  NBrnd
+LNclump  0.6522 0.3478  0.0000 0.0000  0.0000 0.0000
+LNrnd    0.3469 0.6531  0.0000 0.0000  0.0000 0.0000
+LSclump  0.0000 0.0000  0.7806 0.2175  0.0000 0.0019
+LSrnd    0.0000 0.0000  0.1990 0.8010  0.0000 0.0000
+NBclump  0.0000 0.0000  0.0043 0.0000  0.5032 0.4925
+NBrnd    0.0000 0.0000  0.0223 0.0012  0.4817 0.4949
+
+$tol0.025
+        LNclump  LNrnd LSclump  LSrnd NBclump  NBrnd
+LNclump  0.5766 0.4234  0.0000 0.0000  0.0000 0.0000
+LNrnd    0.4146 0.5854  0.0000 0.0000  0.0000 0.0000
+LSclump  0.0000 0.0000  0.6741 0.3239  0.0002 0.0018
+LSrnd    0.0000 0.0000  0.3075 0.6925  0.0000 0.0000
+NBclump  0.0000 0.0000  0.0428 0.0145  0.4729 0.4698
+NBrnd    0.0000 0.0000  0.0561 0.0214  0.4608 0.4618
+
+$tol0.05
+        LNclump  LNrnd LSclump  LSrnd NBclump  NBrnd
+LNclump  0.5357 0.4643  0.0000 0.0000  0.0000 0.0000
+LNrnd    0.4680 0.5320  0.0000 0.0000  0.0000 0.0000
+LSclump  0.0000 0.0000  0.5754 0.4223  0.0005 0.0018
+LSrnd    0.0000 0.0000  0.4195 0.5805  0.0000 0.0000
+NBclump  0.0000 0.0000  0.0977 0.0246  0.4396 0.4381
+NBrnd    0.0000 0.0000  0.0833 0.0344  0.4412 0.4410
+
+> 
+> ## Model selection
+> model.sel <- postpr(target = target,
++                     index=abc2013t$labels,
++                     sumstat = abc2013t$sims,
++                     tol=0.01, method="rejection",
++                     corr=TRUE)
+> summary(model.sel)
+Call: 
+postpr(target = target, index = abc2013t$labels, sumstat = abc2013t$sims, 
+    tol = 0.01, method = "rejection", corr = TRUE)
+Data:
+ postpr.out$values (507 posterior samples)
+Models a priori:
+ LNclump, LNrnd, LSclump, LSrnd, NBclump, NBrnd
+Models a posteriori:
+ LNclump, LNrnd, LSclump, LSrnd, NBclump, NBrnd
+Warning: Posterior model probabilities are corrected for unequal number of simulations per models.
+
+
+Proportion of accepted simulations (rejection):
+LNclump   LNrnd LSclump   LSrnd NBclump   NBrnd 
+ 0.0000  0.0000  0.2726  0.5989  0.0833  0.0451 
+
+Bayes factors:
+        LNclump   LNrnd LSclump   LSrnd NBclump   NBrnd
+LNclump                  0.0000  0.0000  0.0000  0.0000
+LNrnd                    0.0000  0.0000  0.0000  0.0000
+LSclump     Inf     Inf  1.0000  0.4551  6.1250 11.3077
+LSrnd       Inf     Inf  2.1973  1.0000 13.4583 24.8462
+NBclump     Inf     Inf  0.1633  0.0743  1.0000  1.8462
+NBrnd       Inf     Inf  0.0884  0.0402  0.5417  1.0000
+
+
+> ## Selected model(s)
+> index <-
++     abc2013t$labels=="LSrnd"|abc2013t$labels=="LSclump"
+> 
+> 
+> ## Goodness of fit the models
+> nrep <- 200
+> gof <- gfit(target = target,
++             sumstat = abc2013t$sims[index,],
++             nb.replicate = nrep, tol = 0.025)
+> sgof <- summary(gof)
+> p.legend <- ifelse(sgof$pvalue==0,
++                    paste("p < 1/",nrep,sep=""),
++                    paste("p =",sgof$pvalue))
+> plot(gof)
+> mtext(p.legend)
+> 
+> 
+> ## Parameter estimation ##
+> ## Cross validation
+> cv.rej <- cv4abc(param = data.frame(S=abc2013t$params[index]),
++        sumstat = abc2013t$sims[index,],
++        tols=c(0.05, 0.025, 0.01), nval=100, method="rejection")
+> summary(cv.rej)
+Prediction error based on a cross-validation sample of 100
+
+                S
+0.01  0.006394913
+0.025 0.007924648
+0.05  0.009750895
+> 
+> 
+> ## Posterior distribution of Species richness from the selected model
+> S.post1 <- abc(target = target, param=data.frame(S=abc2013t$params[index]),
++               sumstat = abc2013t$sims[index,],
++               tol=0.01, method="rejection")
+> 
+> summary(S.post1)
+Call: 
+abc(target = target, param = data.frame(S = abc2013t$params[index]), 
+    sumstat = abc2013t$sims[index, ], tol = 0.01, method = "rejection")
+Data:
+ abc.out$unadj.values (200 posterior samples)
+
+                    S
+Min.:        15172.99
+2.5% Perc.:  16416.78
+Median:      18557.80
+Mean:        18503.78
+Mode:        18292.70
+97.5% Perc.: 19934.19
+Max.:        19989.96
+> hist(S.post1)
+> 
+> ## stores all relevant objects in a list
+> abc2013t.summ <- list(target=target,
++                    cv.modsel=cv.modsel, model.sel=model.sel,
++                    index=index, gof=gof,
++                    sgof=sgof, p.legend=p.legend,
++                    cv.rej=cv.rej, S.post1=S.post1)
+> 
+> ################################################################################
+> ## 2019 ##
+> ################################################################################
+> load("abcFinal2019.RData")
+> ## Use only the summary statistics of the simulations with noise in
+> ## estimated total population sizes (see abc2019run.R) 
+> abc2019$sims <- abc2019$sims[,5:8]
+> 
+> 
+> ## Model selection
+> ## Target: observed number of species, lmean, sdmean of log abundances 
+> target <- c( atdn.19$Sobs,
++            D(atdn.19$data$population), 
++            mean(log(atdn.19$data$population)),
++            sd(log(atdn.19$data$population))
++            )
+> 
+> ## Quick diagnostics plots
+> ## Box plots of each target variable
+> ## 
+> par(mfrow=c(2,2))
+> for(i in 1:ncol(abc2019$sims)){
++     boxplot(abc2019$sims[,i]~abc2019$labels,
++             main=colnames(abc2019$sims)[i], log="y")
++     abline(h=target[i], lty=2, col="blue")
++     }
+> par(mfrow=c(1,1))
+> 
+> 
+> ## Model selection ##
+> 
+> ## Cross-validation
+> cv.modsel <- cv4postpr(abc2019$labels, abc2019$sims,
++                        nval=100, tol= c(0.05, 0.025, 0.01),
++                        method="rejection")
+> summary(cv.modsel)
+Confusion matrix based on 100 samples for each model.
+
+$tol0.01
+        LNclump LNrnd LSclump LSrnd NBclump NBrnd
+LNclump      99     1       0     0       0     0
+LNrnd         0   100       0     0       0     0
+LSclump       0     0     100     0       0     0
+LSrnd         0     0       0   100       0     0
+NBclump       0     0       0     0      97     3
+NBrnd         0     0       0     0       0   100
+
+$tol0.025
+        LNclump LNrnd LSclump LSrnd NBclump NBrnd
+LNclump      98     2       0     0       0     0
+LNrnd         0   100       0     0       0     0
+LSclump       0     0     100     0       0     0
+LSrnd         0     0       0   100       0     0
+NBclump       0     0       5     0      81    14
+NBrnd         0     0       6     0       4    90
+
+$tol0.05
+        LNclump LNrnd LSclump LSrnd NBclump NBrnd
+LNclump      97     3       0     0       0     0
+LNrnd         3    97       0     0       0     0
+LSclump       0     0     100     0       0     0
+LSrnd         0     0       0   100       0     0
+NBclump       0     0      12     0      70    18
+NBrnd         0     0      11     0      14    75
+
+
+Mean model posterior probabilities (rejection)
+
+$tol0.01
+        LNclump  LNrnd LSclump  LSrnd NBclump  NBrnd
+LNclump  0.9683 0.0317  0.0000 0.0000  0.0000 0.0000
+LNrnd    0.0346 0.9654  0.0000 0.0000  0.0000 0.0000
+LSclump  0.0000 0.0000  0.9877 0.0062  0.0001 0.0061
+LSrnd    0.0000 0.0000  0.0064 0.9936  0.0000 0.0000
+NBclump  0.0000 0.0000  0.0122 0.0000  0.5525 0.4353
+NBrnd    0.0000 0.0000  0.0118 0.0000  0.4384 0.5499
+
+$tol0.025
+        LNclump  LNrnd LSclump  LSrnd NBclump  NBrnd
+LNclump  0.8931 0.1069  0.0000 0.0000  0.0000 0.0000
+LNrnd    0.1268 0.8732  0.0000 0.0000  0.0000 0.0000
+LSclump  0.0000 0.0000  0.9510 0.0362  0.0009 0.0120
+LSrnd    0.0000 0.0000  0.0417 0.9581  0.0000 0.0001
+NBclump  0.0000 0.0000  0.0413 0.0000  0.4908 0.4679
+NBrnd    0.0000 0.0000  0.0402 0.0004  0.4702 0.4892
+
+$tol0.05
+        LNclump  LNrnd LSclump  LSrnd NBclump  NBrnd
+LNclump  0.7266 0.2734  0.0000 0.0000  0.0000 0.0000
+LNrnd    0.2772 0.7228  0.0000 0.0000  0.0000 0.0000
+LSclump  0.0000 0.0000  0.7796 0.1969  0.0051 0.0183
+LSrnd    0.0000 0.0000  0.2083 0.7894  0.0000 0.0022
+NBclump  0.0000 0.0000  0.0958 0.0052  0.4543 0.4446
+NBrnd    0.0000 0.0000  0.0829 0.0213  0.4451 0.4506
+
+> 
+> ## Model selection
+> model.sel <- postpr(target = target,
++                     index=abc2019$labels,
++                     sumstat = abc2019$sims,
++                     tol=0.01, method="rejection",
++                     corr=TRUE)
+> summary(model.sel)
+Call: 
+postpr(target = target, index = abc2019$labels, sumstat = abc2019$sims, 
+    tol = 0.01, method = "rejection", corr = TRUE)
+Data:
+ postpr.out$values (522 posterior samples)
+Models a priori:
+ LNclump, LNrnd, LSclump, LSrnd, NBclump, NBrnd
+Models a posteriori:
+ LNclump, LNrnd, LSclump, LSrnd, NBclump, NBrnd
+Warning: Posterior model probabilities are corrected for unequal number of simulations per models.
+
+
+Proportion of accepted simulations (rejection):
+LNclump   LNrnd LSclump   LSrnd NBclump   NBrnd 
+ 0.0000  0.0000  0.9318  0.0651  0.0000  0.0031 
+
+Bayes factors:
+         LNclump    LNrnd  LSclump    LSrnd  NBclump    NBrnd
+LNclump                     0.0000   0.0000            0.0000
+LNrnd                       0.0000   0.0000            0.0000
+LSclump      Inf      Inf   1.0000  14.3235      Inf 487.0000
+LSrnd        Inf      Inf   0.0698   1.0000      Inf  34.0000
+NBclump                     0.0000   0.0000            0.0000
+NBrnd        Inf      Inf   0.0021   0.0294      Inf   1.0000
+
+
+> ## Selected model(s)
+> index <- abc2019$labels=="LSclump"
+> 
+> ## Goodness of fit the models
+> nrep <- 200
+> gof <- gfit(target = target,
++             sumstat = abc2019$sims[index,],
++             nb.replicate = nrep, tol = 0.05)
+> sgof <- summary(gof)
+> p.legend <- ifelse(sgof$pvalue==0,
++                    paste("p < 1/",nrep,sep=""),
++                    paste("p =",sgof$pvalue))
+> plot(gof)
+> mtext(p.legend)
+> 
+> 
+> ## Parameter estimation ##
+> ## Cross validation
+> cv.rej <- cv4abc(param = data.frame(S=abc2019$params[index]),
++        sumstat = abc2019$sims[index,],
++        tols=c(0.05, 0.025, 0.01), nval=100, method="rejection")
+> 
+> summary(cv.rej)
+Prediction error based on a cross-validation sample of 100
+
+                S
+0.01  0.003061534
+0.025 0.003880117
+0.05  0.004762273
+> 
+> ## Posterior distribution of Species richness from the selected model
+> S.post1 <- abc(target = target, param=data.frame(S=abc2019$params[index]),
++               sumstat = abc2019$sims[index,],
++               tol=0.01, method="rejection")
+> 
+> summary(S.post1)
+Call: 
+abc(target = target, param = data.frame(S = abc2019$params[index]), 
+    sumstat = abc2019$sims[index, ], tol = 0.01, method = "rejection")
+Data:
+ abc.out$unadj.values (100 posterior samples)
+
+                    S
+Min.:        14575.44
+2.5% Perc.:  15181.27
+Median:      17360.01
+Mean:        17205.04
+Mode:        17668.83
+97.5% Perc.: 19205.81
+Max.:        19739.48
+> hist(S.post1)
+> 
+> 
+> ## stores all relevant objects in a list
+> abc2019.summ <- list(target=target,
++                    cv.modsel=cv.modsel, model.sel=model.sel,
++                    index=index, gof=gof,
++                    sgof=sgof, p.legend=p.legend,
++                    ##cv.nn=cv.nn,
++                    S.post1=S.post1)
+> 
+> save(abc2013.summ, abc2013t.summ, abc2019.summ, file="abcSummaries.RData")
+> 
+> proc.time()
+  usuário   sistema decorrido 
+  597.502     0.672   602.227 

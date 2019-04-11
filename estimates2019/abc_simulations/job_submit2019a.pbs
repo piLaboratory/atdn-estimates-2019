@@ -5,7 +5,7 @@
 #PBS -l walltime=1:00:00:00
 #PBS -q short
 #PBS -j oe
-#PBS -o /home/piklprado/amazonia_tree_richness/abc.log
+#PBS -o /home/piklprado/amazonia_tree_richness/2019/abcA.log
 
 cd /home/piklprado/amazonia_tree_richness/2019/
 R CMD BATCH abc_run2019a.R
