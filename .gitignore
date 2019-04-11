@@ -16,7 +16,6 @@ figure/
 *RData
 *.pdf
 *oldies/
-*Rhistory
-*Rhistory
 .Rhistory
-*.Rhistory
+*Rhistory
+old_stuff/
