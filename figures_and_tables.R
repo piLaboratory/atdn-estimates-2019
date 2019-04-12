@@ -1,12 +1,22 @@
 source("functions.R")
+## Basic quantities and original (biased estimates), from script 'dataprep.R'
 load("lists_with_all_objects.RData")
+## Summaries and posterior distributions of ABC analyses, from script 'abc_summaries.R'
 load("abcSummaries.RData")
+## Bias analyses for estimates from logseries and tnb fitted to the sample for 2013 dataset , from script
+## 'simulation_bias/ls_tnb_bias_parallel_2013.R'
 load("bias_ls_tnb_2013.RData")
+## same for 2013 updated
 load("bias_ls_tnb_2013t.RData")
+## same for 2019
 load("bias_ls_tnb_2019.RData")
-load("bias_LSE.RData")
+## Bias analyses for model selection of ls, tnb, pln fitted to the samples, from script 'simulation_bias/model_selection_bias.R'
 load("bias_msel.RData")
+## Bias analyses for estimates from CHAO method from script 'simulation_bias/chao_bias.R'
 load("bias_chao.RData")
+## Bias analyses for estimates from LSE method on the estimated population sizes,
+## from script 'simulation_bias/LSE_bias.R'
+load("bias_LSE.RData")
 
 ################################################################################
 ## Model selection table for ls, tnb, poilog models for each dataset
@@ -24,7 +34,7 @@ tab.ms.all <- data.frame(
 write.csv(tab.ms.all, row.names=FALSE, file = "figs_and_tables/model_selection_table.csv")
 
 ################################################################################
-## Estimated coefficients and SEs and likleihoods for ls, tnb, poilog models for each dataset
+## Table with sstimated coefficients and SEs and likelihoods for ls, tnb, poilog models for each dataset
 ################################################################################
 tab.cf <- rbind(
     cbind(with(atdn.13, summary(y.nb2)@coef[,1:2]),
@@ -56,6 +66,7 @@ write.csv(tab.abc, row.names=FALSE, file = "figs_and_tables/abc_post_table.csv")
 ################################################################################
 ## Tables with all estimates of species richness and CI's 95%
 ################################################################################
+## Not exactly an elegant code, but alas, it works
 
 ## Table with original estimates and CI's (without bias correction) ##
 S.estimates <- expand.grid(
@@ -97,7 +108,7 @@ S.estimates[S.estimates$type=="CHAO"&S.estimates$dataset=="2013 updated",4:6] <-
     with(atdn.13.tax, Chao[c(2,4:5)])
 S.estimates[S.estimates$type=="CHAO"&S.estimates$dataset=="2019",4:6] <-
     with(atdn.19, Chao[c(2,4:5)])
-## ## Shen & He estimates
+## ## Shen & He estimates (to be done)
 ## S.estimates[S.estimates$type=="ShenHe"&S.estimates$dataset=="2013",4:6] <-
 ##     with(atdn.13, S.Shen.boot["LS rnd",-4])
 ## S.estimates[S.estimates$type=="ShenHe"&S.estimates$dataset=="2013 updated",4:6] <-
@@ -758,6 +769,8 @@ dev.off()
 ################################################################################
 ## Species richness estimates and CI's to use: from ABC
 S1 <- unlist(S.estimates.all[S.estimates.all$type=="ABC"&S.estimates.all$dataset=="2019"&S.estimates.all$sampling=="clump",4:6])
+## Alternative: weighted mean and combined CI (worst)
+## S1 <- c(15810, 13763, 19206)
 ## Simulated regional rads
 ls.m <- rad.ls(S = S1[1], N = atdn.19$Tot.t)
 ls.low <- rad.ls(S = S1[2], N = atdn.19$Tot.t)
@@ -770,7 +783,7 @@ abc19.sim.pop <- with(atdn.19,
 hd <- round(atdn.19$HD$summary[c(2,4:5)])
 ## The figure
 pdf("figs_and_tables/pop_rad_with_predicted_rad.pdf")
- par(bty = "l", lwd = 2)
+par(bty = "l", lwd = 2)
 plot(rad(atdn.19$data$population), xlim = c(1, S1[3]),
      ##ylim=c(min(c(ls.m$y, ls.up$y, ls.low$y)), max(atdn.19$data$population)),
      ylim = c(0.5, max(atdn.19$data$population)),
@@ -794,76 +807,114 @@ plot(rad(atdn.19$data$population), xlim=c(1,6e3),
      col="grey", ylab = "", xlab="", cex=0.75, axes = F)
 axis(2, at=c(1e6, 1e9), labels=c("","1e+09"))
 axis(1, at=c(1,2500,5000), labels=c("","","5000"))
-lines(rad(abc19.sim.pop$mean$clump.samp[,2]))
-lines(rad(abc19.sim.pop$IC.low$clump.samp[,2]), lty=2)
-lines(rad(abc19.sim.pop$IC.up$clump.samp[,2]), lty=2)
+lines(rad(abc19.sim.pop[[1]]$clump.samp[,2]))
+lines(rad(abc19.sim.pop[[2]]$clump.samp[,2]), lty=2)
+lines(rad(abc19.sim.pop[[3]]$clump.samp[,2]), lty=2)
 par(fig=c(0,1,0,1))
 dev.off()
 
 ################################################################################
 ## Fits of sads to abundances in the sample
 ################################################################################
-## Predicted octaves
-obs.oc <- octav(atdn.19$data$N.ind)
-ls.op <- octavpred(atdn.19$y.ls)
-tnb.op <- octavpred(atdn.19$y.nb2)
-## Predicted rads
-obs.r <- rad(atdn.19$data$N.ind)
-ls.r <- radpred(atdn.19$y.ls)
-tnb.r <- radpred(atdn.19$y.nb2)
-pln.r <- radpred(atdn.19$pln)
+## Auxiliary functions
+f19 <- function(obj, legend=FALSE, ...){
+    obs.oc <- octav(obj$data$N.ind)
+    ls.op <- octavpred(obj$y.ls)
+    tnb.op <- octavpred(obj$y.nb2)
+    pln.op <- octavpred(obj$pln)
+    plot(obs.oc, ylim = range(c(ls.op$Freq, tnb.op$Freq, pln.op$Freq, obs.oc$Freq)), ...)
+    lines(ls.op, col= 2)
+    lines(tnb.op, col=3)
+    lines(pln.op, col =4)
+    if(legend)
+        legend("topright", c("LS","TNB", "PLN"), pch=1, lty=1, col=c(2:4), bty="n")
+}
 
-##The figures
-pdf("figs_and_tables/sads_fit_to_samples.pdf", width=12, height=12)
-par(mar = c(5, 5, 4, 2) + 0.1,
-    mgp = c(3.25, 1, 0),
-    oma=c(3,3,0,0),
-    las = 1,
+f20 <- function(obj, legend=FALSE, ...){
+    obs.r <- rad(obj$data$N.ind)
+    ls.rp <- radpred(obj$y.ls)
+    tnb.rp <- radpred(obj$y.nb2)
+    pln.rp <- radpred(obj$pln)
+    plot(obs.r, ylim = range(c(ls.rp$abund, tnb.rp$abund, pln.rp$abund, obs.r$abund), na.rm=TRUE), ...)
+    lines(ls.rp, col= 2)
+    lines(tnb.rp, col=3)
+    lines(pln.rp, col =4)
+    if(legend)
+        legend("topright", c("LS","TNB", "PLN"), lty=1, col=c(2:4), bty="n")
+}
+
+## Octav and rad plots
+png("figs_and_tables/sads_fit_to_samples.png", width=9, height=7, res=150, units="in")
+pdf("figs_and_tables/sads_fit_to_samples.pdf", width=12, height=7)
+par(##mar = c(5, 5, 4, 2) + 0.1,
+    ##mgp = c(3.25, 1, 0),
+    ##oma=c(3,3,0,0),
+    ##las = 1,
     bty = "l", 
     cex.main = 1.15,  
     cex.lab = 1, font.lab = 2, cex.axis = 1,
     lwd = 2,
-    mfrow=c(2,2))
-##Octaves
-plot(obs.oc, ylim = range(c(ls.op$Freq,tnb.op$Freq, obs.oc$Freq)))
-lines(ls.op)
-lines(tnb.op, col="red")
-legend("topright", c("LS","TNB"), pch=1, lty=1, col=c(4,2), bty="n")
-## RAD
-plot(obs.r, col="grey")
-lines(ls.r)
-lines(tnb.r, col="red")
-qqsad(atdn.19$y.ls, col="blue", main="", line=FALSE)
-abline(0,1)
-qqsad(atdn.19$y.nb2, col="red", main="")
-abline(0,1)
+    mfrow=c(2,3))
+f19(atdn.13, main = "2013", xlab="", cex.lab=1.5)
+f19(atdn.13.tax, main = "2013 updated", ylab="", cex.lab=1.5)
+f19(atdn.19, legend=TRUE, main = "2019", xlab="", ylab = "")
+f20(atdn.13, log="xy",  xlab="", cex.lab=1.5, col="grey")
+f20(atdn.13.tax, log="xy", ylab="", cex.lab=1.5, col="grey")
+f20(atdn.19, log="xy", xlab="", ylab = "", col="grey")
 dev.off()
 
-##Rad with RAD in log-log in inset
-pdf("figs_and_tables/samp_sad_with_inset_log_log.pdf")
-par(mar = c(5, 5, 4, 2) + 0.1,
-    mgp = c(3.5, 1, 0),
-    oma=c(3,3,0,0),
-    las = 1,
+## qq plots
+pdf("figs_and_tables/samples_qqplots.pdf", width=9, height=9)
+par(mar = c(6, 6, 4, 2) + 0.1,
+    ##mgp = c(3.25, 1, 0),
+    ##oma=c(3,3,0,0),
+    ##las = 1,
     bty = "l", 
-    cex.main = 1.15,  
+    cex.main = 1.5,  
     cex.lab = 1, font.lab = 2, cex.axis = 1,
     lwd = 2,
-    mfrow=c(1,1))
-plot(obs.r, col="grey", ylim=c(1, max(pln.r$abund)))
-lines(ls.r)
-lines(tnb.r, col="red")
-lines(pln.r, col="green")
-par(fig=c(0.39,0.99,0.39,0.99),
-    mgp = c(2.5,0.5,0),
-    ##mar = c(5,4,4,2),
-    new = T, cex.axis = 0.8, cex.lab=1,
-    ##yaxp=c(1,3,3),
-    bty="o")
-plot(obs.r, col="grey", log = "xy", xlab="", ylab="",
-     ylim=c(1, max(pln.r$abund)), axes=FALSE)
-lines(ls.r)
-lines(tnb.r, col="red")
-lines(pln.r, col="green")
-par(fig=c(0,1,0,1))
+    mfrow=c(3,3))
+qqsad(atdn.13$y.ls, main="2013", xlab="", ylab="", col="grey")
+qqsad(atdn.13.tax$y.ls, main="2013 updated", xlab="", ylab="", col="grey")
+qqsad(atdn.19$y.ls, main="2019", xlab="", ylab="", col="grey")
+mtext("LS", at=8e3)
+qqsad(atdn.13$y.nb2, main="", xlab="", ylab="", cex.lab=1.7, col="grey")
+mtext("Sample quantiles", cex=2, side= 2, line = 3)
+qqsad(atdn.13.tax$y.nb2, main="", xlab="", ylab="", col="grey")
+qqsad(atdn.19$y.nb2, main="", xlab="", ylab="", col="grey")
+mtext("TNB", at=7e3)
+qqsad(atdn.13$pln, main="", xlab="", ylab="", col="grey")
+qqsad(atdn.13.tax$pln, main="", xlab="", cex.lab=1.7, ylab="", col="grey")
+mtext("Theoretical quantiles", cex=2, side =1, line = 3.5)
+qqsad(atdn.19$pln, main="", xlab="", ylab="", col="grey")
+mtext("PLN", at=1.8e5)
 dev.off()
+
+## ## Sample RAD and predcited by LS, TNB, PLN with R inset of the same plot in log-log scale
+## pdf("figs_and_tables/samp_sad_with_inset_log_log.pdf")
+## par(mar = c(5, 5, 4, 2) + 0.1,
+##     mgp = c(3.5, 1, 0),
+##     oma=c(3,3,0,0),
+##     las = 1,
+##     bty = "l", 
+##     cex.main = 1.15,  
+##     cex.lab = 1, font.lab = 2, cex.axis = 1,
+##     lwd = 2,
+##     mfrow=c(1,1))
+## plot(obs.r, col="grey", ylim=c(1, max(pln.r$abund)))
+## lines(ls.r)
+## lines(tnb.r, col="red")
+## lines(pln.r, col="green")
+## par(fig=c(0.39,0.99,0.39,0.99),
+##     mgp = c(2.5,0.5,0),
+##     ##mar = c(5,4,4,2),
+##     new = T, cex.axis = 0.8, cex.lab=1,
+##     ##yaxp=c(1,3,3),
+##     bty="o")
+## plot(obs.r, col="grey", log = "xy", xlab="", ylab="",
+##      ylim=c(1, max(pln.r$abund)), axes=FALSE)
+## lines(ls.r)
+## lines(tnb.r, col="red")
+## lines(pln.r, col="green")
+## par(fig=c(0,1,0,1))
+## dev.off()

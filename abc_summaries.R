@@ -1,13 +1,15 @@
 source("functions.R")
 library(abc)
 library(parallel)
+## Basic quantities and original (biased estimates), from script 'dataprep.R'
 load("lists_with_all_objects.RData")
 
 
 ################################################################################
 ## 2013 original data##
 ################################################################################
-load("abcFinal2013.RData")
+## results of simulations for ABC, from script 'simulations_abc/2013/abc_run2013[a,b].R' and then applying 'simulations_abc/2013/join_simulations.R'
+load("abcFinal2013.RData") 
 ## Use only the summary statistics of the simulations with noise in
 ## estimated total population sizes (see abc2019run.R) 
 abc2013$sims <- abc2013$sims[,5:8]
@@ -47,8 +49,10 @@ model.sel <- postpr(target = target,
                     tol=0.01, method="rejection",
                     corr=TRUE)
 summary(model.sel)
-## Selected model(s)
-index <- abc2013$labels=="LSclump"
+
+## Selected model(s): check from the command above and write the selected model(s) in the following command
+
+index <- abc2013$labels=="LSclump" # write here the code of the selected model(s)
 
 ## Goodness of fit of the selected model
 nrep <- 200
