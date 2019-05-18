@@ -786,7 +786,7 @@ dev.off()
 S1 <- unlist(S.estimates.all[S.estimates.all$type=="ABC"&S.estimates.all$dataset=="2019"&S.estimates.all$sampling=="clump",4:6])
 ## Alternative: weighted mean and combined CI (worst)
 ## S1 <- c(15810, 13763, 19206)
-## Simulated regional rads
+## Simulated regional rads$
 ls.m <- rad.ls(S = S1[1], N = atdn.19$Tot.t)
 ls.low <- rad.ls(S = S1[2], N = atdn.19$Tot.t)
 ls.up <- rad.ls(S = S1[3], N = atdn.19$Tot.t)
