@@ -72,12 +72,27 @@ mtext(p.legend)
 cv.rej <- cv4abc(param = data.frame(S=abc2013$params[index]),
        sumstat = abc2013$sims[index,],
        tols=c(0.05, 0.025, 0.01), nval=100, method="rejection")
+cv.neural <- cv4abc(param = data.frame(S=abc2019$params[index]),
+       sumstat = abc2019$sims[index,],
+       tols=c(0.05, 0.025, 0.01), nval=100, method="neuralnet")
+cv.ll <- cv4abc(param = data.frame(S=abc2019$params[index]),
+       sumstat = abc2019$sims[index,],
+       tols=c(0.05, 0.025, 0.01), nval=100, method="loclinear")
+cv.ridge <- cv4abc(param = data.frame(S=abc2019$params[index]),
+       sumstat = abc2019$sims[index,],
+       tols=c(0.05, 0.025, 0.01), nval=100, method="ridge")
+## Cehcks the method and tolerance with smaller error
 summary(cv.rej)
+summary(cv.neural)
+summary(cv.ll)
+summary(cv.ridge)
+## Chosen loclinear as ridge with tol=0.01 is has a slightly smaller error but returns posteriors with negative values
+## Chose tol=0.05 as the difference in loclinear among tolerance levels is less than 1e-5, and tol=0.5 enables a posterior drawn from more simulated values
 
 ## Posterior distribution of Species richness from the selected model
 S.post1 <- abc(target = target, param=data.frame(S=abc2013$params[index]),
               sumstat = abc2013$sims[index,],
-              tol=0.01, method="rejection", numnet=100)
+              tol=0.05, method="loclinear")
 summary(S.post1)
 hist(S.post1)
 
@@ -155,13 +170,26 @@ mtext(p.legend)
 cv.rej <- cv4abc(param = data.frame(S=abc2013t$params[index]),
        sumstat = abc2013t$sims[index,],
        tols=c(0.05, 0.025, 0.01), nval=100, method="rejection")
+cv.neural <- cv4abc(param = data.frame(S=abc2019$params[index]),
+       sumstat = abc2019$sims[index,],
+       tols=c(0.05, 0.025, 0.01), nval=100, method="neuralnet")
+cv.ll <- cv4abc(param = data.frame(S=abc2019$params[index]),
+       sumstat = abc2019$sims[index,],
+       tols=c(0.05, 0.025, 0.01), nval=100, method="loclinear")
+cv.ridge <- cv4abc(param = data.frame(S=abc2019$params[index]),
+       sumstat = abc2019$sims[index,],
+       tols=c(0.05, 0.025, 0.01), nval=100, method="ridge")
+## Checks the method and tolerance with smaller error
 summary(cv.rej)
-
+summary(cv.neural)
+summary(cv.ll)
+summary(cv.ridge)
+## Loc-linear with tol=0.01
 
 ## Posterior distribution of Species richness from the selected model
 S.post1 <- abc(target = target, param=data.frame(S=abc2013t$params[index]),
               sumstat = abc2013t$sims[index,],
-              tol=0.01, method="rejection")
+              tol=0.01, method="loclinear")
 
 summary(S.post1)
 hist(S.post1)
@@ -180,7 +208,6 @@ load("abcFinal2019.RData")
 ## Use only the summary statistics of the simulations with noise in
 ## estimated total population sizes (see abc2019run.R) 
 abc2019$sims <- abc2019$sims[,5:8]
-
 
 ## Model selection
 ## Target: observed number of species, lmean, sdmean of log abundances 
@@ -224,7 +251,7 @@ index <- abc2019$labels=="LSclump"
 nrep <- 200
 gof <- gfit(target = target,
             sumstat = abc2019$sims[index,],
-            nb.replicate = nrep, tol = 0.05)
+            nb.replicate = nrep, tol = 0.01)
 sgof <- summary(gof)
 p.legend <- ifelse(sgof$pvalue==0,
                    paste("p < 1/",nrep,sep=""),
@@ -238,13 +265,21 @@ mtext(p.legend)
 cv.rej <- cv4abc(param = data.frame(S=abc2019$params[index]),
        sumstat = abc2019$sims[index,],
        tols=c(0.05, 0.025, 0.01), nval=100, method="rejection")
-
-summary(cv.rej)
+cv.neural <- cv4abc(param = data.frame(S=abc2019$params[index]),
+       sumstat = abc2019$sims[index,],
+       tols=c(0.05, 0.025, 0.01), nval=100, method="neuralnet")
+cv.ll <- cv4abc(param = data.frame(S=abc2019$params[index]),
+       sumstat = abc2019$sims[index,],
+       tols=c(0.05, 0.025, 0.01), nval=100, method="loclinear")
+cv.ridge <- cv4abc(param = data.frame(S=abc2019$params[index]),
+       sumstat = abc2019$sims[index,],
+       tols=c(0.05, 0.025, 0.01), nval=100, method="ridge")
+## Loclinear with tol=0.05
 
 ## Posterior distribution of Species richness from the selected model
 S.post1 <- abc(target = target, param=data.frame(S=abc2019$params[index]),
               sumstat = abc2019$sims[index,],
-              tol=0.01, method="rejection")
+              tol=0.05, method="loclinear", numnet=100)
 
 summary(S.post1)
 hist(S.post1)
