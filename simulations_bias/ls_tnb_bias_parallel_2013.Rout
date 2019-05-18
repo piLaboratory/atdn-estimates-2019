@@ -1,6 +1,6 @@
 
-R version 3.5.2 (2018-12-20) -- "Eggshell Igloo"
-Copyright (C) 2018 The R Foundation for Statistical Computing
+R version 3.5.3 (2019-03-11) -- "Great Truth"
+Copyright (C) 2019 The R Foundation for Statistical Computing
 Platform: x86_64-pc-linux-gnu (64-bit)
 
 R is free software and comes with ABSOLUTELY NO WARRANTY.
@@ -23,6 +23,16 @@ Type 'q()' to quit R.
 > source("../functions.R")
 Loading required package: stats4
 Loading required package: splines
+Loading required package: permute
+Loading required package: lattice
+This is vegan 2.5-2
+
+Attaching package: ‘vegan’
+
+The following object is masked from ‘package:VGAM’:
+
+    calibrate
+
 Loading required package: bbmle
 
 Attaching package: ‘bbmle’
@@ -112,6 +122,9 @@ locfit 1.5-9.1 	 2013-03-22
 +                               S.est.clump = sapply(sim.tnb.samp,
 +                                                  function(x) f3(x$clump.samp, size = 0.018) )
 +                               )
+Warning message:
+In (function (q, size, prob, mu, lower.tail = TRUE, log.p = FALSE)  :
+  NaNs produced
 > 
 > # Storing in lists
 > bias13 <- list(
@@ -124,4 +137,4 @@ locfit 1.5-9.1 	 2013-03-22
 > 
 > proc.time()
     user   system  elapsed 
-8457.092  529.100 3409.979 
+8389.796  585.996 1056.878 

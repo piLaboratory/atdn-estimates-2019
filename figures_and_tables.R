@@ -721,20 +721,35 @@ f13 <- function(obj, ...){
 
 yl1 <- range(atdn.13$data$pop.sd,atdn.13.tax$data$pop.sd,atdn.19$data$pop.sd[atdn.19$data$pop.sd<1])
 xl1 <- range(atdn.13$data$population,atdn.13.tax$data$population,atdn.19$data$population)
-pdf("figs_and_tables/sdXpopsize.pdf")
+pdf("figs_and_tables/sdXpopsize.pdf", width = 12, height = 4.25)
 par(mar = c(5, 5, 4, 2) + 0.1,
     mgp = c(3.5, 1, 0),
     oma=c(3,3,0,0),
     las = 0,
     bty = "l", 
     cex.main = 1.5,  
-    cex.lab = 1.25, font.lab = 2, cex.axis = 1.2,
+    cex.lab = 1.4, font.lab = 2, cex.axis = 1.25,
     lwd = 2,
-    mfrow=c(1,1))
-f13(atdn.13, ylab = "Standard deviation of estimated pop size",
-    xlab = "Estimated population size",
-    xlim = xl1, ylim = yl1, col="grey", cex=0.25)
+    mfrow=c(1,3))
+f13(atdn.13,
+    ylab = "",
+    xlab="",
+    xlim = xl1, ylim = yl1,
+    main = "2013", col="grey", cex=0.25
+    )
+mtext("Standard deviation of estimated pop size", cex=1.5, font =2, side = 2, line=5)
+f13(atdn.13.tax, ylab = "",
+    xlab="",
+    xlim = xl1, ylim = yl1,
+    main = "2013 updated", col="grey", cex=0.25)
+mtext("Estimated population size", cex=1.5, font = 2, side = 1, line= 6)
+f13(atdn.19,
+    ylab = "",
+    xlab="",
+    xlim = xl1, ylim = yl1,
+    main = "2019", col="grey", cex=0.25)
 dev.off()
+
 
 ################################################################################
 ## Plots of model selection biases

@@ -22,6 +22,16 @@ Type 'q()' to quit R.
 > source("../functions.R")
 Loading required package: stats4
 Loading required package: splines
+Loading required package: permute
+Loading required package: lattice
+This is vegan 2.5-2
+
+Attaching package: ‘vegan’
+
+The following object is masked from ‘package:VGAM’:
+
+    calibrate
+
 Loading required package: bbmle
 
 Attaching package: ‘bbmle’
@@ -114,540 +124,8 @@ Error in uniroot(f1, lower = lower, upper = upper) :
 Error in uniroot(f1, lower = lower, upper = upper) : 
   f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
   f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
   f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
   f.upper = f(upper) is NA
@@ -693,74 +171,6 @@ Error in uniroot(f1, lower = lower, upper = upper) :
   f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
   f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
 Error in uniroot(f1, lower = lower, upper = upper) : 
   f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
@@ -1040,166 +450,6 @@ Error in uniroot(f1, lower = lower, upper = upper) :
 Error in uniroot(f1, lower = lower, upper = upper) : 
   f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
   f() values at end points not of opposite sign
 Error in uniroot(f1, lower = lower, upper = upper) : 
   f.upper = f(upper) is NA
@@ -1249,290 +499,6 @@ Error in uniroot(f1, lower = lower, upper = upper) :
   f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
   f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
 Error in uniroot(f1, lower = lower, upper = upper) : 
   f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
@@ -1756,82 +722,6 @@ Error in uniroot(f1, lower = lower, upper = upper) :
 Error in uniroot(f1, lower = lower, upper = upper) : 
   f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
   f() values at end points not of opposite sign
 Error in uniroot(f1, lower = lower, upper = upper) : 
   f.upper = f(upper) is NA
@@ -1854,113 +744,7 @@ Error in uniroot(f1, lower = lower, upper = upper) :
 Error in uniroot(f1, lower = lower, upper = upper) : 
   f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
   f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
   f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
@@ -2053,6 +837,138 @@ Error in uniroot(f1, lower = lower, upper = upper) :
   f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
   f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f() values at end points not of opposite sign
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f() values at end points not of opposite sign
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f() values at end points not of opposite sign
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f() values at end points not of opposite sign
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f() values at end points not of opposite sign
 Error in uniroot(f1, lower = lower, upper = upper) : 
   f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
@@ -2214,6 +1130,26 @@ Error in uniroot(f1, lower = lower, upper = upper) :
 Error in uniroot(f1, lower = lower, upper = upper) : 
   f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
   f() values at end points not of opposite sign
 Error in uniroot(f1, lower = lower, upper = upper) : 
   f.upper = f(upper) is NA
@@ -2233,6 +1169,768 @@ Error in uniroot(f1, lower = lower, upper = upper) :
   f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
   f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f() values at end points not of opposite sign
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f() values at end points not of opposite sign
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f() values at end points not of opposite sign
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f() values at end points not of opposite sign
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f() values at end points not of opposite sign
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f() values at end points not of opposite sign
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f() values at end points not of opposite sign
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f() values at end points not of opposite sign
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f() values at end points not of opposite sign
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f() values at end points not of opposite sign
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f() values at end points not of opposite sign
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f() values at end points not of opposite sign
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f() values at end points not of opposite sign
 Error in uniroot(f1, lower = lower, upper = upper) : 
   f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
@@ -2578,315 +2276,7 @@ Error in uniroot(f1, lower = lower, upper = upper) :
 Error in uniroot(f1, lower = lower, upper = upper) : 
   f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
   f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
   f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
@@ -2965,96 +2355,6 @@ Error in uniroot(f1, lower = lower, upper = upper) :
   f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
   f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
 Error in uniroot(f1, lower = lower, upper = upper) : 
   f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
@@ -3240,9 +2540,7 @@ Error in uniroot(f1, lower = lower, upper = upper) :
 Error in uniroot(f1, lower = lower, upper = upper) : 
   f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
+  f() values at end points not of opposite sign
 Error in uniroot(f1, lower = lower, upper = upper) : 
   f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
@@ -3278,32 +2576,6 @@ Error in uniroot(f1, lower = lower, upper = upper) :
 Error in uniroot(f1, lower = lower, upper = upper) : 
   f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
   f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
   f.upper = f(upper) is NA
@@ -3317,6 +2589,14 @@ Error in uniroot(f1, lower = lower, upper = upper) :
   f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
   f() values at end points not of opposite sign
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
   f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
@@ -3568,6 +2848,448 @@ Error in uniroot(f1, lower = lower, upper = upper) :
 Error in uniroot(f1, lower = lower, upper = upper) : 
   f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f() values at end points not of opposite sign
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f() values at end points not of opposite sign
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f() values at end points not of opposite sign
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f() values at end points not of opposite sign
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f() values at end points not of opposite sign
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f() values at end points not of opposite sign
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f() values at end points not of opposite sign
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f() values at end points not of opposite sign
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
   f() values at end points not of opposite sign
 Error in uniroot(f1, lower = lower, upper = upper) : 
   f.upper = f(upper) is NA
@@ -3694,6 +3416,152 @@ Error in uniroot(f1, lower = lower, upper = upper) :
 Error in uniroot(f1, lower = lower, upper = upper) : 
   f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
   f() values at end points not of opposite sign
 Error in uniroot(f1, lower = lower, upper = upper) : 
   f.upper = f(upper) is NA
@@ -3748,62 +3616,6 @@ Error in uniroot(f1, lower = lower, upper = upper) :
 Error in uniroot(f1, lower = lower, upper = upper) : 
   f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
   f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
   f.upper = f(upper) is NA
@@ -3851,6 +3663,190 @@ Error in uniroot(f1, lower = lower, upper = upper) :
   f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
   f() values at end points not of opposite sign
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f() values at end points not of opposite sign
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f() values at end points not of opposite sign
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
   f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
@@ -3904,4 +3900,4 @@ Error in uniroot(f1, lower = lower, upper = upper) :
 > 
 > proc.time()
      user    system   elapsed 
-314373.11  21921.77  35791.67 
+319203.44  22002.19  35678.17 

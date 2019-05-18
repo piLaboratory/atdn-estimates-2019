@@ -28,13 +28,13 @@ nsims <- 5e3
 ##simulated.vals <- runif(nsims, 1e4, S.orc$S.est)
 simulated.vals <- runif(nsims, 1e4, 2e4)
 ## Samples of LS
-LS.sims <- mclapply(simulated.vals, f1, sad = "ls",  lower=1e-20, upper=1e20, mc.cores=10)
+LS.sims <- mclapply(simulated.vals, f1, sad = "ls",  lower=1e-20, upper=1e45, mc.cores=10)
 ## save.image()
 ## Samples of TNB
-NB.sims <- mclapply(simulated.vals, f1, sad = "tnb", lower=1e-20, upper=1e20, mc.cores=10)
+NB.sims <- mclapply(simulated.vals, f1, sad = "tnb", lower=1e-20, upper=1e45, mc.cores=10)
 ##save.image()
 ## Samples of Log-normal
-LN.sims <- mclapply(simulated.vals, f1, sad = "lnorm", sdlog = needed.objs$pln.cf[2], lower=1e-20, upper=1e20, mc.cores=10)
+LN.sims <- mclapply(simulated.vals, f1, sad = "lnorm", sdlog = needed.objs$pln.cf[2], lower=1e-20, upper=1e45, mc.cores=10)
 ##save.image()
 
 ## Assembles all simulation results in a matrix

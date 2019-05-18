@@ -1,6 +1,6 @@
 
-R version 3.5.2 (2018-12-20) -- "Eggshell Igloo"
-Copyright (C) 2018 The R Foundation for Statistical Computing
+R version 3.6.0 (2019-04-26) -- "Planting of a Tree"
+Copyright (C) 2019 The R Foundation for Statistical Computing
 Platform: x86_64-pc-linux-gnu (64-bit)
 
 R é um software livre e vem sem GARANTIA ALGUMA.
@@ -22,7 +22,10 @@ Carregando pacotes exigidos: stats4
 Carregando pacotes exigidos: splines
 Carregando pacotes exigidos: permute
 Carregando pacotes exigidos: lattice
-This is vegan 2.5-3
+Registered S3 method overwritten by 'vegan':
+  method       from
+  plot.preston untb
+This is vegan 2.5-4
 
 Attaching package: ‘vegan’
 
@@ -68,13 +71,15 @@ Carregando pacotes exigidos: locfit
 locfit 1.5-9.1 	 2013-03-22
 > library(abc)
 > library(parallel)
+> ## Basic quantities and original (biased estimates), from script 'dataprep.R'
 > load("lists_with_all_objects.RData")
 > 
 > 
 > ################################################################################
 > ## 2013 original data##
 > ################################################################################
-> load("abcFinal2013.RData")
+> ## results of simulations for ABC, from script 'simulations_abc/2013/abc_run2013[a,b].R' and then applying 'simulations_abc/2013/join_simulations.R'
+> load("abcFinal2013.RData") 
 > ## Use only the summary statistics of the simulations with noise in
 > ## estimated total population sizes (see abc2019run.R) 
 > abc2013$sims <- abc2013$sims[,5:8]
@@ -110,60 +115,60 @@ Confusion matrix based on 100 samples for each model.
 
 $tol0.01
         LNclump LNrnd LSclump LSrnd NBclump NBrnd
-LNclump      92     8       0     0       0     0
-LNrnd        25    75       0     0       0     0
-LSclump       0     0      91     9       0     0
+LNclump      85    15       0     0       0     0
+LNrnd        20    80       0     0       0     0
+LSclump       0     0      92     8       0     0
 LSrnd         0     0       6    94       0     0
-NBclump       0     0       3     0      90     7
-NBrnd         0     0       3     1       7    89
+NBclump       0     0       4     1      89     6
+NBrnd         0     0       0     0      10    90
 
 $tol0.025
         LNclump LNrnd LSclump LSrnd NBclump NBrnd
-LNclump      85    15       0     0       0     0
-LNrnd        33    67       0     0       0     0
-LSclump       0     0      90    10       0     0
-LSrnd         0     0       9    91       0     0
-NBclump       0     0       6     0      80    14
-NBrnd         0     0       6     2      15    77
+LNclump      82    18       0     0       0     0
+LNrnd        27    73       0     0       0     0
+LSclump       0     0      93     7       0     0
+LSrnd         0     0       6    94       0     0
+NBclump       0     0       4     1      80    15
+NBrnd         0     0       1     1      10    88
 
 $tol0.05
         LNclump LNrnd LSclump LSrnd NBclump NBrnd
-LNclump      93     7       0     0       0     0
-LNrnd        47    53       0     0       0     0
-LSclump       0     0      86    14       0     0
-LSrnd         0     0       9    91       0     0
-NBclump       0     0      12     1      64    23
-NBrnd         0     0       8     2      37    53
+LNclump      88    12       0     0       0     0
+LNrnd        46    54       0     0       0     0
+LSclump       0     0      85    15       0     0
+LSrnd         0     0       8    92       0     0
+NBclump       0     0       7     1      65    27
+NBrnd         0     0       3     4      27    66
 
 
 Mean model posterior probabilities (rejection)
 
 $tol0.01
         LNclump  LNrnd LSclump  LSrnd NBclump  NBrnd
-LNclump  0.6415 0.3585  0.0000 0.0000  0.0000 0.0000
-LNrnd    0.3930 0.6070  0.0000 0.0000  0.0000 0.0000
-LSclump  0.0000 0.0000  0.7313 0.2634  0.0016 0.0037
-LSrnd    0.0000 0.0000  0.2428 0.7554  0.0001 0.0017
-NBclump  0.0000 0.0000  0.0228 0.0017  0.5231 0.4524
-NBrnd    0.0000 0.0000  0.0231 0.0100  0.4566 0.5103
+LNclump  0.6699 0.3301  0.0000 0.0000  0.0000 0.0000
+LNrnd    0.3491 0.6509  0.0000 0.0000  0.0000 0.0000
+LSclump  0.0000 0.0000  0.7957 0.1937  0.0033 0.0072
+LSrnd    0.0000 0.0000  0.1722 0.8252  0.0000 0.0025
+NBclump  0.0000 0.0000  0.0271 0.0041  0.5269 0.4419
+NBrnd    0.0000 0.0000  0.0037 0.0008  0.4559 0.5396
 
 $tol0.025
         LNclump  LNrnd LSclump  LSrnd NBclump  NBrnd
-LNclump  0.5752 0.4248  0.0000 0.0000  0.0000 0.0000
-LNrnd    0.4450 0.5550  0.0000 0.0000  0.0000 0.0000
-LSclump  0.0000 0.0000  0.6102 0.3826  0.0022 0.0050
-LSrnd    0.0000 0.0000  0.3800 0.6174  0.0004 0.0023
-NBclump  0.0000 0.0000  0.0432 0.0116  0.4790 0.4662
-NBrnd    0.0000 0.0000  0.0414 0.0165  0.4669 0.4751
+LNclump  0.5961 0.4039  0.0000 0.0000  0.0000 0.0000
+LNrnd    0.4160 0.5840  0.0000 0.0000  0.0000 0.0000
+LSclump  0.0000 0.0000  0.6541 0.3327  0.0049 0.0083
+LSrnd    0.0000 0.0000  0.3261 0.6670  0.0002 0.0066
+NBclump  0.0000 0.0000  0.0364 0.0086  0.4846 0.4704
+NBrnd    0.0000 0.0000  0.0087 0.0126  0.4815 0.4971
 
 $tol0.05
         LNclump  LNrnd LSclump  LSrnd NBclump  NBrnd
-LNclump  0.5425 0.4575  0.0000 0.0000  0.0000 0.0000
-LNrnd    0.4790 0.5210  0.0000 0.0000  0.0000 0.0000
-LSclump  0.0000 0.0000  0.5303 0.4577  0.0043 0.0077
-LSrnd    0.0000 0.0000  0.4616 0.5322  0.0015 0.0047
-NBclump  0.0000 0.0000  0.0697 0.0359  0.4486 0.4458
-NBrnd    0.0000 0.0000  0.0570 0.0349  0.4527 0.4554
+LNclump  0.5510 0.4490  0.0000 0.0000  0.0000 0.0000
+LNrnd    0.4662 0.5338  0.0000 0.0000  0.0000 0.0000
+LSclump  0.0000 0.0000  0.5448 0.4372  0.0073 0.0107
+LSrnd    0.0000 0.0000  0.4378 0.5491  0.0018 0.0113
+NBclump  0.0000 0.0000  0.0469 0.0250  0.4656 0.4625
+NBrnd    0.0000 0.0000  0.0280 0.0315  0.4670 0.4734
 
 > 
 > ## Model selection
@@ -185,20 +190,22 @@ Models a posteriori:
 
 Proportion of accepted simulations (rejection):
 LNclump   LNrnd LSclump   LSrnd NBclump   NBrnd 
- 0.0000  0.0000  0.7100  0.2883  0.0017  0.0000 
+ 0.0000  0.0000  0.7050  0.2917  0.0033  0.0000 
 
 Bayes factors:
          LNclump    LNrnd  LSclump    LSrnd  NBclump    NBrnd
 LNclump                     0.0000   0.0000   0.0000         
 LNrnd                       0.0000   0.0000   0.0000         
-LSclump      Inf      Inf   1.0000   2.4624 426.0000      Inf
-LSrnd        Inf      Inf   0.4061   1.0000 173.0000      Inf
-NBclump      Inf      Inf   0.0023   0.0058   1.0000      Inf
+LSclump      Inf      Inf   1.0000   2.4171 211.5000      Inf
+LSrnd        Inf      Inf   0.4137   1.0000  87.5000      Inf
+NBclump      Inf      Inf   0.0047   0.0114   1.0000      Inf
 NBrnd                       0.0000   0.0000   0.0000         
 
 
-> ## Selected model(s)
-> index <- abc2013$labels=="LSclump"
+> 
+> ## Selected model(s): check from the command above and write the selected model(s) in the following command
+> 
+> index <- abc2013$labels=="LSclump" # write here the code of the selected model(s)
 > 
 > ## Goodness of fit of the selected model
 > nrep <- 200
@@ -222,9 +229,9 @@ NBrnd                       0.0000   0.0000   0.0000
 Prediction error based on a cross-validation sample of 100
 
                 S
-0.01  0.004396232
-0.025 0.005056464
-0.05  0.005471399
+0.01  0.003476209
+0.025 0.004314662
+0.05  0.005410981
 > 
 > ## Posterior distribution of Species richness from the selected model
 > S.post1 <- abc(target = target, param=data.frame(S=abc2013$params[index]),
@@ -239,13 +246,13 @@ Data:
  abc.out$unadj.values (100 posterior samples)
 
                     S
-Min.:        12569.02
-2.5% Perc.:  14662.68
-Median:      17809.49
-Mean:        17673.31
-Mode:        17980.15
-97.5% Perc.: 19895.79
-Max.:        19960.18
+Min.:        14901.20
+2.5% Perc.:  15428.02
+Median:      17960.87
+Mean:        17938.60
+Mode:        17392.63
+97.5% Perc.: 19951.39
+Max.:        19988.34
 > hist(S.post1)
 > 
 > ## stores all relevant objects in a list
@@ -296,60 +303,60 @@ Confusion matrix based on 100 samples for each model.
 
 $tol0.01
         LNclump LNrnd LSclump LSrnd NBclump NBrnd
-LNclump      92     8       0     0       0     0
-LNrnd        14    86       0     0       0     0
-LSclump       0     0      89    11       0     0
-LSrnd         0     0      10    90       0     0
-NBclump       0     0       0     0      69    31
-NBrnd         0     0       2     0      39    59
+LNclump      89    11       0     0       0     0
+LNrnd        15    85       0     0       0     0
+LSclump       0     0      94     6       0     0
+LSrnd         0     0       2    98       0     0
+NBclump       0     0       0     0      88    12
+NBrnd         0     0       1     0      16    83
 
 $tol0.025
         LNclump LNrnd LSclump LSrnd NBclump NBrnd
-LNclump      88    12       0     0       0     0
-LNrnd        24    76       0     0       0     0
-LSclump       0     0      87    13       0     0
-LSrnd         0     0      13    87       0     0
-NBclump       0     0       6     0      74    20
-NBrnd         0     0       9     3      62    26
+LNclump      82    18       0     0       0     0
+LNrnd        23    77       0     0       0     0
+LSclump       0     0      92     8       0     0
+LSrnd         0     0       5    95       0     0
+NBclump       0     0       3     0      78    19
+NBrnd         0     0       2     0      60    38
 
 $tol0.05
         LNclump LNrnd LSclump LSrnd NBclump NBrnd
-LNclump      84    16       0     0       0     0
-LNrnd        38    62       0     0       0     0
-LSclump       0     0      85    15       0     0
-LSrnd         0     0      14    86       0     0
-NBclump       0     0      14     3      76     7
-NBrnd         0     0      10     6      73    11
+LNclump      86    14       0     0       0     0
+LNrnd        43    57       0     0       0     0
+LSclump       0     0      90    10       0     0
+LSrnd         0     0       7    93       0     0
+NBclump       0     0       7     0      91     2
+NBrnd         0     0       7     0      71    22
 
 
 Mean model posterior probabilities (rejection)
 
 $tol0.01
         LNclump  LNrnd LSclump  LSrnd NBclump  NBrnd
-LNclump  0.6522 0.3478  0.0000 0.0000  0.0000 0.0000
-LNrnd    0.3469 0.6531  0.0000 0.0000  0.0000 0.0000
-LSclump  0.0000 0.0000  0.7806 0.2175  0.0000 0.0019
-LSrnd    0.0000 0.0000  0.1990 0.8010  0.0000 0.0000
-NBclump  0.0000 0.0000  0.0043 0.0000  0.5032 0.4925
-NBrnd    0.0000 0.0000  0.0223 0.0012  0.4817 0.4949
+LNclump  0.6908 0.3092  0.0000 0.0000  0.0000 0.0000
+LNrnd    0.3042 0.6958  0.0000 0.0000  0.0000 0.0000
+LSclump  0.0000 0.0000  0.8594 0.1399  0.0000 0.0006
+LSrnd    0.0000 0.0000  0.1193 0.8807  0.0000 0.0000
+NBclump  0.0000 0.0000  0.0030 0.0001  0.5041 0.4928
+NBrnd    0.0000 0.0000  0.0048 0.0006  0.4913 0.5033
 
 $tol0.025
         LNclump  LNrnd LSclump  LSrnd NBclump  NBrnd
-LNclump  0.5766 0.4234  0.0000 0.0000  0.0000 0.0000
-LNrnd    0.4146 0.5854  0.0000 0.0000  0.0000 0.0000
-LSclump  0.0000 0.0000  0.6741 0.3239  0.0002 0.0018
-LSrnd    0.0000 0.0000  0.3075 0.6925  0.0000 0.0000
-NBclump  0.0000 0.0000  0.0428 0.0145  0.4729 0.4698
-NBrnd    0.0000 0.0000  0.0561 0.0214  0.4608 0.4618
+LNclump  0.6023 0.3977  0.0000 0.0000  0.0000 0.0000
+LNrnd    0.3963 0.6037  0.0000 0.0000  0.0000 0.0000
+LSclump  0.0000 0.0000  0.7308 0.2676  0.0000 0.0015
+LSrnd    0.0000 0.0000  0.2574 0.7426  0.0000 0.0000
+NBclump  0.0000 0.0000  0.0219 0.0018  0.4899 0.4864
+NBrnd    0.0000 0.0000  0.0156 0.0041  0.4896 0.4907
 
 $tol0.05
         LNclump  LNrnd LSclump  LSrnd NBclump  NBrnd
-LNclump  0.5357 0.4643  0.0000 0.0000  0.0000 0.0000
-LNrnd    0.4680 0.5320  0.0000 0.0000  0.0000 0.0000
-LSclump  0.0000 0.0000  0.5754 0.4223  0.0005 0.0018
-LSrnd    0.0000 0.0000  0.4195 0.5805  0.0000 0.0000
-NBclump  0.0000 0.0000  0.0977 0.0246  0.4396 0.4381
-NBrnd    0.0000 0.0000  0.0833 0.0344  0.4412 0.4410
+LNclump  0.5523 0.4477  0.0000 0.0000  0.0000 0.0000
+LNrnd    0.4595 0.5405  0.0000 0.0000  0.0000 0.0000
+LSclump  0.0000 0.0000  0.5959 0.4014  0.0002 0.0026
+LSrnd    0.0000 0.0000  0.4010 0.5989  0.0000 0.0000
+NBclump  0.0000 0.0000  0.0481 0.0039  0.4752 0.4729
+NBrnd    0.0000 0.0000  0.0420 0.0068  0.4760 0.4752
 
 > 
 > ## Model selection
@@ -363,7 +370,7 @@ Call:
 postpr(target = target, index = abc2013t$labels, sumstat = abc2013t$sims, 
     tol = 0.01, method = "rejection", corr = TRUE)
 Data:
- postpr.out$values (507 posterior samples)
+ postpr.out$values (508 posterior samples)
 Models a priori:
  LNclump, LNrnd, LSclump, LSrnd, NBclump, NBrnd
 Models a posteriori:
@@ -373,16 +380,16 @@ Warning: Posterior model probabilities are corrected for unequal number of simul
 
 Proportion of accepted simulations (rejection):
 LNclump   LNrnd LSclump   LSrnd NBclump   NBrnd 
- 0.0000  0.0000  0.2726  0.5989  0.0833  0.0451 
+ 0.0000  0.0000  0.7579  0.2421  0.0000  0.0000 
 
 Bayes factors:
-        LNclump   LNrnd LSclump   LSrnd NBclump   NBrnd
-LNclump                  0.0000  0.0000  0.0000  0.0000
-LNrnd                    0.0000  0.0000  0.0000  0.0000
-LSclump     Inf     Inf  1.0000  0.4551  6.1250 11.3077
-LSrnd       Inf     Inf  2.1973  1.0000 13.4583 24.8462
-NBclump     Inf     Inf  0.1633  0.0743  1.0000  1.8462
-NBrnd       Inf     Inf  0.0884  0.0402  0.5417  1.0000
+        LNclump  LNrnd LSclump  LSrnd NBclump  NBrnd
+LNclump                 0.0000 0.0000               
+LNrnd                   0.0000 0.0000               
+LSclump     Inf    Inf  1.0000 3.1301     Inf    Inf
+LSrnd       Inf    Inf  0.3195 1.0000     Inf    Inf
+NBclump                 0.0000 0.0000               
+NBrnd                   0.0000 0.0000               
 
 
 > ## Selected model(s)
@@ -412,9 +419,9 @@ NBrnd       Inf     Inf  0.0884  0.0402  0.5417  1.0000
 Prediction error based on a cross-validation sample of 100
 
                 S
-0.01  0.006394913
-0.025 0.007924648
-0.05  0.009750895
+0.01  0.003879984
+0.025 0.004985707
+0.05  0.007387761
 > 
 > 
 > ## Posterior distribution of Species richness from the selected model
@@ -430,13 +437,13 @@ Data:
  abc.out$unadj.values (200 posterior samples)
 
                     S
-Min.:        15172.99
-2.5% Perc.:  16416.78
-Median:      18557.80
-Mean:        18503.78
-Mode:        18292.70
-97.5% Perc.: 19934.19
-Max.:        19989.96
+Min.:        13137.97
+2.5% Perc.:  13714.73
+Median:      16200.52
+Mean:        16184.25
+Mode:        16152.51
+97.5% Perc.: 18644.22
+Max.:        19675.80
 > hist(S.post1)
 > 
 > ## stores all relevant objects in a list
@@ -486,60 +493,60 @@ Confusion matrix based on 100 samples for each model.
 
 $tol0.01
         LNclump LNrnd LSclump LSrnd NBclump NBrnd
-LNclump      99     1       0     0       0     0
-LNrnd         0   100       0     0       0     0
+LNclump      98     2       0     0       0     0
+LNrnd         2    98       0     0       0     0
 LSclump       0     0     100     0       0     0
-LSrnd         0     0       0   100       0     0
-NBclump       0     0       0     0      97     3
-NBrnd         0     0       0     0       0   100
+LSrnd         0     0       1    99       0     0
+NBclump       0     0       2     0      82    16
+NBrnd         0     0       1     0       8    91
 
 $tol0.025
         LNclump LNrnd LSclump LSrnd NBclump NBrnd
-LNclump      98     2       0     0       0     0
-LNrnd         0   100       0     0       0     0
+LNclump      96     4       0     0       0     0
+LNrnd         4    96       0     0       0     0
 LSclump       0     0     100     0       0     0
-LSrnd         0     0       0   100       0     0
-NBclump       0     0       5     0      81    14
-NBrnd         0     0       6     0       4    90
+LSrnd         0     0       3    97       0     0
+NBclump       0     0       5     0      64    31
+NBrnd         0     0       3     0       7    90
 
 $tol0.05
         LNclump LNrnd LSclump LSrnd NBclump NBrnd
-LNclump      97     3       0     0       0     0
-LNrnd         3    97       0     0       0     0
+LNclump      94     6       0     0       0     0
+LNrnd        11    89       0     0       0     0
 LSclump       0     0     100     0       0     0
-LSrnd         0     0       0   100       0     0
-NBclump       0     0      12     0      70    18
-NBrnd         0     0      11     0      14    75
+LSrnd         0     0       4    96       0     0
+NBclump       0     0      10     0      45    45
+NBrnd         0     0       9     0      23    68
 
 
 Mean model posterior probabilities (rejection)
 
 $tol0.01
         LNclump  LNrnd LSclump  LSrnd NBclump  NBrnd
-LNclump  0.9683 0.0317  0.0000 0.0000  0.0000 0.0000
-LNrnd    0.0346 0.9654  0.0000 0.0000  0.0000 0.0000
-LSclump  0.0000 0.0000  0.9877 0.0062  0.0001 0.0061
-LSrnd    0.0000 0.0000  0.0064 0.9936  0.0000 0.0000
-NBclump  0.0000 0.0000  0.0122 0.0000  0.5525 0.4353
-NBrnd    0.0000 0.0000  0.0118 0.0000  0.4384 0.5499
+LNclump  0.9054 0.0946  0.0000 0.0000  0.0000 0.0000
+LNrnd    0.1071 0.8929  0.0000 0.0000  0.0000 0.0000
+LSclump  0.0000 0.0000  0.9527 0.0407  0.0006 0.0061
+LSrnd    0.0000 0.0000  0.0701 0.9298  0.0000 0.0000
+NBclump  0.0000 0.0000  0.0166 0.0000  0.5293 0.4541
+NBrnd    0.0000 0.0000  0.0079 0.0039  0.4646 0.5235
 
 $tol0.025
         LNclump  LNrnd LSclump  LSrnd NBclump  NBrnd
-LNclump  0.8931 0.1069  0.0000 0.0000  0.0000 0.0000
-LNrnd    0.1268 0.8732  0.0000 0.0000  0.0000 0.0000
-LSclump  0.0000 0.0000  0.9510 0.0362  0.0009 0.0120
-LSrnd    0.0000 0.0000  0.0417 0.9581  0.0000 0.0001
-NBclump  0.0000 0.0000  0.0413 0.0000  0.4908 0.4679
-NBrnd    0.0000 0.0000  0.0402 0.0004  0.4702 0.4892
+LNclump  0.8115 0.1885  0.0000 0.0000  0.0000 0.0000
+LNrnd    0.2090 0.7910  0.0000 0.0000  0.0000 0.0000
+LSclump  0.0000 0.0000  0.8448 0.1403  0.0027 0.0122
+LSrnd    0.0000 0.0000  0.1714 0.8279  0.0000 0.0007
+NBclump  0.0000 0.0000  0.0320 0.0000  0.4915 0.4764
+NBrnd    0.0000 0.0000  0.0185 0.0052  0.4833 0.4930
 
 $tol0.05
         LNclump  LNrnd LSclump  LSrnd NBclump  NBrnd
-LNclump  0.7266 0.2734  0.0000 0.0000  0.0000 0.0000
-LNrnd    0.2772 0.7228  0.0000 0.0000  0.0000 0.0000
-LSclump  0.0000 0.0000  0.7796 0.1969  0.0051 0.0183
-LSrnd    0.0000 0.0000  0.2083 0.7894  0.0000 0.0022
-NBclump  0.0000 0.0000  0.0958 0.0052  0.4543 0.4446
-NBrnd    0.0000 0.0000  0.0829 0.0213  0.4451 0.4506
+LNclump  0.6761 0.3239  0.0000 0.0000  0.0000 0.0000
+LNrnd    0.3470 0.6530  0.0000 0.0000  0.0000 0.0000
+LSclump  0.0000 0.0000  0.6629 0.3152  0.0069 0.0149
+LSrnd    0.0000 0.0000  0.3435 0.6523  0.0000 0.0042
+NBclump  0.0000 0.0000  0.0711 0.0042  0.4649 0.4597
+NBrnd    0.0000 0.0000  0.0542 0.0197  0.4614 0.4647
 
 > 
 > ## Model selection
@@ -553,7 +560,7 @@ Call:
 postpr(target = target, index = abc2019$labels, sumstat = abc2019$sims, 
     tol = 0.01, method = "rejection", corr = TRUE)
 Data:
- postpr.out$values (522 posterior samples)
+ postpr.out$values (570 posterior samples)
 Models a priori:
  LNclump, LNrnd, LSclump, LSrnd, NBclump, NBrnd
 Models a posteriori:
@@ -563,16 +570,16 @@ Warning: Posterior model probabilities are corrected for unequal number of simul
 
 Proportion of accepted simulations (rejection):
 LNclump   LNrnd LSclump   LSrnd NBclump   NBrnd 
- 0.0000  0.0000  0.9318  0.0651  0.0000  0.0031 
+ 0.0000  0.0000  0.9123  0.0877  0.0000  0.0000 
 
 Bayes factors:
-         LNclump    LNrnd  LSclump    LSrnd  NBclump    NBrnd
-LNclump                     0.0000   0.0000            0.0000
-LNrnd                       0.0000   0.0000            0.0000
-LSclump      Inf      Inf   1.0000  14.3235      Inf 487.0000
-LSrnd        Inf      Inf   0.0698   1.0000      Inf  34.0000
-NBclump                     0.0000   0.0000            0.0000
-NBrnd        Inf      Inf   0.0021   0.0294      Inf   1.0000
+        LNclump   LNrnd LSclump   LSrnd NBclump   NBrnd
+LNclump                  0.0000  0.0000                
+LNrnd                    0.0000  0.0000                
+LSclump     Inf     Inf  1.0000 10.4000     Inf     Inf
+LSrnd       Inf     Inf  0.0962  1.0000     Inf     Inf
+NBclump                  0.0000  0.0000                
+NBrnd                    0.0000  0.0000                
 
 
 > ## Selected model(s)
@@ -601,9 +608,9 @@ NBrnd        Inf      Inf   0.0021   0.0294      Inf   1.0000
 Prediction error based on a cross-validation sample of 100
 
                 S
-0.01  0.003061534
-0.025 0.003880117
-0.05  0.004762273
+0.01  0.004871219
+0.025 0.006749083
+0.05  0.008830066
 > 
 > ## Posterior distribution of Species richness from the selected model
 > S.post1 <- abc(target = target, param=data.frame(S=abc2019$params[index]),
@@ -618,13 +625,13 @@ Data:
  abc.out$unadj.values (100 posterior samples)
 
                     S
-Min.:        14575.44
-2.5% Perc.:  15181.27
-Median:      17360.01
-Mean:        17205.04
-Mode:        17668.83
-97.5% Perc.: 19205.81
-Max.:        19739.48
+Min.:        14492.80
+2.5% Perc.:  14773.62
+Median:      17492.65
+Mean:        17380.55
+Mode:        18101.35
+97.5% Perc.: 19425.84
+Max.:        19540.96
 > hist(S.post1)
 > 
 > 
@@ -640,4 +647,4 @@ Max.:        19739.48
 > 
 > proc.time()
   usuário   sistema decorrido 
-  597.502     0.672   602.227 
+  560.269     0.213   562.195 

@@ -25,7 +25,7 @@ target <- c( atdn.13$Sobs,
 
 ## Diagnostics plots
 ## Box plots of each target variable
-par(mfrow=c(1,2))
+par(mfrow=c(2,2))
 for(i in 1:ncol(abc2013$sims)){
     boxplot(abc2013$sims[,i]~abc2013$labels,
             main=colnames(abc2013$sims)[i], log="y")
@@ -134,8 +134,7 @@ model.sel <- postpr(target = target,
                     corr=TRUE)
 summary(model.sel)
 ## Selected model(s)
-index <-
-    abc2013t$labels=="LSrnd"|abc2013t$labels=="LSclump"
+index <- abc2013t$labels=="LSclump"
 
 
 ## Goodness of fit the models

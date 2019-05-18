@@ -1,1 +1,1168 @@
-Fatal error: n?o foi poss?vel abrir o arquivo 'figures_and_tables': Arquivo ou diret?rio inexistente
+
+R version 3.6.0 (2019-04-26) -- "Planting of a Tree"
+Copyright (C) 2019 The R Foundation for Statistical Computing
+Platform: x86_64-pc-linux-gnu (64-bit)
+
+R é um software livre e vem sem GARANTIA ALGUMA.
+Você pode redistribuí-lo sob certas circunstâncias.
+Digite 'license()' ou 'licence()' para detalhes de distribuição.
+
+R é um projeto colaborativo com muitos contribuidores.
+Digite 'contributors()' para obter mais informações e
+'citation()' para saber como citar o R ou pacotes do R em publicações.
+
+Digite 'demo()' para demonstrações, 'help()' para o sistema on-line de ajuda,
+ou 'help.start()' para abrir o sistema de ajuda em HTML no seu navegador.
+Digite 'q()' para sair do R.
+
+[Área de trabalho anterior carregada]
+
+> source("functions.R")
+Carregando pacotes exigidos: stats4
+Carregando pacotes exigidos: splines
+Carregando pacotes exigidos: permute
+Carregando pacotes exigidos: lattice
+Registered S3 method overwritten by 'vegan':
+  method       from
+  plot.preston untb
+This is vegan 2.5-4
+
+Attaching package: ‘vegan’
+
+The following object is masked from ‘package:VGAM’:
+
+    calibrate
+
+Carregando pacotes exigidos: bbmle
+
+Attaching package: ‘bbmle’
+
+The following object is masked from ‘package:VGAM’:
+
+    AICc
+
+
+Attaching package: ‘sads’
+
+The following objects are masked from ‘package:VGAM’:
+
+    dpareto, dzipf, ppareto, pzipf, qpareto, qzipf, rpareto, rzipf
+
+Carregando pacotes exigidos: abc.data
+Carregando pacotes exigidos: nnet
+Carregando pacotes exigidos: quantreg
+Carregando pacotes exigidos: SparseM
+
+Attaching package: ‘SparseM’
+
+The following object is masked from ‘package:base’:
+
+    backsolve
+
+Carregando pacotes exigidos: MASS
+
+Attaching package: ‘MASS’
+
+The following object is masked from ‘package:untb’:
+
+    select
+
+Carregando pacotes exigidos: locfit
+locfit 1.5-9.1 	 2013-03-22
+> ## Basic quantities and original (biased estimates), from script 'dataprep.R'
+> load("lists_with_all_objects.RData")
+> ## Summaries and posterior distributions of ABC analyses, from script 'abc_summaries.R'
+> load("abcSummaries.RData")
+> ## Bias analyses for estimates from logseries and tnb fitted to the sample for 2013 dataset , from script
+> ## 'simulation_bias/ls_tnb_bias_parallel_2013.R'
+> load("bias_ls_tnb_2013.RData")
+> ## same for 2013 updated
+> load("bias_ls_tnb_2013t.RData")
+> ## same for 2019
+> load("bias_ls_tnb_2019.RData")
+> ## Bias analyses for model selection of ls, tnb, pln fitted to the samples, from script 'simulation_bias/model_selection_bias.R'
+> load("bias_msel.RData")
+> ## Bias analyses for estimates from CHAO method from script 'simulation_bias/chao_bias.R'
+> load("bias_chao.RData")
+> ## Bias analyses for estimates from LSE method on the estimated population sizes,
+> ## from script 'simulation_bias/LSE_bias.R'
+> load("bias_LSE.RData")
+> 
+> ################################################################################
+> ## Model selection table for ls, tnb, poilog models for each dataset
+> ################################################################################
+> ms13 <- (with(atdn.13, AICtab(y.nb2, y.ls, pln, weights = TRUE, sort=FALSE)))
+> ms13t <- (with(atdn.13.tax, AICtab(y.nb2, y.ls, pln, weights = TRUE, sort=FALSE)))
+> ms19 <- (with(atdn.19, AICtab(y.nb2, y.ls, pln, weights = TRUE, sort=FALSE)))
+> tab.ms.all <- data.frame(
++     model = c("TNB", "LS", "PLN"),
++     df = ms13$df,
++     y.13 = ms13$dAIC,
++     y.13t = ms13t$dAIC,
++     y.19 = ms19$dAIC
++ )
+> write.csv(tab.ms.all, row.names=FALSE, file = "figs_and_tables/model_selection_table.csv")
+> 
+> ################################################################################
+> ## Table with sstimated coefficients and SEs and likelihoods for ls, tnb, poilog models for each dataset
+> ################################################################################
+> tab.cf <- rbind(
++     cbind(with(atdn.13, summary(y.nb2)@coef[,1:2]),
++           with(atdn.13.tax, summary(y.nb2)@coef[,1:2]),
++           with(atdn.19, summary(y.nb2)@coef[,1:2])),
++     cbind(with(atdn.13, matrix(summary(y.ls)@coef[,1:2], nrow=1)),
++           with(atdn.13.tax, matrix(summary(y.ls)@coef[,1:2], nrow=1)),
++           with(atdn.19, matrix(summary(y.ls)@coef[,1:2], nrow=1))),
++     cbind(with(atdn.13, summary(pln)@coef[,1:2]),
++           with(atdn.13.tax, summary(pln)@coef[,1:2]),
++           with(atdn.19, summary(pln)@coef[,1:2]))
++     )
+> colnames(tab.cf) <- paste(colnames(tab.cf), rep(c("2013","2013t","2019"),each=2))
+> rownames(tab.cf)[rownames(tab.cf)==""] <- "alpha"
+> write.csv(tab.cf, file = "figs_and_tables/model_coefficients.csv")
+> 
+> ################################################################################
+> ## ABC posterior probabilities for each model for each dataset
+> ################################################################################
+> tab.abc <- rbind(
++     summary(abc2013.summ$model.sel)$Prob,
++     summary(abc2013t.summ$model.sel)$Prob,
++     summary(abc2019.summ$model.sel)$Prob
++     )
+Call: 
+postpr(target = target, index = abc2013$labels, sumstat = abc2013$sims, 
+    tol = 0.01, method = "rejection", corr = TRUE)
+Data:
+ postpr.out$values (600 posterior samples)
+Models a priori:
+ LNclump, LNrnd, LSclump, LSrnd, NBclump, NBrnd
+Models a posteriori:
+ LNclump, LNrnd, LSclump, LSrnd, NBclump, NBrnd
+
+Proportion of accepted simulations (rejection):
+LNclump   LNrnd LSclump   LSrnd NBclump   NBrnd 
+ 0.0000  0.0000  0.7050  0.2917  0.0033  0.0000 
+
+Bayes factors:
+         LNclump    LNrnd  LSclump    LSrnd  NBclump    NBrnd
+LNclump                     0.0000   0.0000   0.0000         
+LNrnd                       0.0000   0.0000   0.0000         
+LSclump      Inf      Inf   1.0000   2.4171 211.5000      Inf
+LSrnd        Inf      Inf   0.4137   1.0000  87.5000      Inf
+NBclump      Inf      Inf   0.0047   0.0114   1.0000      Inf
+NBrnd                       0.0000   0.0000   0.0000         
+
+
+Call: 
+postpr(target = target, index = abc2013t$labels, sumstat = abc2013t$sims, 
+    tol = 0.01, method = "rejection", corr = TRUE)
+Data:
+ postpr.out$values (508 posterior samples)
+Models a priori:
+ LNclump, LNrnd, LSclump, LSrnd, NBclump, NBrnd
+Models a posteriori:
+ LNclump, LNrnd, LSclump, LSrnd, NBclump, NBrnd
+Warning: Posterior model probabilities are corrected for unequal number of simulations per models.
+
+
+Proportion of accepted simulations (rejection):
+LNclump   LNrnd LSclump   LSrnd NBclump   NBrnd 
+ 0.0000  0.0000  0.7579  0.2421  0.0000  0.0000 
+
+Bayes factors:
+        LNclump  LNrnd LSclump  LSrnd NBclump  NBrnd
+LNclump                 0.0000 0.0000               
+LNrnd                   0.0000 0.0000               
+LSclump     Inf    Inf  1.0000 3.1301     Inf    Inf
+LSrnd       Inf    Inf  0.3195 1.0000     Inf    Inf
+NBclump                 0.0000 0.0000               
+NBrnd                   0.0000 0.0000               
+
+
+Call: 
+postpr(target = target, index = abc2019$labels, sumstat = abc2019$sims, 
+    tol = 0.01, method = "rejection", corr = TRUE)
+Data:
+ postpr.out$values (570 posterior samples)
+Models a priori:
+ LNclump, LNrnd, LSclump, LSrnd, NBclump, NBrnd
+Models a posteriori:
+ LNclump, LNrnd, LSclump, LSrnd, NBclump, NBrnd
+Warning: Posterior model probabilities are corrected for unequal number of simulations per models.
+
+
+Proportion of accepted simulations (rejection):
+LNclump   LNrnd LSclump   LSrnd NBclump   NBrnd 
+ 0.0000  0.0000  0.9123  0.0877  0.0000  0.0000 
+
+Bayes factors:
+        LNclump   LNrnd LSclump   LSrnd NBclump   NBrnd
+LNclump                  0.0000  0.0000                
+LNrnd                    0.0000  0.0000                
+LSclump     Inf     Inf  1.0000 10.4000     Inf     Inf
+LSrnd       Inf     Inf  0.0962  1.0000     Inf     Inf
+NBclump                  0.0000  0.0000                
+NBrnd                    0.0000  0.0000                
+
+
+> rownames(tab.abc) <- c("2013","2013t","2019")
+> write.csv(tab.abc, row.names=FALSE, file = "figs_and_tables/abc_post_table.csv")
+> 
+> 
+> ################################################################################
+> ## Tables with all estimates of species richness and CI's 95%
+> ################################################################################
+> ## Not exactly an elegant code, but alas, it works
+> 
+> ## Table with original estimates and CI's (without bias correction) ##
+> S.estimates <- expand.grid(
++     dataset = c("2013", "2013 updated", "2019"),
++     type = c("CHAO", "TNB", "LS", "LSE"),
++     mean = NA,
++     IC.low = NA,
++     IC.up = NA
++ )
+> ## Add a missing column of sampling in simulations (to compatibility with the next table)
+> S.estimates$sampling <- NA
+> S.estimates <- S.estimates[,c(1:2,6,3:5)]
+> ## Including the values
+> ## Truncated negative binomial
+> S.estimates[S.estimates$type=="TNB"&S.estimates$dataset=="2013",4:6] <-
++     with(atdn.13, c(tovo.S$S.est, tovo.S$CIs[4,2:1]))
+> S.estimates[S.estimates$type=="TNB"&S.estimates$dataset=="2013 updated",4:6] <-
++     with(atdn.13.tax, c(tovo.S$S.est, tovo.S$CIs[4,2:1]))
+> S.estimates[S.estimates$type=="TNB"&S.estimates$dataset=="2019",4:6] <-
++     with(atdn.19, c(tovo.S$S.est, tovo.S$CIs[4,2:1]))
+> ## Log-series
+> S.estimates[S.estimates$type=="LS"&S.estimates$dataset=="2013",4:6] <-
++     with(atdn.13, c(S.ls, S.ls.ci))
+> S.estimates[S.estimates$type=="LS"&S.estimates$dataset=="2013 updated",4:6] <-
++     with(atdn.13.tax, c(S.ls, S.ls.ci))
+> S.estimates[S.estimates$type=="LS"&S.estimates$dataset=="2019",4:6] <-
++     with(atdn.19, c(S.ls, S.ls.ci))
+> ## Linear extension of RAD of estimated pop sizes (LSE)
+> S.estimates[S.estimates$type=="LSE"&S.estimates$dataset=="2013",4:6] <-
++     with(atdn.13, S.ulrich$S[1,2:4])
+> S.estimates[S.estimates$type=="LSE"&S.estimates$dataset=="2013 updated",4:6] <-
++     with(atdn.13.tax, S.ulrich$S[1,2:4])
+> S.estimates[S.estimates$type=="LSE"&S.estimates$dataset=="2019",4:6] <-
++     with(atdn.19, S.ulrich$S[1,2:4])
+> ## Chao 1
+> S.estimates[S.estimates$type=="CHAO"&S.estimates$dataset=="2013",4:6] <-
++     with(atdn.13, Chao[c(2,4:5)])
+> S.estimates[S.estimates$type=="CHAO"&S.estimates$dataset=="2013 updated",4:6] <-
++     with(atdn.13.tax, Chao[c(2,4:5)])
+> S.estimates[S.estimates$type=="CHAO"&S.estimates$dataset=="2019",4:6] <-
++     with(atdn.19, Chao[c(2,4:5)])
+> ## ## Shen & He estimates (to be done)
+> ## S.estimates[S.estimates$type=="ShenHe"&S.estimates$dataset=="2013",4:6] <-
+> ##     with(atdn.13, S.Shen.boot["LS rnd",-4])
+> ## S.estimates[S.estimates$type=="ShenHe"&S.estimates$dataset=="2013 updated",4:6] <-
+> ##     with(atdn.13.tax, S.Shen.boot["LS rnd",-4])
+> ## S.estimates[S.estimates$type=="ShenHe"&S.estimates$dataset=="2019",4:6] <-
+> ##     with(atdn.19, S.Shen.boot["LS rnd",-4])
+> ## ## Hui estimates
+> ## S.estimates[S.estimates$type=="Hui"&S.estimates$dataset=="2013",4:6] <-
+> ##     with(atdn.13, S.orc.boot["LS rnd",-4])
+> ## S.estimates[S.estimates$type=="Hui"&S.estimates$dataset=="2013 updated",4:6] <-
+> ##     with(atdn.13.tax, S.orc.boot["LS rnd",-4])
+> ## S.estimates[S.estimates$type=="Hui"&S.estimates$dataset=="2019",4:6] <-
+> ##     with(atdn.19, S.orc.boot["LS rnd",-4])
+> 
+> ## Table of Bias-corrected estimates ##
+> S.estimates.bc <- expand.grid(
++     sampling = c("rnd", "clump"),
++     type = c("TNB", "LS", "LSE LS", "LSE TNB", "CHAO", "ABC"),
++     dataset = c("2013", "2013 updated", "2019"),    
++     mean = NA,
++     IC.low = NA,
++     IC.up = NA,
++     stringsAsFactors=FALSE
++ )[c(3:1,4:6)]
+> ## Including the values
+> ## Truncated negative binomial
+> type <- "TNB"
+> ## 2013
+> dataset <- "2013"
+> obj <- bias13$tnb
+> S.estimates.bc[S.estimates.bc$type==type&S.estimates.bc$dataset==dataset,4:6] <-
++     bias.ci(obj, ci.vector = S.estimates[S.estimates$type==type&S.estimates$dataset==dataset,4:5])
+> ##2013 updated
+> dataset <- "2013 updated"
+> obj <- bias13t$tnb
+> S.estimates.bc[S.estimates.bc$type==type&S.estimates.bc$dataset==dataset,4:6] <-
++     bias.ci(obj, ci.vector = S.estimates[S.estimates$type==type&S.estimates$dataset==dataset,4:5])
+> ## 2019
+> dataset <- "2019"
+> obj <- bias19$tnb
+> S.estimates.bc[S.estimates.bc$type==type&S.estimates.bc$dataset==dataset,4:6] <-
++     bias.ci(obj, ci.vector = S.estimates[S.estimates$type==type&S.estimates$dataset==dataset,4:5])
+> ## Logseries
+> type <- "LS"
+> ## 2013
+> dataset <- "2013"
+> obj <- bias13$ls
+> S.estimates.bc[S.estimates.bc$type==type&S.estimates.bc$dataset==dataset,4:6] <-
++     bias.ci(obj, ci.vector = S.estimates[S.estimates$type==type&S.estimates$dataset==dataset,4:5])
+> ##2013 updated
+> dataset <- "2013 updated"
+> obj <- bias13t$ls
+> S.estimates.bc[S.estimates.bc$type==type&S.estimates.bc$dataset==dataset,4:6] <-
++     bias.ci(obj, ci.vector = S.estimates[S.estimates$type==type&S.estimates$dataset==dataset,4:5])
+> ## 2019
+> dataset <- "2019"
+> obj <- bias19$ls
+> S.estimates.bc[S.estimates.bc$type==type&S.estimates.bc$dataset==dataset,4:6] <-
++     bias.ci(obj, ci.vector = S.estimates[S.estimates$type==type&S.estimates$dataset==dataset,4:5])
+> ## LSE (linear extension of the RAD of estimated population sizes, assuming a log-series RAD)
+> type <- "LSE LS"
+> ## 2013
+> dataset <- "2013"
+> obj <- bias.lse.13$ls
+> S.estimates.bc[S.estimates.bc$type==type&S.estimates.bc$dataset==dataset,4:6] <-
++     bias.ci(obj, ci.vector = S.estimates[S.estimates$type=="LSE"&S.estimates$dataset==dataset,4:5])
+> ##2013 updated
+> dataset <- "2013 updated"
+> obj <- bias.lse.13t$ls
+> S.estimates.bc[S.estimates.bc$type==type&S.estimates.bc$dataset==dataset,4:6] <-
++     bias.ci(obj, ci.vector = S.estimates[S.estimates$type=="LSE"&S.estimates$dataset==dataset,4:5])
+> ## 2019
+> dataset <- "2019"
+> obj <- bias.lse.19$ls
+> S.estimates.bc[S.estimates.bc$type==type&S.estimates.bc$dataset==dataset,4:6] <-
++     bias.ci(obj, ci.vector = S.estimates[S.estimates$type=="LSE"&S.estimates$dataset==dataset,4:5])
+> ## LSE (linear extension of the RAD of estimated population sizes, assuming a TNB RAD)
+> type <- "LSE TNB"
+> ## 2013
+> dataset <- "2013"
+> obj <- bias.lse.13$tnb
+> S.estimates.bc[S.estimates.bc$type==type&S.estimates.bc$dataset==dataset,4:6] <-
++     bias.ci(obj, ci.vector = S.estimates[S.estimates$type=="LSE"&S.estimates$dataset==dataset,4:5])
+> ##2013 updated
+> dataset <- "2013 updated"
+> obj <- bias.lse.13t$tnb
+> S.estimates.bc[S.estimates.bc$type==type&S.estimates.bc$dataset==dataset,4:6] <-
++     bias.ci(obj, ci.vector = S.estimates[S.estimates$type=="LSE"&S.estimates$dataset==dataset,4:5])
+> ## 2019
+> dataset <- "2019"
+> obj <- bias.lse.19$tnb
+> S.estimates.bc[S.estimates.bc$type==type&S.estimates.bc$dataset==dataset,4:6] <-
++     bias.ci(obj, ci.vector = S.estimates[S.estimates$type=="LSE"&S.estimates$dataset==dataset,4:5])
+> ## CHAO
+> type <- "CHAO"
+> ## 2013
+> dataset <- "2013"
+> obj <- bias.chao.13$ls
+> S.estimates.bc[S.estimates.bc$type==type&S.estimates.bc$dataset==dataset,4:6] <-
++     bias.ci(obj, ci.vector = S.estimates[S.estimates$type=="CHAO"&S.estimates$dataset==dataset,4:5])
+> ##2013 updated
+> dataset <- "2013 updated"
+> obj <- bias.chao.13t$ls
+> S.estimates.bc[S.estimates.bc$type==type&S.estimates.bc$dataset==dataset,4:6] <-
++     bias.ci(obj, ci.vector = S.estimates[S.estimates$type=="CHAO"&S.estimates$dataset==dataset,4:5])
+> ## 2019
+> dataset <- "2019"
+> obj <- bias.chao.19$ls
+> S.estimates.bc[S.estimates.bc$type==type&S.estimates.bc$dataset==dataset,4:6] <-
++     bias.ci(obj, ci.vector = S.estimates[S.estimates$type=="CHAO"&S.estimates$dataset==dataset,4:5])
+> ## ABC (only the selected model(s), in general clumped sample)
+> S.estimates.bc[S.estimates.bc$type=="ABC"&S.estimates.bc$dataset=="2013"&S.estimates.bc$sampling=="clump",4:6] <-
++     summary(abc2013.summ$S.post1)[c(4,2,6),]
+Call: 
+abc(target = target, param = data.frame(S = abc2013$params[index]), 
+    sumstat = abc2013$sims[index, ], tol = 0.01, method = "rejection", 
+    numnet = 100)
+Data:
+ abc.out$unadj.values (100 posterior samples)
+
+                    S
+Min.:        14901.20
+2.5% Perc.:  15428.02
+Median:      17960.87
+Mean:        17938.60
+Mode:        17392.63
+97.5% Perc.: 19951.39
+Max.:        19988.34
+> S.estimates.bc[S.estimates.bc$type=="ABC"&S.estimates.bc$dataset=="2013 updated"&S.estimates.bc$sampling=="clump",4:6] <-
++     summary(abc2013t.summ$S.post1)[c(4,2,6),]
+Call: 
+abc(target = target, param = data.frame(S = abc2013t$params[index]), 
+    sumstat = abc2013t$sims[index, ], tol = 0.01, method = "rejection")
+Data:
+ abc.out$unadj.values (200 posterior samples)
+
+                    S
+Min.:        13137.97
+2.5% Perc.:  13714.73
+Median:      16200.52
+Mean:        16184.25
+Mode:        16152.51
+97.5% Perc.: 18644.22
+Max.:        19675.80
+> S.estimates.bc[S.estimates.bc$type=="ABC"&S.estimates.bc$dataset=="2019"&S.estimates.bc$sampling=="clump",4:6] <-
++     summary(abc2019.summ$S.post1)[c(4,2,6),]
+Call: 
+abc(target = target, param = data.frame(S = abc2019$params[index]), 
+    sumstat = abc2019$sims[index, ], tol = 0.01, method = "rejection")
+Data:
+ abc.out$unadj.values (100 posterior samples)
+
+                    S
+Min.:        14492.80
+2.5% Perc.:  14773.62
+Median:      17492.65
+Mean:        17380.55
+Mode:        18101.35
+97.5% Perc.: 19425.84
+Max.:        19540.96
+> ## A single table with all values (for supplemmentary material) ##
+> S.estimates.all <- rbind(S.estimates.bc, S.estimates)
+> S.estimates.all$bias.corrected <- !is.na(S.estimates.all$sampling)
+> 
+> write.csv(S.estimates.all, row.names=FALSE, file = "figs_and_tables/estimates_S_table.csv")
+> 
+> ################################################################################
+> ## Figures with relationship estimated x true values of Species Richness
+> ################################################################################
+> 
+> pdf("figs_and_tables/estSxS_ls_tnb.pdf", width = 12, height = 12)
+> nf <- layout(
++     matrix(
++         c( c(1,2:10),c(1,11:19), c(1,20:28), c(1, 29:37), c(1,rep(38,9)) ),
++         nrow = 5,
++         ncol = 10,
++         byrow = TRUE
++     ),
++     widths = c(1, rep(c(0.3,0.3,3),4)),
++     heights= c(3,3,3,3,1))
+> ## Logseries #
+> ## 2013
+> par(las = 0, mar=c(0,4,0,0), cex.axis=1.25)
+> plot(0,0, xlim=c(0,1), ylim =c(0,1), axes=FALSE, xlab="", ylab="", type="n")
+> mtext(text = "Number of species in simulated communities", side=2, cex = 1.5)
+> par(mar = c(3, 0, 2, 0))
+> with(subset(bias13$ls$estimates, S.est.clump>atdn.13$S.ls.ci[1] & S.est.clump<atdn.13$S.ls.ci[2]),
++      boxplot(S, axes=FALSE, ylim = atdn.13$S.ls.ci*c(.9,1.1), border="red"))
+> with(subset(bias13$ls$estimates, S.est.rnd>atdn.13$S.ls.ci[1] & S.est.rnd<atdn.13$S.ls.ci[2]),
++      boxplot(S, axes=FALSE, ylim = atdn.13$S.ls.ci*c(.9,1.1), border="blue"))
+> par(mar = c(3, 2, 2, 4))
+> plot(S ~ S.est.rnd, data = bias13$ls$estimates, ylim = atdn.13$S.ls.ci*c(.9,1.1),
++      xlim = atdn.13$S.ls.ci*c(.9,1.1), col="blue", ylab = "", xlab = "", type="n", main = "2013")
+> rect(atdn.13$S.ls.ci[1],0,atdn.13$S.ls.ci[2],max(bias13$ls$estimates$S),col="lightgrey", border=NA)
+> box()
+> axis(1)
+> points(S ~ S.est.rnd, data = bias13$ls$estimates, col="blue")
+> points(S ~ S.est.clump, data = bias13$ls$estimates, col="red")
+> abline(0,1)
+> segments(x0 = c(atdn.13$S.ls.ci),
++        y0 = c(atdn.13$S.ls.ci),
++        x1 = c(0,0),
++        y1 = c(atdn.13$S.ls.ci),
++        lty=2)
+> ## 2013 updated taxonomy
+> par(mar = c(3, 0, 2, 0))
+> with(subset(bias13t$ls$estimates, S.est.clump>atdn.13.tax$S.ls.ci[1] & S.est.clump<atdn.13.tax$S.ls.ci[2]),
++      boxplot(S, axes=FALSE, ylim = atdn.13.tax$S.ls.ci*c(.9,1.1), border="red"))
+> with(subset(bias13t$ls$estimates, S.est.rnd>atdn.13.tax$S.ls.ci[1] & S.est.rnd<atdn.13.tax$S.ls.ci[2]),
++      boxplot(S, axes=FALSE, ylim = atdn.13.tax$S.ls.ci*c(.9,1.1), border="blue"))
+> par(mar = c(3, 2, 2, 4))
+> plot(S ~ S.est.rnd, data = bias13t$ls$estimates, ylim = atdn.13.tax$S.ls.ci*c(.9,1.1),
++      xlim = atdn.13.tax$S.ls.ci*c(.9,1.1), col="blue", ylab = "", xlab = "", type="n", main = "2013 Updated")
+> rect(atdn.13.tax$S.ls.ci[1],0,atdn.13.tax$S.ls.ci[2],max(bias13t$ls$estimates$S),col="lightgrey", border=NA)
+> box()
+> axis(1)
+> points(S ~ S.est.rnd, data = bias13t$ls$estimates, col="blue")
+> points(S ~ S.est.clump, data = bias13t$ls$estimates, col="red")
+> abline(0,1)
+> segments(x0 = c(atdn.13.tax$S.ls.ci),
++        y0 = c(atdn.13.tax$S.ls.ci),
++        x1 = c(0,0),
++        y1 = c(atdn.13.tax$S.ls.ci),
++        lty=2)
+> ## 2019
+> par(mar = c(3, 0, 2, 0))
+> with(subset(bias19$ls$estimates, S.est.clump>atdn.19$S.ls.ci[1] & S.est.clump<atdn.19$S.ls.ci[2]),
++      boxplot(S, axes=FALSE, ylim = atdn.19$S.ls.ci*c(.9,1.1), border="red"))
+> with(subset(bias19$ls$estimates, S.est.rnd>atdn.19$S.ls.ci[1] & S.est.rnd<atdn.19$S.ls.ci[2]),
++      boxplot(S, axes=FALSE, ylim = atdn.19$S.ls.ci*c(.9,1.1), border="blue"))
+> par(mar = c(3, 2, 2, 4))
+> plot(S ~ S.est.rnd, data = bias19$ls$estimates, ylim = atdn.19$S.ls.ci*c(.9,1.1),
++      xlim = atdn.19$S.ls.ci*c(.9,1.1), col="blue", ylab = "", xlab = "", type="n", main = "2019")
+> rect(atdn.19$S.ls.ci[1],0,atdn.19$S.ls.ci[2],max(bias19$ls$estimates$S),col="lightgrey", border=NA)
+> box()
+> axis(1)
+> points(S ~ S.est.rnd, data = bias19$ls$estimates, col="blue")
+> points(S ~ S.est.clump, data = bias19$ls$estimates, col="red")
+> abline(0,1)
+> segments(x0 = c(atdn.19$S.ls.ci),
++        y0 = c(atdn.19$S.ls.ci),
++        x1 = c(0,0),
++        y1 = c(atdn.19$S.ls.ci),
++        lty=2)
+> par(las = 1)
+> mtext("LS", side = 4, line = 1.1, cex = 1.1)
+> par(las = 0)
+> ## TNB
+> par(mar = c(3, 0, 2, 0))
+> with(subset(bias13$tnb$estimates, S.est.clump>atdn.13$tovo.S$CIs[4,2] & S.est.clump<atdn.13$tovo.S$CIs[4,1]),
++      boxplot(S, axes=FALSE, ylim = range(bias13$tnb$estimates$S), border="red"))
+> with(subset(bias13$tnb$estimates, S.est.rnd>atdn.13$tovo.S$CIs[4,2] & S.est.rnd<atdn.13$tovo.S$CIs[4,1]),
++      boxplot(S, axes=FALSE, ylim = range(bias13$tnb$estimates$S), border="blue"))
+> par(mar = c(3, 2, 2, 4))
+> plot(S ~ S.est.rnd, data = bias13$tnb$estimates, ylim = range(bias13$tnb$estimates$S),
++      col="blue", ylab = "", xlab = "", type="n", main = "")
+> rect(atdn.13$tovo.S$CIs[4,2],0,atdn.13$tovo.S$CIs[4,1],max(bias13$tnb$estimates$S)*1.1,col="lightgrey", border=NA)
+> box()
+> axis(1)
+> points(S ~ S.est.rnd, data = bias13$tnb$estimates, col="blue")
+> points(S ~ S.est.clump, data = bias13$tnb$estimates, col="red")
+> abline(0,1)
+> segments(x0 = c(atdn.13$tovo.S$CIs[4,]),
++        y0 = c(atdn.13$tovo.S$CIs[4,]),
++        x1 = c(0,0),
++        y1 = c(atdn.13$tovo.S$CIs[4,]),
++        lty=2)
+> ## 2013 updated taxonomy
+> par(mar = c(3, 0, 2, 0))
+> with(subset(bias13t$tnb$estimates, S.est.clump>atdn.13.tax$tovo.S$CIs[4,2] & S.est.clump<atdn.13.tax$tovo.S$CIs[4,1]),
++      boxplot(S, axes=FALSE, ylim = range(bias13t$tnb$estimates$S), border="red"))
+> with(subset(bias13t$tnb$estimates, S.est.rnd>atdn.13.tax$tovo.S$CIs[4,2] & S.est.rnd<atdn.13.tax$tovo.S$CIs[4,1]),
++      boxplot(S, axes=FALSE, ylim = range(bias13t$tnb$estimates$S), border="blue"))
+> par(mar = c(3, 2, 2, 4))
+> plot(S ~ S.est.rnd, data = bias13t$tnb$estimates, ylim = range(bias13t$tnb$estimates$S),
++      xlim = range(bias13$tnb$estimates$S.est.rnd), ## That's it to avoid some extreme values 
++      col="blue", ylab = "", xlab = "", type="n", main = "")
+> rect(atdn.13.tax$tovo.S$CIs[4,2],0,atdn.13.tax$tovo.S$CIs[4,1],max(bias13t$tnb$estimates$S),col="lightgrey", border=NA)
+> box()
+> axis(1)
+> points(S ~ S.est.rnd, data = bias13t$tnb$estimates, col="blue")
+> points(S ~ S.est.clump, data = bias13t$tnb$estimates, col="red")
+> abline(0,1)
+> segments(x0 = c(atdn.13.tax$tovo.S$CIs[4,]),
++        y0 = c(atdn.13.tax$tovo.S$CIs[4,]),
++        x1 = c(0,0),
++        y1 = c(atdn.13.tax$tovo.S$CIs[4,]),
++        lty=2)
+> ## 2019
+> par(mar = c(3, 0, 2, 0))
+> with(subset(bias19$tnb$estimates, S.est.clump>atdn.19$tovo.S$CIs[4,2] & S.est.clump<atdn.19$tovo.S$CIs[4,1]),
++      boxplot(S, axes=FALSE, ylim = range(bias19$tnb$estimates$S), border="red"))
+> with(subset(bias19$tnb$estimates, S.est.rnd>atdn.19$tovo.S$CIs[4,2] & S.est.rnd<atdn.19$tovo.S$CIs[4,1]),
++      boxplot(S, axes=FALSE, ylim = range(bias19$tnb$estimates$S), border="blue"))
+> par(mar = c(3, 2, 2, 4))
+> plot(S ~ S.est.rnd, data = bias19$tnb$estimates, ylim = range(bias19$tnb$estimates$S),
++      xlim = range(bias13$tnb$estimates$S.est.rnd),
++      col="blue", ylab = "", xlab = "", type="n", main = "")
+> rect(atdn.19$tovo.S$CIs[4,2],0,atdn.19$tovo.S$CIs[4,1],max(bias19$tnb$estimates$S),col="lightgrey", border=NA)
+> box()
+> axis(1)
+> points(S ~ S.est.rnd, data = bias19$tnb$estimates, col="blue")
+> points(S ~ S.est.clump, data = bias19$tnb$estimates, col="red")
+> abline(0,1)
+> segments(x0 = c(atdn.19$tovo.S$CIs[4,]),
++        y0 = c(atdn.19$tovo.S$CIs[4,]),
++        x1 = c(0,0),
++        y1 = c(atdn.19$tovo.S$CIs[4,]),
++        lty=2)
+> par(las = 1)
+> mtext("TNB", side = 4, line = 0.5, cex = 1.1)
+> par(las = 0)
+> ## LSE
+> par(mar = c(3, 0, 2, 0))
+> with(subset(bias.lse.13$tnb$estimates, S.est.clump>atdn.13$S.ulrich$S[1,3] & S.est.clump<atdn.13$S.ulrich$S[1,4]),
++      boxplot(S, axes=FALSE,  ylim = c(1.3e4, 1.6e4), border="red"))
+> with(subset(bias.lse.13$tnb$estimates, S.est.rnd>atdn.13$S.ulrich$S[1,3] & S.est.rnd<atdn.13$S.ulrich$S[1,4]),
++      boxplot(S, axes=FALSE, ylim = c(1.3e4, 1.6e4), border="blue"))
+> par(mar = c(3, 2, 2, 4))
+> plot(S ~ S.est.rnd, data = bias.lse.13$tnb$estimates, ylim = c(1.3e4,1.6e4), xlim = c(1.1e4,1.8e4),
++      col="blue", ylab = "", xlab = "", type="n", main = "")
+> rect(atdn.13$S.ulrich$S[1,3],0,atdn.13$S.ulrich$S[1,4],max(bias.lse.13$tnb$estimates$S)*1.1,col="lightgrey", border=NA)
+> box()
+> axis(1)
+> points(S ~ S.est.rnd, data = bias.lse.13$tnb$estimates, col="blue")
+> points(S ~ S.est.clump, data = bias.lse.13$tnb$estimates, col="red")
+> abline(0,1)
+> segments(x0 = unlist(atdn.13$S.ulrich$S[1,3:4]),
++        y0 = unlist(atdn.13$S.ulrich$S[1,3:4]),
++        x1 = c(0,0),
++        y1 = unlist(atdn.13$S.ulrich$S[1,3:4]),
++        lty=2)
+> ## 2013 updated taxonomy
+> par(mar = c(3, 0, 2, 0))
+> with(subset(bias.lse.13t$tnb$estimates, S.est.clump>atdn.13.tax$S.ulrich$S[1,3] & S.est.clump<atdn.13.tax$S.ulrich$S[1,4]),
++      boxplot(S, axes=FALSE, ylim = c(1e4,1.4e4), border="red"))
+> with(subset(bias.lse.13t$tnb$estimates, S.est.rnd>atdn.13.tax$S.ulrich$S[1,3] & S.est.rnd<atdn.13.tax$S.ulrich$S[1,4]),
++      boxplot(S, axes=FALSE, ylim = c(1e4,1.4e4), border="blue"))
+> par(mar = c(3, 2, 2, 4))
+> plot(S ~ S.est.rnd, data = bias.lse.13t$tnb$estimates, ylim = c(1e4,1.4e4), xlim = c(1e4,1.5e4),
++      col="blue", ylab = "", xlab = "", type="n", main = "")
+> rect(atdn.13.tax$S.ulrich$S[1,3],0,atdn.13.tax$S.ulrich$S[1,4],max(bias.lse.13t$tnb$estimates$S),col="lightgrey", border=NA)
+> box()
+> axis(1)
+> points(S ~ S.est.rnd, data = bias.lse.13t$tnb$estimates, col="blue")
+> points(S ~ S.est.clump, data = bias.lse.13t$tnb$estimates, col="red")
+> abline(0,1)
+> segments(x0 = unlist(atdn.13.tax$S.ulrich$S[1,3:4]),
++        y0 = unlist(atdn.13.tax$S.ulrich$S[1,3:4]),
++        x1 = c(0,0),
++        y1 = unlist(atdn.13.tax$S.ulrich$S[1,3:4]),
++        lty=2)
+> ## 2019
+> par(mar = c(3, 0, 2, 0))
+> with(subset(bias.lse.19$tnb$estimates, S.est.clump>atdn.19$S.ulrich$S[1,3] & S.est.clump<atdn.19$S.ulrich$S[1,4]),
++      boxplot(S, axes=FALSE, ylim = c(1e4,1.5e4), border="red"))
+> with(subset(bias.lse.19$tnb$estimates, S.est.rnd>atdn.19$S.ulrich$S[1,3] & S.est.rnd<atdn.19$S.ulrich$S[1,4]),
++      boxplot(S, axes=FALSE, ylim = c(1e4,1.5e4), border="blue"))
+> par(mar = c(3, 2, 2, 4))
+> plot(S ~ S.est.rnd, data = bias.lse.19$tnb$estimates, ylim = c(1e4,1.5e4), xlim = c(1e4,1.6e4),
++      col="blue", ylab = "", xlab = "", type="n", main = "")
+> rect(atdn.19$S.ulrich$S[1,3],0,atdn.19$S.ulrich$S[1,4],max(bias.lse.19$tnb$estimates$S),col="lightgrey", border=NA)
+> box()
+> axis(1)
+> points(S ~ S.est.rnd, data = bias.lse.19$tnb$estimates, col="blue")
+> points(S ~ S.est.clump, data = bias.lse.19$tnb$estimates, col="red")
+> abline(0,1)
+> segments(x0 = unlist(atdn.19$S.ulrich$S[1,3:4]),
++        y0 = unlist(atdn.19$S.ulrich$S[1,3:4]),
++        x1 = c(0,0),
++        y1 = unlist(atdn.19$S.ulrich$S[1,3:4]),
++        lty=2)
+> par(las = 1)
+> mtext("LSE", side = 4, line = 0.5, cex = 1.1)
+> par(las = 0)
+> ## CHAO #
+> ## 2013
+> par(mar = c(3, 0, 2, 0))
+> with(subset(bias.chao.13$ls$estimates, S.est.clump>atdn.13$Chao[4] & S.est.clump<atdn.13$Chao[5]),
++      boxplot(S, axes=FALSE, ylim = c(5e3,1.6e4), border="red"))
+> with(subset(bias.chao.13$ls$estimates, S.est.rnd>atdn.13$Chao[4] & S.est.rnd<atdn.13$Chao[5]),
++      boxplot(S, axes=FALSE, ylim = c(5e3,1.6e4), border="blue"))
+> par(mar = c(3, 2, 2, 4))
+> plot(S ~ S.est.rnd, data = bias.chao.13$ls$estimates, ylim = c(5e3,1.6e4),
++      xlim = atdn.13$Chao[4:5]*c(.95,1.05), col="blue", ylab = "", xlab = "", type="n", main = "")
+> rect(atdn.13$Chao[4],0,atdn.13$Chao[5],max(bias.chao.13$ls$estimates$S),col="lightgrey", border=NA)
+> box()
+> axis(1)
+> points(S ~ S.est.rnd, data = bias.chao.13$ls$estimates, col="blue")
+> points(S ~ S.est.clump, data = bias.chao.13$ls$estimates, col="red")
+> abline(0,1)
+> segments(x0 = c(atdn.13$Chao[4:5]),
++        y0 = c(atdn.13$Chao[4:5]),
++        x1 = c(0,0),
++        y1 = c(atdn.13$Chao[4:5]),
++        lty=2)
+> ## 2013 updated taxonomy
+> par(mar = c(3, 0, 2, 0))
+> with(subset(bias.chao.13t$ls$estimates, S.est.clump>atdn.13.tax$Chao[4] & S.est.clump<atdn.13.tax$Chao[5]),
++      boxplot(S, axes=FALSE, ylim = c(5e3,1.6e4), border="red"))
+> with(subset(bias.chao.13t$ls$estimates, S.est.rnd>atdn.13.tax$Chao[4] & S.est.rnd<atdn.13.tax$Chao[5]),
++      boxplot(S, axes=FALSE, ylim = c(5e3,1.6e4), border="blue"))
+> par(mar = c(3, 2, 2, 4))
+> plot(S ~ S.est.rnd, data = bias.chao.13t$ls$estimates, ylim = c(5e3,1.6e4),
++      xlim = atdn.13.tax$Chao[4:5]*c(.95,1.05), col="blue", ylab = "", xlab = "", type="n", main = "")
+> rect(atdn.13.tax$Chao[4],0,atdn.13.tax$Chao[5],max(bias.chao.13t$ls$estimates$S),col="lightgrey", border=NA)
+> box()
+> axis(1)
+> points(S ~ S.est.rnd, data = bias.chao.13t$ls$estimates, col="blue")
+> points(S ~ S.est.clump, data = bias.chao.13t$ls$estimates, col="red")
+> abline(0,1)
+> segments(x0 = c(atdn.13.tax$Chao[4:5]),
++        y0 = c(atdn.13.tax$Chao[4:5]),
++        x1 = c(0,0),
++        y1 = c(atdn.13.tax$Chao[4:5]),
++        lty=2)
+> ## 2019
+> par(mar = c(3, 0, 2, 0))
+> with(subset(bias.chao.19$ls$estimates, S.est.clump>atdn.19$Chao[4] & S.est.clump<atdn.19$Chao[5]),
++      boxplot(S, axes=FALSE, ylim = c(5e3,1.6e4), border="red"))
+> with(subset(bias.chao.19$ls$estimates, S.est.rnd>atdn.19$Chao[4] & S.est.rnd<atdn.19$Chao[5]),
++      boxplot(S, axes=FALSE, ylim = c(5e3,1.6e4), border="blue"))
+> par(mar = c(3, 2, 2, 4))
+> plot(S ~ S.est.rnd, data = bias.chao.19$ls$estimates, ylim = c(5e3,1.6e4),
++      xlim = atdn.19$Chao[4:5]*c(.95,1.05), col="blue", ylab = "", xlab = "", type="n", main = "")
+> rect(atdn.19$Chao[4],0,atdn.19$Chao[5],max(bias.chao.19$ls$estimates$S),col="lightgrey", border=NA)
+> box()
+> axis(1)
+> points(S ~ S.est.rnd, data = bias.chao.19$ls$estimates, col="blue")
+> points(S ~ S.est.clump, data = bias.chao.19$ls$estimates, col="red")
+> abline(0,1)
+> segments(x0 = c(atdn.19$Chao[4:5]),
++        y0 = c(atdn.19$Chao[4:5]),
++        x1 = c(0,0),
++        y1 = c(atdn.19$Chao[4:5]),
++        lty=2)
+> par(las = 1)
+> mtext("CHAO", side = 4, line = 0.1, cex = 1)
+> par(las = 0)
+> ## X axis
+> par(mar=c(2,0,1,0))
+> plot(0,0, xlim=c(0,1), ylim =c(0,1), axes=FALSE, xlab="", ylab="", type="n")
+> mtext(text = "Estimated number of species from simulated samples", side=1, cex = 1.5)
+> dev.off()
+null device 
+          1 
+> 
+> ################################################################################
+> ## Dotplots of estimated Species Richness  and ABC estimates##
+> ################################################################################
+> 
+> pdf("figs_and_tables/bias_corrected_estimates_dotchart.pdf")
+> par(cex.main = 1.5,
++     cex.lab = 1.25,
++     font.lab = 2,
++     cex.axis = 1.25)
+> ## Bias-corrected estimates (assuming clumped sampling) ##
+> tmp1 <- S.estimates.bc[S.estimates.bc$sampling=="clump"&S.estimates.bc$type!="LSE TNB",]
+> tmp1$type[tmp1$type=="LSE LS"] <- "LSE"
+> tmp1$type <- factor(tmp1$type, levels=c("CHAO","TNB","LS","LSE","ABC"))
+> tmp1 <- tmp1[order(tmp1$type,tmp1$dataset),]
+> with(tmp1,
++      dotchart(mean, labels = dataset, groups = type, color=2:4, pch=1,
++               pt.cex = 1.5,
++               xlab = "Estimated species richness",
++               xlim=range(c(IC.low, IC.up),na.rm=TRUE))
++      )
+> Ys <- 21:23 - rep(seq(0,20, by=5), each=3)
+> ## ## Adds uncorrected values
+> ## points(S.estimates$mean, Ys[-(10:12)], col=rep(2:4,3), pch="|")
+> ## Adds error bars
+> cores <- rep(2:4,5)
+> for(i in 1:nrow(tmp1))
++     segments(x0=tmp1$IC.low[i], x1=tmp1$IC.up[i], y0=Ys[i], y1=Ys[i],
++              col=cores[i], lwd =1.5)
+> dev.off()
+null device 
+          1 
+> 
+> 
+> ## Original (biased) estimates ##
+> pdf("figs_and_tables/uncorrected_estimates_dotchart.pdf")
+> par(cex.main = 1.5,
++     cex.lab = 1.25,
++     font.lab = 2,
++     cex.axis = 1.25)
+> with(S.estimates,
++      dotchart(mean, labels = dataset, groups = type, color=2:4, pch=1,
++               pt.cex = 1.5,
++               xlim=range(c(S.estimates$IC.low, S.estimates$IC.up),na.rm=TRUE),
++               xlab = "Estimated species richness")
++      )
+> Ys <- 16:18 - rep(seq(0,15, by=5), each=3)
+> cores <- rep(2:4,4)
+> for(i in 1:nrow(S.estimates))
++     segments(x0=S.estimates$IC.low[i], x1=S.estimates$IC.up[i], y0=Ys[i], y1=Ys[i],
++              col=cores[i], lwd =1.5)
+> dev.off()
+null device 
+          1 
+> 
+> ## Bias corrected with both types of sampling (random and clumped) ##
+> ## Auxiliary function
+> f11 <- function(x, type, ...){
++     tmp3 <- x[x$type==type,]
++     with(tmp3,
++          dotchart(mean, labels = sampling, groups = factor(dataset),
++                   color=2:4,
++                   pch=1,
++                   pt.cex = 1.5,
++                   xlim=range(c(IC.low, IC.up),na.rm=TRUE),
++                   ...
++                   )
++      )
++     ## Errors bars
++     Ys <- 11:13 - rep(seq(0,10, by=5), each=3)
++     cores <- rep(2:4,4)
++     for(i in 1:nrow(tmp3))
++         segments(x0=tmp3$IC.low[i], x1=tmp3$IC.up[i], y0=Ys[i], y1=Ys[i],
++                  col=cores[i], lwd =1.5)
++     }
+> #####################################################################################
+> tmp2 <- S.estimates.all[S.estimates.all$type!="LSE TNB"&S.estimates.all$type!="ABC",]
+> tmp2$type[tmp2$type=="LSE LS"] <- "LSE"
+> tmp2$sampling[is.na(tmp2$sampling)] <- "Not corrected"
+> tmp2 <- tmp2[order(tmp2$dataset,tmp2$sampling),]
+> 
+> pdf("figs_and_tables/bias_corrected_estimates_rnd_clump_dotchart.pdf", width = 9, height = 9)
+> par(cex.main = 1.5,
++     cex.lab = 1.25,
++     font.lab = 2,
++     cex.axis = 1.5,
++     mfrow = c(2,2))
+> f11(tmp2, "LS", xlab = "Estimated species richness", main= "Logseries")
+> f11(tmp2, "TNB", xlab = "Estimated species richness", main= "Truncated Negative Binomial")
+> f11(tmp2, "LSE", xlab = "Estimated species richness", main= "RAD linear extension")
+> f11(tmp2, "CHAO", xlab = "Estimated species richness", main= "CHAO")
+> dev.off()
+null device 
+          1 
+> 
+> 
+> ################################################################################
+> ## Plots of Population rad expected by ABC ##
+> ################################################################################
+> 
+> ## 2013
+> S1 <- S.estimates.all[S.estimates.all$type=="ABC"&S.estimates.all$dataset=="2013"&S.estimates.all$sampling=="clump",4:6]
+> abc13.sim.pop <- with(atdn.13,
++                  lapply(S1, sim.abc, sad = "ls",
++                         N = Tot.t,  tot.area = Tot.A, n.plots = N.plots,
++                         lm.sd.fit = lm.sd, lmk.fit = lm.k, nb.fit =y.nb2,
++                         summary = FALSE, upper=1e16) )
+> ## 2013 with updated taxonomy
+> S1 <- S.estimates.all[S.estimates.all$type=="ABC"&S.estimates.all$dataset=="2013 updated"&S.estimates.all$sampling=="clump",4:6]
+> abc13t.sim.pop <- with(atdn.13.tax,
++                       lapply(S1,
++                              sim.abc, sad = "ls",
++                              N = Tot.t,  tot.area = Tot.A, n.plots = N.plots,
++                              lm.sd.fit = lm.sd, lmk.fit = lm.k, nb.fit =y.nb2,
++                              summary = FALSE, upper=1e16) )
+> ## 2019
+> S1 <- S.estimates.all[S.estimates.all$type=="ABC"&S.estimates.all$dataset=="2019"&S.estimates.all$sampling=="clump",4:6]
+> abc19.sim.pop <- with(atdn.19,
++                       lapply(S1,
++                              sim.abc, sad = "ls",
++                              N = Tot.t,  tot.area = Tot.A, n.plots = N.plots,
++                              lm.sd.fit = lm.sd, lmk.fit = lm.k, nb.fit =y.nb2,
++                              summary = FALSE, upper=1e16) )
+> 
+> 
+> ## The plots for  ##
+> pdf("figs_and_tables/population_RADS_and_ABC_predictions%d.pdf", onefile=TRUE)
+> par(cex.main = 1.5, lwd=2,
++     mar = c(5, 4, 4, 2) + 0.1,
++     mgp = c(3.5, 1, 0), 
++     cex.lab = 1.25, font.lab = 2, cex.axis = 1.2, bty = "l", las = 1,
++     oma=c(3,3,0,0))
+> ## 2013
+> plot(rad(atdn.13$data$population), xlim=c(1,6e3), col="grey", ylab="")
+> par(las=0)
+> mtext("Species abundances", 2, cex =1.25, font = 2, line = 4.5)
+> par(las=1)
+> lines(rad(abc13.sim.pop$mean$clump.samp[,2]))
+> lines(rad(abc13.sim.pop$IC.low$clump.samp[,2]), lty=2)
+> lines(rad(abc13.sim.pop$IC.up$clump.samp[,2]), lty=2)
+> ## 2013 updated
+> plot(rad(atdn.13.tax$data$population), xlim=c(1,6e3), col="grey", ylab = "")
+> par(las=0)
+> mtext("Species abundances", 2, cex =1.25, font = 2, line = 4.5)
+> par(las=1)
+> lines(rad(abc13t.sim.pop$mean$clump.samp[,2]))
+> lines(rad(abc13t.sim.pop$IC.low$clump.samp[,2]), lty=2)
+> lines(rad(abc13t.sim.pop$IC.up$clump.samp[,2]), lty=2)
+> ## 2019
+> plot(rad(atdn.19$data$population), xlim=c(1,6e3), col="grey", ylab = "")
+> par(las=0)
+> mtext("Species abundances", 2, cex =1.25, font = 2, line = 4.5)
+> par(las=1)
+> lines(rad(abc19.sim.pop$mean$clump.samp[,2]))
+> lines(rad(abc19.sim.pop$IC.low$clump.samp[,2]), lty=2)
+> lines(rad(abc19.sim.pop$IC.up$clump.samp[,2]), lty=2)
+> dev.off()
+null device 
+          1 
+> 
+> ################################################################################
+> ## Plots of aggregation coefficients x mean population abundances
+> ################################################################################
+> ##Utility function
+> f12 <- function(obj, ...){
++     with(obj,{
++         cf1 <- coef(lm.k)
++         plot(k ~ dens.ha, data= data, log = "xy", ...)
++         curve(exp(cf1[1])*x^cf1[2], add=TRUE, col = 4)
++     }
++     )
++ }
+> ###################################
+> yl1 <- range(atdn.13$data$k,atdn.13.tax$data$k,atdn.19$data$k[atdn.19$data$k<1])
+> xl1 <- range(atdn.13$data$dens.ha,atdn.13.tax$data$dens.ha,atdn.19$data$dens.ha)
+> pdf("figs_and_tables/kXdens.pdf", width = 12, height = 4.25)
+> par(mar = c(5, 5, 4, 2) + 0.1,
++     mgp = c(3.5, 1, 0),
++     oma=c(3,3,0,0),
++     las = 0,
++     bty = "l", 
++     cex.main = 1.5,  
++     cex.lab = 1.4, font.lab = 2, cex.axis = 1.25,
++     lwd = 2,
++     mfrow=c(1,3))
+> f12(atdn.13,
++     ylab = "",
++     xlab="",
++     xlim = xl1, ylim = yl1,
++     main = "2013", col="grey", cex=0.25
++     )
+> mtext("Dispersion coefficient", cex=1.5, font =2, side = 2, line=5)
+> f12(atdn.13.tax, ylab = "",
++     xlab="",
++     xlim = xl1, ylim = yl1,
++     main = "2013 updated", col="grey", cex=0.25)
+> mtext(expression(paste("Density (",ha^{-1},")")), cex=1.5, font = 2, side = 1, line= 6)
+> f12(atdn.19,
++     ylab = "",
++     xlab="",
++     xlim = xl1, ylim = yl1,
++     main = "2019", col="grey", cex=0.25)
+> dev.off()
+null device 
+          1 
+> 
+> 
+> ################################################################################
+> ## Plots of sd deviations  x mean of population abundances
+> ################################################################################
+> f13 <- function(obj, ...){
++     with(obj,{
++         cf1 <- coef(lm.sd)
++         plot(pop.sd ~ population, data= data, log = "xy", ...)
++         curve(exp(cf1[1])*x^cf1[2], add=TRUE, col = 4)
++     }
++     )
++ }
+> 
+> yl1 <- range(atdn.13$data$pop.sd,atdn.13.tax$data$pop.sd,atdn.19$data$pop.sd[atdn.19$data$pop.sd<1])
+> xl1 <- range(atdn.13$data$population,atdn.13.tax$data$population,atdn.19$data$population)
+> pdf("figs_and_tables/sdXpopsize.pdf")
+> par(mar = c(5, 5, 4, 2) + 0.1,
++     mgp = c(3.5, 1, 0),
++     oma=c(3,3,0,0),
++     las = 0,
++     bty = "l", 
++     cex.main = 1.5,  
++     cex.lab = 1.25, font.lab = 2, cex.axis = 1.2,
++     lwd = 2,
++     mfrow=c(1,1))
+> f13(atdn.13, ylab = "Standard deviation of estimated pop size",
++     xlab = "Estimated population size",
++     xlim = xl1, ylim = yl1, col="grey", cex=0.25)
+> dev.off()
+null device 
+          1 
+> 
+> ################################################################################
+> ## Plots of model selection biases
+> ################################################################################
+> 
+> pdf("figs_and_tables/bias_model_selection.pdf", width = 9, height = 5)
+> par(mar = c(5, 5, 4, 2) + 0.1,
++     mgp = c(3.5, 1, 0),
++     oma=c(3,3,0,0),
++     las = 1,
++     bty = "l", 
++     cex.main = 1.15,  
++     cex.lab = 1, font.lab = 2, cex.axis = 1,
++     lwd = 2,
++     mfrow=c(1,2))
+> plot(ls.rnd.w ~ S, data = bias.msel.19$ls, ylim = c(0,1),
++      xlab = "Species richness in the community",
++      ylab = "Evidence weight of logseries fit",
++      main = "Logseries community")
+> points(ls.clump.w ~ S, data = bias.msel.19$ls, col = 2)
+> plot(ls.rnd.w ~ S, data = bias.msel.19$tnb, ylim = c(0,1),
++      xlab = "Species richness in the community",
++      ylab = "Evidence weight of logseries fit",
++      main = "Negative binomial community")
+> points(ls.clump.w ~ S, data = bias.msel.19$tnb, col = 2)
+> legend("topright", c("Random", "Clumped"), col=c(1,2), cex = 1, pch =1, bty="n")
+> dev.off()
+null device 
+          1 
+> 
+> 
+> ################################################################################
+> ## Population RAD and regional LS
+> ################################################################################
+> ## Species richness estimates and CI's to use: from ABC
+> S1 <- unlist(S.estimates.all[S.estimates.all$type=="ABC"&S.estimates.all$dataset=="2019"&S.estimates.all$sampling=="clump",4:6])
+> ## Alternative: weighted mean and combined CI (worst)
+> ## S1 <- c(15810, 13763, 19206)
+> ## Simulated regional rads
+> ls.m <- rad.ls(S = S1[1], N = atdn.19$Tot.t)
+> ls.low <- rad.ls(S = S1[2], N = atdn.19$Tot.t)
+> ls.up <- rad.ls(S = S1[3], N = atdn.19$Tot.t)
+> ## Simulated population sizes
+> abc19.sim.pop <- with(atdn.19,
++                             lapply(S1, sim.abc, N = Tot.t, sad = "ls", tot.area = Tot.A, n.plots = N.plots,
++                                    lm.sd.fit = lm.sd, lmk.fit = lm.k, nb.fit = y.nb2, summary = FALSE))
+> ## Hyperdominants
+> hd <- round(atdn.19$HD$summary[c(2,4:5)])
+> ## The figure
+> pdf("figs_and_tables/pop_rad_with_predicted_rad.pdf")
+> par(bty = "l", lwd = 2)
+> plot(rad(atdn.19$data$population), xlim = c(1, S1[3]),
++      ##ylim=c(min(c(ls.m$y, ls.up$y, ls.low$y)), max(atdn.19$data$population)),
++      ylim = c(0.5, max(atdn.19$data$population)),
++      axes=FALSE , #yaxs="i",
++      col=rep(c("red","darkgrey"), c(hd[1], length(atdn.19$data$population)-hd[1])),
++      cex.lab = 1.25, font.lab = 2, cex.axis = 1.2)
+> axis(1, at=c(1, seq(2500,17500, by=2500)))
+> axis(2)
+> lines(rad(ls.m$y), col="darkblue")
+> lines(rad(ls.low$y), lty=2, col="darkblue")
+> lines(rad(ls.up$y), lty=2, col="darkblue")
+> text(2e4, 1e9, paste("Nr of hyperdominant species = ",hd[1]," (",hd[2]," - ",hd[3],")", sep=""), font=2, pos=2)
+> text(2e4, 0.25e9, paste("Estimated tree species = ",round(S1[1])," (",round(S1[2])," - ",round(S1[3]),")", sep=""), font=2, pos=2)
+> par(fig=c(0.09,0.49,0.05,0.50),
++     mgp = c(2.5,0.5,0),
++     ##mar = c(5,4,4,2),
++     new = T, cex.axis = 0.8, cex.lab=1,
++     ##yaxp=c(1,3,3),
++     bty="o")
+> plot(rad(atdn.19$data$population), xlim=c(1,6e3),
++      col="grey", ylab = "", xlab="", cex=0.75, axes = F)
+> axis(2, at=c(1e6, 1e9), labels=c("","1e+09"))
+> axis(1, at=c(1,2500,5000), labels=c("","","5000"))
+> lines(rad(abc19.sim.pop[[1]]$clump.samp[,2]))
+> lines(rad(abc19.sim.pop[[2]]$clump.samp[,2]), lty=2)
+> lines(rad(abc19.sim.pop[[3]]$clump.samp[,2]), lty=2)
+> par(fig=c(0,1,0,1))
+> dev.off()
+null device 
+          1 
+> 
+> ################################################################################
+> ## Fits of sads to abundances in the sample
+> ################################################################################
+> ## Auxiliary functions
+> f19 <- function(obj, legend=FALSE, ...){
++     obs.oc <- octav(obj$data$N.ind)
++     ls.op <- octavpred(obj$y.ls)
++     tnb.op <- octavpred(obj$y.nb2)
++     pln.op <- octavpred(obj$pln)
++     plot(obs.oc, ylim = range(c(ls.op$Freq, tnb.op$Freq, pln.op$Freq, obs.oc$Freq)), ...)
++     lines(ls.op, col= 2)
++     lines(tnb.op, col=3)
++     lines(pln.op, col =4)
++     if(legend)
++         legend("topright", c("LS","TNB", "PLN"), pch=1, lty=1, col=c(2:4), bty="n")
++ }
+> 
+> f20 <- function(obj, legend=FALSE, ...){
++     obs.r <- rad(obj$data$N.ind)
++     ls.rp <- radpred(obj$y.ls)
++     tnb.rp <- radpred(obj$y.nb2)
++     pln.rp <- radpred(obj$pln)
++     plot(obs.r, ylim = range(c(ls.rp$abund, tnb.rp$abund, pln.rp$abund, obs.r$abund), na.rm=TRUE), ...)
++     lines(ls.rp, col= 2)
++     lines(tnb.rp, col=3)
++     lines(pln.rp, col =4)
++     if(legend)
++         legend("topright", c("LS","TNB", "PLN"), lty=1, col=c(2:4), bty="n")
++ }
+> 
+> ## Octav and rad plots
+> png("figs_and_tables/sads_fit_to_samples.png", width=9, height=7, res=150, units="in")
+> pdf("figs_and_tables/sads_fit_to_samples.pdf", width=12, height=7)
+> par(##mar = c(5, 5, 4, 2) + 0.1,
++     ##mgp = c(3.25, 1, 0),
++     ##oma=c(3,3,0,0),
++     ##las = 1,
++     bty = "l", 
++     cex.main = 1.15,  
++     cex.lab = 1, font.lab = 2, cex.axis = 1,
++     lwd = 2,
++     mfrow=c(2,3))
+> f19(atdn.13, main = "2013", xlab="", cex.lab=1.5)
+> f19(atdn.13.tax, main = "2013 updated", ylab="", cex.lab=1.5)
+> f19(atdn.19, legend=TRUE, main = "2019", xlab="", ylab = "")
+> f20(atdn.13, log="xy",  xlab="", cex.lab=1.5, col="grey")
+Warning messages:
+1: In regularize.values(x, y, ties, missing(ties)) :
+  collapsing to unique 'x' values
+2: In regularize.values(x, y, ties, missing(ties)) :
+  collapsing to unique 'x' values
+> f20(atdn.13.tax, log="xy", ylab="", cex.lab=1.5, col="grey")
+Warning messages:
+1: In regularize.values(x, y, ties, missing(ties)) :
+  collapsing to unique 'x' values
+2: In regularize.values(x, y, ties, missing(ties)) :
+  collapsing to unique 'x' values
+> f20(atdn.19, log="xy", xlab="", ylab = "", col="grey")
+Warning messages:
+1: In regularize.values(x, y, ties, missing(ties)) :
+  collapsing to unique 'x' values
+2: In regularize.values(x, y, ties, missing(ties)) :
+  collapsing to unique 'x' values
+> dev.off()
+png 
+  2 
+> 
+> ## qq plots
+> pdf("figs_and_tables/samples_qqplots.pdf", width=9, height=9)
+> par(mar = c(6, 6, 4, 2) + 0.1,
++     ##mgp = c(3.25, 1, 0),
++     ##oma=c(3,3,0,0),
++     ##las = 1,
++     bty = "l", 
++     cex.main = 1.5,  
++     cex.lab = 1, font.lab = 2, cex.axis = 1,
++     lwd = 2,
++     mfrow=c(3,3))
+> qqsad(atdn.13$y.ls, main="2013", xlab="", ylab="", col="grey")
+Warning message:
+In regularize.values(x, y, ties, missing(ties)) :
+  collapsing to unique 'x' values
+> qqsad(atdn.13.tax$y.ls, main="2013 updated", xlab="", ylab="", col="grey")
+Warning message:
+In regularize.values(x, y, ties, missing(ties)) :
+  collapsing to unique 'x' values
+> qqsad(atdn.19$y.ls, main="2019", xlab="", ylab="", col="grey")
+Warning message:
+In regularize.values(x, y, ties, missing(ties)) :
+  collapsing to unique 'x' values
+> mtext("LS", at=8e3)
+> qqsad(atdn.13$y.nb2, main="", xlab="", ylab="", cex.lab=1.7, col="grey")
+Warning message:
+In regularize.values(x, y, ties, missing(ties)) :
+  collapsing to unique 'x' values
+> mtext("Sample quantiles", cex=2, side= 2, line = 3)
+> qqsad(atdn.13.tax$y.nb2, main="", xlab="", ylab="", col="grey")
+Warning message:
+In regularize.values(x, y, ties, missing(ties)) :
+  collapsing to unique 'x' values
+> qqsad(atdn.19$y.nb2, main="", xlab="", ylab="", col="grey")
+Warning message:
+In regularize.values(x, y, ties, missing(ties)) :
+  collapsing to unique 'x' values
+> mtext("TNB", at=7e3)
+> qqsad(atdn.13$pln, main="", xlab="", ylab="", col="grey")
+> qqsad(atdn.13.tax$pln, main="", xlab="", cex.lab=1.7, ylab="", col="grey")
+> mtext("Theoretical quantiles", cex=2, side =1, line = 3.5)
+> qqsad(atdn.19$pln, main="", xlab="", ylab="", col="grey")
+> mtext("PLN", at=1.8e5)
+> dev.off()
+png 
+  2 
+> 
+> ## ## Sample RAD and predcited by LS, TNB, PLN with R inset of the same plot in log-log scale
+> ## pdf("figs_and_tables/samp_sad_with_inset_log_log.pdf")
+> ## par(mar = c(5, 5, 4, 2) + 0.1,
+> ##     mgp = c(3.5, 1, 0),
+> ##     oma=c(3,3,0,0),
+> ##     las = 1,
+> ##     bty = "l", 
+> ##     cex.main = 1.15,  
+> ##     cex.lab = 1, font.lab = 2, cex.axis = 1,
+> ##     lwd = 2,
+> ##     mfrow=c(1,1))
+> ## plot(obs.r, col="grey", ylim=c(1, max(pln.r$abund)))
+> ## lines(ls.r)
+> ## lines(tnb.r, col="red")
+> ## lines(pln.r, col="green")
+> ## par(fig=c(0.39,0.99,0.39,0.99),
+> ##     mgp = c(2.5,0.5,0),
+> ##     ##mar = c(5,4,4,2),
+> ##     new = T, cex.axis = 0.8, cex.lab=1,
+> ##     ##yaxp=c(1,3,3),
+> ##     bty="o")
+> ## plot(obs.r, col="grey", log = "xy", xlab="", ylab="",
+> ##      ylim=c(1, max(pln.r$abund)), axes=FALSE)
+> ## lines(ls.r)
+> ## lines(tnb.r, col="red")
+> ## lines(pln.r, col="green")
+> ## par(fig=c(0,1,0,1))
+> ## dev.off()
+> 
+> proc.time()
+  usuário   sistema decorrido 
+  139.611     0.850   141.361 

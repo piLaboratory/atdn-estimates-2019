@@ -1,6 +1,6 @@
 
-R version 3.5.2 (2018-12-20) -- "Eggshell Igloo"
-Copyright (C) 2018 The R Foundation for Statistical Computing
+R version 3.5.3 (2019-03-11) -- "Great Truth"
+Copyright (C) 2019 The R Foundation for Statistical Computing
 Platform: x86_64-pc-linux-gnu (64-bit)
 
 R is free software and comes with ABSOLUTELY NO WARRANTY.
@@ -22,6 +22,16 @@ Type 'q()' to quit R.
 > source("../functions.R")
 Loading required package: stats4
 Loading required package: splines
+Loading required package: permute
+Loading required package: lattice
+This is vegan 2.5-2
+
+Attaching package: ‘vegan’
+
+The following object is masked from ‘package:VGAM’:
+
+    calibrate
+
 Loading required package: bbmle
 
 Attaching package: ‘bbmle’
@@ -62,18 +72,18 @@ locfit 1.5-9.1 	 2013-03-22
 > ## library(parallel)
 > ## library(untb)
 > ## library(sads)
-> load("needed_objs2013.RData")
+> load("../lists_with_all_objects.RData")
 > 
 > ## Simulations
 > ## Function to parallelize simulations
 > f1 <- function(x, ...){
 +     y <- try(sim.abc(S = x,
-+                      N = needed.objs$Tot.t,
-+                      n.plots = needed.objs$N.plots,
-+                      tot.area= needed.objs$Tot.A,
-+                      nb.fit = needed.objs$y.nb2,
-+                      lm.sd.fit = needed.objs$lm.sd,
-+                      lmk.fit = needed.objs$lm.k,
++                      N = atdn.13$Tot.t,
++                      n.plots = atdn.13$N.plots,
++                      tot.area= atdn.13$Tot.A,
++                      nb.fit = atdn.13$y.nb2,
++                      lm.sd.fit = atdn.13$lm.sd,
++                      lmk.fit = atdn.13$lm.k,
 +                      nrep = 1, ...))
 +     if(class(y)=="try-error")
 +         return(matrix(NA, nrow=2, ncol=8))
@@ -93,7 +103,7 @@ locfit 1.5-9.1 	 2013-03-22
 > NB.sims <- mclapply(simulated.vals, f1, sad = "tnb", lower=1e-20, upper=1e20, mc.cores=10)
 > ##save.image()
 > ## Samples of Log-normal
-> LN.sims <- mclapply(simulated.vals, f1, sad = "lnorm", sdlog = needed.objs$pln.cf[2], lower=1e-20, upper=1e20, mc.cores=10)
+> LN.sims <- mclapply(simulated.vals, f1, sad = "lnorm", sdlog = atdn.13$pln.cf[2], lower=1e-20, upper=1e20, mc.cores=10)
 > ##save.image()
 > 
 > ## Assembles all simulation results in a matrix
@@ -130,8 +140,8 @@ locfit 1.5-9.1 	 2013-03-22
 +            rep(simulated.vals[j2],each=2),
 +            rep(simulated.vals[j3],each=2))
 > 
-> save(needed.objs, all.sims, sim.ids, sim.y, file="ABC2013b.RData")
+> save(all.sims, sim.ids, sim.y, file="ABC2013b.RData")
 > 
 > proc.time()
      user    system   elapsed 
-247457.75  24088.41  27852.51 
+245259.72  24433.46  27602.45 

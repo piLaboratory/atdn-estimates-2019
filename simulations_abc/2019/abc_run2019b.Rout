@@ -22,6 +22,16 @@ Type 'q()' to quit R.
 > source("../functions.R")
 Loading required package: stats4
 Loading required package: splines
+Loading required package: permute
+Loading required package: lattice
+This is vegan 2.5-2
+
+Attaching package: ‘vegan’
+
+The following object is masked from ‘package:VGAM’:
+
+    calibrate
+
 Loading required package: bbmle
 
 Attaching package: ‘bbmle’
@@ -87,42 +97,34 @@ locfit 1.5-9.1 	 2013-03-22
 > ##simulated.vals <- runif(nsims, 1e4, S.orc$S.est)
 > simulated.vals <- runif(nsims, 1e4, 2e4)
 > ## Samples of LS
-> LS.sims <- mclapply(simulated.vals, f1, sad = "ls",  lower=1e-20, upper=1e20, mc.cores=10)
+> LS.sims <- mclapply(simulated.vals, f1, sad = "ls",  lower=1e-20, upper=1e45, mc.cores=10)
 > ## save.image()
 > ## Samples of TNB
-> NB.sims <- mclapply(simulated.vals, f1, sad = "tnb", lower=1e-20, upper=1e20, mc.cores=10)
+> NB.sims <- mclapply(simulated.vals, f1, sad = "tnb", lower=1e-20, upper=1e45, mc.cores=10)
 Error in uniroot(f1, lower = lower, upper = upper) : 
   f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
   f() values at end points not of opposite sign
 Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
   f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
 Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
+  f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
+  f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
   f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
+  f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
+  f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
   f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
+  f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
+  f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
+  f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
   f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
@@ -134,65 +136,63 @@ Error in uniroot(f1, lower = lower, upper = upper) :
 Error in uniroot(f1, lower = lower, upper = upper) : 
   f() values at end points not of opposite sign
 Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
+  f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
+  f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
   f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
   f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
+  f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
   f() values at end points not of opposite sign
 Error in uniroot(f1, lower = lower, upper = upper) : 
   f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
+  f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
   f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
+  f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
+  f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
+  f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
   f() values at end points not of opposite sign
 Error in uniroot(f1, lower = lower, upper = upper) : 
   f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
+  f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
   f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
+  f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
+  f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
+  f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
+  f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
   f() values at end points not of opposite sign
 Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
+  f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
+  f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
+  f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
   f() values at end points not of opposite sign
 Error in uniroot(f1, lower = lower, upper = upper) : 
   f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
+  f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
   f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
+  f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
   f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
@@ -200,89 +200,87 @@ Error in uniroot(f1, lower = lower, upper = upper) :
 Error in uniroot(f1, lower = lower, upper = upper) : 
   f() values at end points not of opposite sign
 Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
+  f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
   f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
+  f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
   f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
   f() values at end points not of opposite sign
 Error in uniroot(f1, lower = lower, upper = upper) : 
   f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
+  f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
   f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
+  f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
   f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
+  f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
+  f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
   f() values at end points not of opposite sign
 Error in uniroot(f1, lower = lower, upper = upper) : 
   f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
+  f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
   f() values at end points not of opposite sign
 Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
+  f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
   f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
   f() values at end points not of opposite sign
 Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
+  f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
+  f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
+  f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
+  f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
+  f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
   f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
   f() values at end points not of opposite sign
 Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
+  f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
+  f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
+  f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
+  f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
   f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
+  f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
   f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
+  f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
+  f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
+  f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
+  f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
   f() values at end points not of opposite sign
 Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
+  f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
+  f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
+  f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
   f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
@@ -293,30 +291,28 @@ Error in uniroot(f1, lower = lower, upper = upper) :
   f() values at end points not of opposite sign
 Error in uniroot(f1, lower = lower, upper = upper) : 
   f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
 Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
+  f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
   f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
+  f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
   f() values at end points not of opposite sign
 Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
+  f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
   f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
   f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
+  f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
   f() values at end points not of opposite sign
 Error in uniroot(f1, lower = lower, upper = upper) : 
   f() values at end points not of opposite sign
 Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
+  f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
   f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
@@ -325,8 +321,6 @@ Error in uniroot(f1, lower = lower, upper = upper) :
   f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
   f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
 Error in uniroot(f1, lower = lower, upper = upper) : 
   f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
@@ -334,35 +328,35 @@ Error in uniroot(f1, lower = lower, upper = upper) :
 Error in uniroot(f1, lower = lower, upper = upper) : 
   f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
+  f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
+  f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
   f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
+  f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
   f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
+  f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
+  f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
+  f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
+  f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
+  f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
+  f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
+  f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
+  f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
+  f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
+  f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
   f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
@@ -374,23 +368,25 @@ Error in uniroot(f1, lower = lower, upper = upper) :
 Error in uniroot(f1, lower = lower, upper = upper) : 
   f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
+  f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
+  f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
+  f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
   f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
+  f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
   f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
   f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
+  f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
   f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
@@ -404,7 +400,7 @@ Error in uniroot(f1, lower = lower, upper = upper) :
 Error in uniroot(f1, lower = lower, upper = upper) : 
   f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
+  f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
   f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
@@ -412,13 +408,13 @@ Error in uniroot(f1, lower = lower, upper = upper) :
 Error in uniroot(f1, lower = lower, upper = upper) : 
   f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
+  f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
+  f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
+  f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
+  f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
   f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
@@ -432,11 +428,11 @@ Error in uniroot(f1, lower = lower, upper = upper) :
 Error in uniroot(f1, lower = lower, upper = upper) : 
   f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
+  f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
+  f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
+  f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
   f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
@@ -450,11 +446,11 @@ Error in uniroot(f1, lower = lower, upper = upper) :
 Error in uniroot(f1, lower = lower, upper = upper) : 
   f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
+  f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
   f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
+  f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
   f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
@@ -462,25 +458,27 @@ Error in uniroot(f1, lower = lower, upper = upper) :
 Error in uniroot(f1, lower = lower, upper = upper) : 
   f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
+  f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
   f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
+  f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
+  f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
+  f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
   f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
   f() values at end points not of opposite sign
 Error in uniroot(f1, lower = lower, upper = upper) : 
   f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
+  f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
   f() values at end points not of opposite sign
 Error in uniroot(f1, lower = lower, upper = upper) : 
@@ -488,7 +486,7 @@ Error in uniroot(f1, lower = lower, upper = upper) :
 Error in uniroot(f1, lower = lower, upper = upper) : 
   f() values at end points not of opposite sign
 Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
+  f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
   f() values at end points not of opposite sign
 Error in uniroot(f1, lower = lower, upper = upper) : 
@@ -496,45 +494,43 @@ Error in uniroot(f1, lower = lower, upper = upper) :
 Error in uniroot(f1, lower = lower, upper = upper) : 
   f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
+  f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
   f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
+  f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
+  f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
   f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
+  f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
   f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
   f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
+  f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
+  f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
   f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
   f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
+  f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
+  f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
+  f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
+  f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
   f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
   f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
+  f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
   f() values at end points not of opposite sign
 Error in uniroot(f1, lower = lower, upper = upper) : 
@@ -544,21 +540,15 @@ Error in uniroot(f1, lower = lower, upper = upper) :
 Error in uniroot(f1, lower = lower, upper = upper) : 
   f() values at end points not of opposite sign
 Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
   f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
 Error in uniroot(f1, lower = lower, upper = upper) : 
   f() values at end points not of opposite sign
 Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
+  f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
+  f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
+  f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
   f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
@@ -566,19 +556,19 @@ Error in uniroot(f1, lower = lower, upper = upper) :
 Error in uniroot(f1, lower = lower, upper = upper) : 
   f() values at end points not of opposite sign
 Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
+  f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
   f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
   f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
+  f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
+  f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
   f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
+  f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
   f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
@@ -586,2565 +576,165 @@ Error in uniroot(f1, lower = lower, upper = upper) :
 Error in uniroot(f1, lower = lower, upper = upper) : 
   f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
+  f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
   f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
   f() values at end points not of opposite sign
 Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
+  f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
+  f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
   f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
+  f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
+  f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
   f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
+  f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
   f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
 Error in uniroot(f1, lower = lower, upper = upper) : 
   f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
   f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
 Error in uniroot(f1, lower = lower, upper = upper) : 
   f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
 Error in uniroot(f1, lower = lower, upper = upper) : 
   f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
 Error in uniroot(f1, lower = lower, upper = upper) : 
   f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
 Error in uniroot(f1, lower = lower, upper = upper) : 
   f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
 Error in uniroot(f1, lower = lower, upper = upper) : 
   f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
 Error in uniroot(f1, lower = lower, upper = upper) : 
   f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
 Error in uniroot(f1, lower = lower, upper = upper) : 
   f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
 Error in uniroot(f1, lower = lower, upper = upper) : 
   f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
   f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
 Error in uniroot(f1, lower = lower, upper = upper) : 
   f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
   f() values at end points not of opposite sign
 Error in uniroot(f1, lower = lower, upper = upper) : 
   f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
 Error in uniroot(f1, lower = lower, upper = upper) : 
   f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
   f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
   f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
 Error in uniroot(f1, lower = lower, upper = upper) : 
   f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
 Error in uniroot(f1, lower = lower, upper = upper) : 
   f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
 Error in uniroot(f1, lower = lower, upper = upper) : 
   f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
 Error in uniroot(f1, lower = lower, upper = upper) : 
   f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
 Error in uniroot(f1, lower = lower, upper = upper) : 
   f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
   f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
 Error in uniroot(f1, lower = lower, upper = upper) : 
   f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
 Error in uniroot(f1, lower = lower, upper = upper) : 
   f() values at end points not of opposite sign
 Error in uniroot(f1, lower = lower, upper = upper) : 
   f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
 Error in uniroot(f1, lower = lower, upper = upper) : 
   f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
 Error in uniroot(f1, lower = lower, upper = upper) : 
   f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
   f() values at end points not of opposite sign
 Error in uniroot(f1, lower = lower, upper = upper) : 
   f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
 Error in uniroot(f1, lower = lower, upper = upper) : 
   f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
 Error in uniroot(f1, lower = lower, upper = upper) : 
   f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
 Error in uniroot(f1, lower = lower, upper = upper) : 
   f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
   f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
 Error in uniroot(f1, lower = lower, upper = upper) : 
   f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
   f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
 Error in uniroot(f1, lower = lower, upper = upper) : 
   f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
 Error in uniroot(f1, lower = lower, upper = upper) : 
   f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
   f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
 Error in uniroot(f1, lower = lower, upper = upper) : 
   f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
 Error in uniroot(f1, lower = lower, upper = upper) : 
   f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
 Error in uniroot(f1, lower = lower, upper = upper) : 
   f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
   f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
 Error in uniroot(f1, lower = lower, upper = upper) : 
   f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
   f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
 Error in uniroot(f1, lower = lower, upper = upper) : 
   f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
 Error in uniroot(f1, lower = lower, upper = upper) : 
   f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
 Error in uniroot(f1, lower = lower, upper = upper) : 
   f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
 Error in uniroot(f1, lower = lower, upper = upper) : 
   f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
   f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
 Error in uniroot(f1, lower = lower, upper = upper) : 
   f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
 Error in uniroot(f1, lower = lower, upper = upper) : 
   f() values at end points not of opposite sign
 Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
+  f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
   f() values at end points not of opposite sign
 Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
+  f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
   f() values at end points not of opposite sign
 Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
+  f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
+  f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
+  f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
   f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
+  f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
+  f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
+  f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
   f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
   f() values at end points not of opposite sign
 Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
+  f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
   f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
   f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
+  f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
   f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
@@ -3152,23 +742,25 @@ Error in uniroot(f1, lower = lower, upper = upper) :
 Error in uniroot(f1, lower = lower, upper = upper) : 
   f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
+  f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
   f() values at end points not of opposite sign
 Error in uniroot(f1, lower = lower, upper = upper) : 
   f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
+  f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
+  f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
   f() values at end points not of opposite sign
 Error in uniroot(f1, lower = lower, upper = upper) : 
   f() values at end points not of opposite sign
 Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
+  f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
   f() values at end points not of opposite sign
 Error in uniroot(f1, lower = lower, upper = upper) : 
@@ -3180,41 +772,39 @@ Error in uniroot(f1, lower = lower, upper = upper) :
 Error in uniroot(f1, lower = lower, upper = upper) : 
   f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
   f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
+  f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
+  f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
   f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
   f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
+  f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
   f() values at end points not of opposite sign
 Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
+  f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
+  f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
+  f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
   f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
+  f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
   f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
+  f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
+  f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
+  f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
+  f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
   f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
@@ -3222,21 +812,21 @@ Error in uniroot(f1, lower = lower, upper = upper) :
 Error in uniroot(f1, lower = lower, upper = upper) : 
   f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
+  f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
+  f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
+  f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
+  f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
+  f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
+  f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
+  f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
+  f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
   f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
@@ -3244,47 +834,47 @@ Error in uniroot(f1, lower = lower, upper = upper) :
 Error in uniroot(f1, lower = lower, upper = upper) : 
   f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
+  f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
   f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
+  f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
   f() values at end points not of opposite sign
 Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
+  f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
+  f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
   f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
+  f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
+  f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
   f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
+  f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
+  f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
+  f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
+  f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
   f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
+  f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
+  f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
+  f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
   f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
+  f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
+  f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
   f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
@@ -3298,43 +888,45 @@ Error in uniroot(f1, lower = lower, upper = upper) :
 Error in uniroot(f1, lower = lower, upper = upper) : 
   f() values at end points not of opposite sign
 Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
+  f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
+  f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
   f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
+  f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
   f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
+  f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
   f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
+  f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
+  f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
+  f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
+  f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
+  f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
   f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
+  f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
   f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
   f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
+  f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
+  f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
   f() values at end points not of opposite sign
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
   f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
@@ -3344,45 +936,43 @@ Error in uniroot(f1, lower = lower, upper = upper) :
 Error in uniroot(f1, lower = lower, upper = upper) : 
   f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
   f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
   f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
+  f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
+  f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
+  f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
+  f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
+  f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
+  f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
+  f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
+  f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
   f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
   f() values at end points not of opposite sign
 Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
+  f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
+  f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
   f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
+  f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
+  f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
+  f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
+  f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
   f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
@@ -3392,23 +982,23 @@ Error in uniroot(f1, lower = lower, upper = upper) :
 Error in uniroot(f1, lower = lower, upper = upper) : 
   f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
+  f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
+  f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
+  f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
+  f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
+  f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
   f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
+  f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
   f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
+  f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
   f() values at end points not of opposite sign
 Error in uniroot(f1, lower = lower, upper = upper) : 
@@ -3416,13 +1006,15 @@ Error in uniroot(f1, lower = lower, upper = upper) :
 Error in uniroot(f1, lower = lower, upper = upper) : 
   f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
+  f() values at end points not of opposite sign
+Error in uniroot(f1, lower = lower, upper = upper) : 
   f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
   f() values at end points not of opposite sign
 Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
+  f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
+  f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
   f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
@@ -3430,81 +1022,83 @@ Error in uniroot(f1, lower = lower, upper = upper) :
 Error in uniroot(f1, lower = lower, upper = upper) : 
   f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
+  f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
+  f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
+  f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
   f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
+  f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
   f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
+  f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
+  f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
+  f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
+  f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
+  f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
   f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
+  f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
+  f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
   f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
   f() values at end points not of opposite sign
 Error in uniroot(f1, lower = lower, upper = upper) : 
   f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
+  f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
   f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
+  f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
   f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
+  f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
   f() values at end points not of opposite sign
 Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
+  f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
   f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
+  f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
+  f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
+  f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
+  f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
+  f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
+  f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
   f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
+  f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
+  f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
+  f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
+  f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
+  f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
+  f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
   f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
@@ -3520,47 +1114,51 @@ Error in uniroot(f1, lower = lower, upper = upper) :
 Error in uniroot(f1, lower = lower, upper = upper) : 
   f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
+  f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
   f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
+  f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
+  f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
+  f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
+  f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
   f() values at end points not of opposite sign
 Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
+  f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
+  f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
   f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
   f() values at end points not of opposite sign
 Error in uniroot(f1, lower = lower, upper = upper) : 
   f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
+  f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
   f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
   f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
+  f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
   f() values at end points not of opposite sign
 Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
+  f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
   f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
   f() values at end points not of opposite sign
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
   f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
@@ -3570,15 +1168,19 @@ Error in uniroot(f1, lower = lower, upper = upper) :
 Error in uniroot(f1, lower = lower, upper = upper) : 
   f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
+  f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
   f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
   f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
   f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f() values at end points not of opposite sign
 Error in uniroot(f1, lower = lower, upper = upper) : 
   f() values at end points not of opposite sign
 Error in uniroot(f1, lower = lower, upper = upper) : 
@@ -3590,131 +1192,133 @@ Error in uniroot(f1, lower = lower, upper = upper) :
 Error in uniroot(f1, lower = lower, upper = upper) : 
   f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
   f() values at end points not of opposite sign
 Error in uniroot(f1, lower = lower, upper = upper) : 
   f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
+  f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
   f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
   f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
+  f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
   f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
+  f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
   f() values at end points not of opposite sign
 Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
+  f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
+  f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
+  f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
   f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
+  f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
   f() values at end points not of opposite sign
 Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
+  f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
+  f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
   f() values at end points not of opposite sign
 Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
+  f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
+  f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
+  f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
+  f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
+  f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
+  f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
+  f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
   f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
+  f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
   f() values at end points not of opposite sign
 Error in uniroot(f1, lower = lower, upper = upper) : 
   f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
+  f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
+  f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
   f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
   f() values at end points not of opposite sign
 Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
+  f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
+  f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
   f() values at end points not of opposite sign
 Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
+  f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
+  f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
   f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
   f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
+  f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
   f() values at end points not of opposite sign
 Error in uniroot(f1, lower = lower, upper = upper) : 
   f() values at end points not of opposite sign
 Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
+  f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
+  f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
   f() values at end points not of opposite sign
 Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
+  f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
+  f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
+  f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
+  f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
   f() values at end points not of opposite sign
 Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
+  f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
+  f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
+  f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
   f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
+  f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
+  f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
+  f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
+  f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
   f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
+  f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
+  f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
   f() values at end points not of opposite sign
 Error in uniroot(f1, lower = lower, upper = upper) : 
@@ -3723,28 +1327,26 @@ Error in uniroot(f1, lower = lower, upper = upper) :
   f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
   f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
 Error in uniroot(f1, lower = lower, upper = upper) : 
   f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
+  f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
   f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
+  f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
+  f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
   f() values at end points not of opposite sign
 Error in uniroot(f1, lower = lower, upper = upper) : 
   f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
+  f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
+  f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
+  f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
   f() values at end points not of opposite sign
 Error in uniroot(f1, lower = lower, upper = upper) : 
@@ -3752,45 +1354,45 @@ Error in uniroot(f1, lower = lower, upper = upper) :
 Error in uniroot(f1, lower = lower, upper = upper) : 
   f() values at end points not of opposite sign
 Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
+  f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
+  f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
+  f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
+  f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
+  f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
+  f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
   f() values at end points not of opposite sign
 Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
+  f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
+  f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
+  f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
+  f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
+  f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
+  f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
   f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
+  f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
+  f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
   f() values at end points not of opposite sign
 Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
+  f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
+  f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
+  f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
   f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
@@ -3798,33 +1400,33 @@ Error in uniroot(f1, lower = lower, upper = upper) :
 Error in uniroot(f1, lower = lower, upper = upper) : 
   f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
+  f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
   f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
   f() values at end points not of opposite sign
 Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
+  f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
+  f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
+  f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
   f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
+  f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
+  f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
   f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
+  f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
   f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
+  f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
+  f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
   f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
@@ -3836,15 +1438,15 @@ Error in uniroot(f1, lower = lower, upper = upper) :
 Error in uniroot(f1, lower = lower, upper = upper) : 
   f() values at end points not of opposite sign
 Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
+  f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
+  f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
   f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
+  f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
+  f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
   f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
@@ -3852,49 +1454,49 @@ Error in uniroot(f1, lower = lower, upper = upper) :
 Error in uniroot(f1, lower = lower, upper = upper) : 
   f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
+  f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
+  f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
   f() values at end points not of opposite sign
 Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
+  f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
+  f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
+  f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
   f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
+  f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
+  f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
+  f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
+  f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
+  f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
   f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
+  f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
+  f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
+  f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
   f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
+  f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
+  f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
+  f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
+  f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
+  f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
   f() values at end points not of opposite sign
 Error in uniroot(f1, lower = lower, upper = upper) : 
@@ -3910,37 +1512,37 @@ Error in uniroot(f1, lower = lower, upper = upper) :
 Error in uniroot(f1, lower = lower, upper = upper) : 
   f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
+  f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
+  f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
   f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
+  f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
+  f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
+  f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
   f() values at end points not of opposite sign
 Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
+  f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
+  f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
+  f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
   f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
   f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
+  f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
   f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
+  f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
+  f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
   f() values at end points not of opposite sign
 Error in uniroot(f1, lower = lower, upper = upper) : 
@@ -3949,20 +1551,14 @@ Error in uniroot(f1, lower = lower, upper = upper) :
   f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
   f.upper = f(upper) is NA
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
 Error in uniroot(f1, lower = lower, upper = upper) : 
   f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
+  f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
+  f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
+  f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
   f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
@@ -3976,30 +1572,36 @@ Error in uniroot(f1, lower = lower, upper = upper) :
 Error in uniroot(f1, lower = lower, upper = upper) : 
   f() values at end points not of opposite sign
 Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
+  f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
+  f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
+  f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
   f() values at end points not of opposite sign
 Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
+  f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
   f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
+  f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
+  f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
   f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
-  f() values at end points not of opposite sign
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
+Error in uniroot(f1, lower = lower, upper = upper) : 
+  f.upper = f(upper) is NA
 Error in uniroot(f1, lower = lower, upper = upper) : 
   f() values at end points not of opposite sign
 > ##save.image()
 > ## Samples of Log-normal
-> LN.sims <- mclapply(simulated.vals, f1, sad = "lnorm", sdlog = needed.objs$pln.cf[2], lower=1e-20, upper=1e20, mc.cores=10)
+> LN.sims <- mclapply(simulated.vals, f1, sad = "lnorm", sdlog = needed.objs$pln.cf[2], lower=1e-20, upper=1e45, mc.cores=10)
 > ##save.image()
 > 
 > ## Assembles all simulation results in a matrix
@@ -4040,4 +1642,4 @@ Error in uniroot(f1, lower = lower, upper = upper) :
 > 
 > proc.time()
      user    system   elapsed 
-166677.33  22089.26  19903.85 
+385796.92  23646.10  41959.82 

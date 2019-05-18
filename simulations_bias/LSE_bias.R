@@ -8,7 +8,7 @@ load("../bias_ls_tnb_2019.RData")
 
 
 ## Number of cores to use
-mc.cores <- 3
+mc.cores <- 5
 
 ## Auxiliary functions ##
 f3 <- function(x, obj){

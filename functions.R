@@ -1032,6 +1032,14 @@ HD.boot <- function(x, N.tot, x.sd, lm.sd.fit, p = 0.5, n.boot= 1000){
 }
 
 
+#' To prepare csv files from raw worksheets
+format.data <- function(input.file, output.file, ...){
+    raw <- read.csv2(input.file, ...)
+    raw <- raw[!is.na(raw$n.ind),c("Accepted_species", "population.mean", "n.ind", "n.plots", "population.sd")]
+    names(raw) <- c("species","population","N.ind","N.plots","pop.sd")
+    write.csv2(raw, file=output.file, row.names=FALSE)
+    }
+
 #' A function to rule them all
 #'
 #' Run all the calculations used in Steege et al 2019

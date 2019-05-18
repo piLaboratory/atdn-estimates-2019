@@ -3,18 +3,18 @@ source("../functions.R")
 ## library(parallel)
 ## library(untb)
 ## library(sads)
-load("needed_objs2013.RData")
+load("../lists_with_all_objects.RData")
 
 ## Simulations
 ## Function to parallelize simulations
 f1 <- function(x, ...){
     y <- try(sim.abc(S = x,
-                     N = needed.objs$Tot.t,
-                     n.plots = needed.objs$N.plots,
-                     tot.area= needed.objs$Tot.A,
-                     nb.fit = needed.objs$y.nb2,
-                     lm.sd.fit = needed.objs$lm.sd,
-                     lmk.fit = needed.objs$lm.k,
+                     N = atdn.13$Tot.t,
+                     n.plots = atdn.13$N.plots,
+                     tot.area= atdn.13$Tot.A,
+                     nb.fit = atdn.13$y.nb2,
+                     lm.sd.fit = atdn.13$lm.sd,
+                     lmk.fit = atdn.13$lm.k,
                      nrep = 1, ...))
     if(class(y)=="try-error")
         return(matrix(NA, nrow=2, ncol=8))
@@ -34,7 +34,7 @@ LS.sims <- mclapply(simulated.vals, f1, sad = "ls",  lower=1e-20, upper=1e20, mc
 NB.sims <- mclapply(simulated.vals, f1, sad = "tnb", lower=1e-20, upper=1e20, mc.cores=10)
 ##save.image()
 ## Samples of Log-normal
-LN.sims <- mclapply(simulated.vals, f1, sad = "lnorm", sdlog = needed.objs$pln.cf[2], lower=1e-20, upper=1e20, mc.cores=10)
+LN.sims <- mclapply(simulated.vals, f1, sad = "lnorm", sdlog = atdn.13$pln.cf[2], lower=1e-20, upper=1e20, mc.cores=10)
 ##save.image()
 
 ## Assembles all simulation results in a matrix
@@ -71,4 +71,4 @@ sim.y <- c(rep(simulated.vals[j1],each=2),
            rep(simulated.vals[j2],each=2),
            rep(simulated.vals[j3],each=2))
 
-save(needed.objs, all.sims, sim.ids, sim.y, file="ABC2013.RData")
+save(all.sims, sim.ids, sim.y, file="ABC2013a.RData")

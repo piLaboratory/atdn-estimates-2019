@@ -1,0 +1,119 @@
+
+R version 3.6.0 (2019-04-26) -- "Planting of a Tree"
+Copyright (C) 2019 The R Foundation for Statistical Computing
+Platform: x86_64-pc-linux-gnu (64-bit)
+
+R é um software livre e vem sem GARANTIA ALGUMA.
+Você pode redistribuí-lo sob certas circunstâncias.
+Digite 'license()' ou 'licence()' para detalhes de distribuição.
+
+R é um projeto colaborativo com muitos contribuidores.
+Digite 'contributors()' para obter mais informações e
+'citation()' para saber como citar o R ou pacotes do R em publicações.
+
+Digite 'demo()' para demonstrações, 'help()' para o sistema on-line de ajuda,
+ou 'help.start()' para abrir o sistema de ajuda em HTML no seu navegador.
+Digite 'q()' para sair do R.
+
+[Área de trabalho anterior carregada]
+
+> library(parallel)
+> library(vegan)
+Carregando pacotes exigidos: permute
+Carregando pacotes exigidos: lattice
+This is vegan 2.5-4
+> source("../functions.R")
+Carregando pacotes exigidos: stats4
+Carregando pacotes exigidos: splines
+
+Attaching package: ‘VGAM’
+
+The following object is masked from ‘package:vegan’:
+
+    calibrate
+
+Registered S3 method overwritten by 'untb':
+  method       from 
+  plot.preston vegan
+Carregando pacotes exigidos: bbmle
+
+Attaching package: ‘bbmle’
+
+The following object is masked from ‘package:VGAM’:
+
+    AICc
+
+
+Attaching package: ‘sads’
+
+The following objects are masked from ‘package:VGAM’:
+
+    dpareto, dzipf, ppareto, pzipf, qpareto, qzipf, rpareto, rzipf
+
+Carregando pacotes exigidos: abc.data
+Carregando pacotes exigidos: nnet
+Carregando pacotes exigidos: quantreg
+Carregando pacotes exigidos: SparseM
+
+Attaching package: ‘SparseM’
+
+The following object is masked from ‘package:base’:
+
+    backsolve
+
+Carregando pacotes exigidos: MASS
+
+Attaching package: ‘MASS’
+
+The following object is masked from ‘package:untb’:
+
+    select
+
+Carregando pacotes exigidos: locfit
+locfit 1.5-9.1 	 2013-03-22
+> load("../lists_with_all_objects.RData")
+> load("../bias_ls_tnb_2013.RData")
+> load("../bias_ls_tnb_2013t.RData")
+> load("../bias_ls_tnb_2019.RData")
+> 
+> ## Auxiliary function
+> bias.chao <- function(obj){
++     ## Chao S estimates for communities sampled under random and clumped distribution of conspecifics
++     ## for a Logseries coomunity ##
++     ls.rnd <- data.frame(t(sapply(obj$ls$samples, function(x) estimateR(x$rnd.samp[x$rnd.samp>0]))))
++     ls.clump <- data.frame(t(sapply(obj$ls$samples, function(x) estimateR(x$clump.samp[x$clump.samp>0]))))
++     ls.rnd$S <- obj$ls$estimates$S
++     ls.clump$S <- obj$ls$estimates$S
++     ls.estimates <- data.frame(S = obj$ls$estimates$S, S.est.rnd = ls.rnd$S.chao1, S.est.clump=ls.clump$S.chao1)
++     ## for a TNB community ##
++     tnb.rnd <- data.frame(t(sapply(obj$tnb$samples, function(x) estimateR(x$rnd.samp[x$rnd.samp>0]))))
++     tnb.clump <- data.frame(t(sapply(obj$tnb$samples, function(x) estimateR(x$clump.samp[x$clump.samp>0]))))
++     tnb.rnd$S <- obj$tnb$estimates$S
++     tnb.clump$S <- obj$tnb$estimates$S
++     tnb.estimates <- data.frame(S = obj$tnb$estimates$S, S.est.rnd = tnb.rnd$S.chao1, S.est.clump=tnb.clump$S.chao1)
++     ## Storing in a list
++     list(
++         ls = list(rnd = ls.rnd, clump = ls.clump, samples = obj$ls$samples, estimates = ls.estimates),
++         tnb = list(rnd = tnb.rnd, clump = tnb.clump, samples = obj$tnb$samples, estimates = tnb.estimates) 
++     )
++ }
+> 
+> ################################################################################
+> ## 2013 ##
+> bias.chao.13 <- bias.chao(bias13)
+> 
+> ## 2013 updated ##
+> bias.chao.13t <- bias.chao(bias13t)
+> 
+> ## 2019 ##
+> bias.chao.19 <- bias.chao(bias19)
+> 
+> ################################################################################
+> ## Save objects in a binary file
+> ################################################################################
+> save(bias.chao.13, bias.chao.13t, bias.chao.19, file = "../bias_chao.RData")
+>     
+> 
+> proc.time()
+  usuário   sistema decorrido 
+   43.805     0.662    44.650 

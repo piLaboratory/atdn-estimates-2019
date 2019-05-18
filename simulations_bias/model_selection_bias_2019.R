@@ -74,5 +74,5 @@ bias.msel.19 <- list(
     tnb= sim.tnb.msel
     )
 
-save(bias.msel.19, file = "bias_msel.RData")
+save(bias.msel.19, file = "../bias_msel.RData")
     

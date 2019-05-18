@@ -23,6 +23,16 @@ Type 'q()' to quit R.
 > source("../functions.R")
 Loading required package: stats4
 Loading required package: splines
+Loading required package: permute
+Loading required package: lattice
+This is vegan 2.5-2
+
+Attaching package: ‘vegan’
+
+The following object is masked from ‘package:VGAM’:
+
+    calibrate
+
 Loading required package: bbmle
 
 Attaching package: ‘bbmle’
@@ -112,14 +122,7 @@ locfit 1.5-9.1 	 2013-03-22
 +                               S.est.clump = sapply(sim.tnb.samp,
 +                                                  function(x) f3(x$clump.samp, size = 0.018) )
 +                               )
-Error in optim(par = c(lsize = -4.01738352108597, lmu = NaN), fn = function (p)  : 
-  non-finite value supplied by optim
-In addition: Warning message:
-In min(x) : no non-missing arguments to min; returning Inf
-Error in optim(par = c(lsize = -4.01738352108597, lmu = NaN), fn = function (p)  : 
-  non-finite value supplied by optim
-In addition: There were 19 warnings (use warnings() to see them)
-There were 26 warnings (use warnings() to see them)
+There were 49 warnings (use warnings() to see them)
 > 
 > 
 > # Storing in lists
@@ -133,4 +136,4 @@ There were 26 warnings (use warnings() to see them)
 > 
 > proc.time()
      user    system   elapsed 
-19147.880  1189.476  4084.900 
+17124.344   847.176  2075.216 

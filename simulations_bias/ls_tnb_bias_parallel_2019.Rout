@@ -23,6 +23,16 @@ Type 'q()' to quit R.
 > source("../functions.R")
 Loading required package: stats4
 Loading required package: splines
+Loading required package: permute
+Loading required package: lattice
+This is vegan 2.5-2
+
+Attaching package: ‘vegan’
+
+The following object is masked from ‘package:VGAM’:
+
+    calibrate
+
 Loading required package: bbmle
 
 Attaching package: ‘bbmle’
@@ -112,7 +122,7 @@ locfit 1.5-9.1 	 2013-03-22
 +                               S.est.clump = sapply(sim.tnb.samp,
 +                                                  function(x) f3(x$clump.samp, size = 0.018) )
 +                               )
-There were 27 warnings (use warnings() to see them)
+There were 17 warnings (use warnings() to see them)
 > 
 > # Storing in lists
 > bias19 <- list(
@@ -125,4 +135,4 @@ There were 27 warnings (use warnings() to see them)
 > 
 > proc.time()
      user    system   elapsed 
-12378.196   729.092  1995.436 
+12305.700   800.100  1657.161 
