@@ -36,7 +36,7 @@ tab.ms.all <- data.frame(
 write.csv(tab.ms.all, row.names=FALSE, file = "figs_and_tables/model_selection_table.csv")
 
 ################################################################################
-## Table with sstimated coefficients and SEs and likelihoods for ls, tnb, poilog models for each dataset
+## Table with estimated coefficients and SEs and likelihoods for ls, tnb, poilog models for each dataset
 ################################################################################
 tab.cf <- rbind(
     cbind(with(atdn.13, summary(y.nb2)@coef[,1:2]),
@@ -142,86 +142,86 @@ type <- "TNB"
 dataset <- "2013"
 obj <- bias13$tnb
 S.estimates.bc[S.estimates.bc$type==type&S.estimates.bc$dataset==dataset,4:6] <-
-    bias.ci(obj, ci.vector = S.estimates[S.estimates$type==type&S.estimates$dataset==dataset,4:5])
+    bias.ci(obj, ci.vector = S.estimates[S.estimates$type==type&S.estimates$dataset==dataset,4:6])
 ##2013 updated
 dataset <- "2013 updated"
 obj <- bias13t$tnb
 S.estimates.bc[S.estimates.bc$type==type&S.estimates.bc$dataset==dataset,4:6] <-
-    bias.ci(obj, ci.vector = S.estimates[S.estimates$type==type&S.estimates$dataset==dataset,4:5])
+    bias.ci(obj, ci.vector = S.estimates[S.estimates$type==type&S.estimates$dataset==dataset,4:6])
 ## 2019
 dataset <- "2019"
 obj <- bias19$tnb
 S.estimates.bc[S.estimates.bc$type==type&S.estimates.bc$dataset==dataset,4:6] <-
-    bias.ci(obj, ci.vector = S.estimates[S.estimates$type==type&S.estimates$dataset==dataset,4:5])
+    bias.ci(obj, ci.vector = S.estimates[S.estimates$type==type&S.estimates$dataset==dataset,4:6])
 ## Logseries
 type <- "LS"
 ## 2013
 dataset <- "2013"
 obj <- bias13$ls
 S.estimates.bc[S.estimates.bc$type==type&S.estimates.bc$dataset==dataset,4:6] <-
-    bias.ci(obj, ci.vector = S.estimates[S.estimates$type==type&S.estimates$dataset==dataset,4:5])
+    bias.ci(obj, ci.vector = S.estimates[S.estimates$type==type&S.estimates$dataset==dataset,4:6], method="lm")
 ##2013 updated
 dataset <- "2013 updated"
 obj <- bias13t$ls
 S.estimates.bc[S.estimates.bc$type==type&S.estimates.bc$dataset==dataset,4:6] <-
-    bias.ci(obj, ci.vector = S.estimates[S.estimates$type==type&S.estimates$dataset==dataset,4:5])
+    bias.ci(obj, ci.vector = S.estimates[S.estimates$type==type&S.estimates$dataset==dataset,4:6], method="lm")
 ## 2019
 dataset <- "2019"
 obj <- bias19$ls
 S.estimates.bc[S.estimates.bc$type==type&S.estimates.bc$dataset==dataset,4:6] <-
-    bias.ci(obj, ci.vector = S.estimates[S.estimates$type==type&S.estimates$dataset==dataset,4:5])
+    bias.ci(obj, ci.vector = S.estimates[S.estimates$type==type&S.estimates$dataset==dataset,4:6], method="lm")
 ## LSE (linear extension of the RAD of estimated population sizes, assuming a log-series RAD)
 type <- "LSE LS"
 ## 2013
 dataset <- "2013"
 obj <- bias.lse.13$ls
 S.estimates.bc[S.estimates.bc$type==type&S.estimates.bc$dataset==dataset,4:6] <-
-    bias.ci(obj, ci.vector = S.estimates[S.estimates$type=="LSE"&S.estimates$dataset==dataset,4:5])
+    bias.ci(obj, ci.vector = S.estimates[S.estimates$type=="LSE"&S.estimates$dataset==dataset,4:6], method="lm")
 ##2013 updated
 dataset <- "2013 updated"
 obj <- bias.lse.13t$ls
 S.estimates.bc[S.estimates.bc$type==type&S.estimates.bc$dataset==dataset,4:6] <-
-    bias.ci(obj, ci.vector = S.estimates[S.estimates$type=="LSE"&S.estimates$dataset==dataset,4:5])
+    bias.ci(obj, ci.vector = S.estimates[S.estimates$type=="LSE"&S.estimates$dataset==dataset,4:6], method="lm")
 ## 2019
 dataset <- "2019"
 obj <- bias.lse.19$ls
 S.estimates.bc[S.estimates.bc$type==type&S.estimates.bc$dataset==dataset,4:6] <-
-    bias.ci(obj, ci.vector = S.estimates[S.estimates$type=="LSE"&S.estimates$dataset==dataset,4:5])
+    bias.ci(obj, ci.vector = S.estimates[S.estimates$type=="LSE"&S.estimates$dataset==dataset,4:6], method="lm")
 ## LSE (linear extension of the RAD of estimated population sizes, assuming a TNB RAD)
 type <- "LSE TNB"
 ## 2013
 dataset <- "2013"
 obj <- bias.lse.13$tnb
 S.estimates.bc[S.estimates.bc$type==type&S.estimates.bc$dataset==dataset,4:6] <-
-    bias.ci(obj, ci.vector = S.estimates[S.estimates$type=="LSE"&S.estimates$dataset==dataset,4:5])
+    bias.ci(obj, ci.vector = S.estimates[S.estimates$type=="LSE"&S.estimates$dataset==dataset,4:6], method="lm")
 ##2013 updated
 dataset <- "2013 updated"
 obj <- bias.lse.13t$tnb
 S.estimates.bc[S.estimates.bc$type==type&S.estimates.bc$dataset==dataset,4:6] <-
-    bias.ci(obj, ci.vector = S.estimates[S.estimates$type=="LSE"&S.estimates$dataset==dataset,4:5])
+    bias.ci(obj, ci.vector = S.estimates[S.estimates$type=="LSE"&S.estimates$dataset==dataset,4:6], method="lm")
 ## 2019
 dataset <- "2019"
 obj <- bias.lse.19$tnb
 S.estimates.bc[S.estimates.bc$type==type&S.estimates.bc$dataset==dataset,4:6] <-
-    bias.ci(obj, ci.vector = S.estimates[S.estimates$type=="LSE"&S.estimates$dataset==dataset,4:5])
+    bias.ci(obj, ci.vector = S.estimates[S.estimates$type=="LSE"&S.estimates$dataset==dataset,4:6], method="lm")
 ## CHAO
 type <- "CHAO"
 ## 2013
 dataset <- "2013"
 obj <- bias.chao.13$ls
 S.estimates.bc[S.estimates.bc$type==type&S.estimates.bc$dataset==dataset,4:6] <-
-    bias.ci(obj, ci.vector = S.estimates[S.estimates$type=="CHAO"&S.estimates$dataset==dataset,4:5])
+    bias.ci(obj, ci.vector = S.estimates[S.estimates$type=="CHAO"&S.estimates$dataset==dataset,4:6], method="lm")
 ##2013 updated
 dataset <- "2013 updated"
 obj <- bias.chao.13t$ls
 S.estimates.bc[S.estimates.bc$type==type&S.estimates.bc$dataset==dataset,4:6] <-
-    bias.ci(obj, ci.vector = S.estimates[S.estimates$type=="CHAO"&S.estimates$dataset==dataset,4:5])
+    bias.ci(obj, ci.vector = S.estimates[S.estimates$type=="CHAO"&S.estimates$dataset==dataset,4:6], method="lm")
 ## 2019
 dataset <- "2019"
 obj <- bias.chao.19$ls
 S.estimates.bc[S.estimates.bc$type==type&S.estimates.bc$dataset==dataset,4:6] <-
-    bias.ci(obj, ci.vector = S.estimates[S.estimates$type=="CHAO"&S.estimates$dataset==dataset,4:5])
-## ABC (only the selected model(s), in general clumped sample)
+    bias.ci(obj, ci.vector = S.estimates[S.estimates$type=="CHAO"&S.estimates$dataset==dataset,4:6], method="lm")
+## ABC (only the selected model)
 S.estimates.bc[S.estimates.bc$type=="ABC"&S.estimates.bc$dataset=="2013"&S.estimates.bc$sampling=="clump",4:6] <-
     summary(abc2013.summ$S.post1)[c(4,2,6),]
 S.estimates.bc[S.estimates.bc$type=="ABC"&S.estimates.bc$dataset=="2013 updated"&S.estimates.bc$sampling=="clump",4:6] <-
@@ -790,7 +790,7 @@ dev.off()
 ## Species richness estimates and CI's to use:
 ## from ABC
 ## S1 <- unlist(S.estimates.all[S.estimates.all$type=="ABC"&S.estimates.all$dataset=="2019"&S.estimates.all$sampling=="clump",4:6])
-## Mean of estimates wieghted by uncertainty, excluding TNB. ICs as the range of IC
+## Mean of estimates weighted by uncertainty, excluding TNB. ICs as the range of IC
 S1  <- 
     read.csv("figs_and_tables/estimates_S_table.csv") %>%
     filter(bias.corrected==TRUE&type!="LSE TNB"&sampling=="clump"&type!="TNB"&dataset=="2019") %>%

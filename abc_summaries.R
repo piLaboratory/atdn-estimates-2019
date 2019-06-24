@@ -8,7 +8,8 @@ load("lists_with_all_objects.RData")
 ################################################################################
 ## 2013 original data##
 ################################################################################
-## results of simulations for ABC, from script 'simulations_abc/2013/abc_run2013[a,b].R' and then applying 'simulations_abc/2013/join_simulations.R'
+## results of simulations for ABC, from script 'simulations_abc/2013/abc_run2013[a,b].R'
+## and then applying 'simulations_abc/2013/join_simulations.R'
 load("abcFinal2013.RData") 
 ## Use only the summary statistics of the simulations with noise in
 ## estimated total population sizes (see abc2019run.R) 
@@ -81,13 +82,15 @@ cv.ll <- cv4abc(param = data.frame(S=abc2019$params[index]),
 cv.ridge <- cv4abc(param = data.frame(S=abc2019$params[index]),
        sumstat = abc2019$sims[index,],
        tols=c(0.05, 0.025, 0.01), nval=100, method="ridge")
-## Cehcks the method and tolerance with smaller error
+## Checks the method and tolerance with smaller error
 summary(cv.rej)
 summary(cv.neural)
 summary(cv.ll)
 summary(cv.ridge)
-## Chosen loclinear as ridge with tol=0.01 is has a slightly smaller error but returns posteriors with negative values
-## Chose tol=0.05 as the difference in loclinear among tolerance levels is less than 1e-5, and tol=0.5 enables a posterior drawn from more simulated values
+## Chosen loclinear as ridge with tol=0.01 has a slightly smaller error
+## but returns posteriors with negative values
+## Chosen tol=0.05 as the difference in loclinear among tolerance levels
+## is less than 1e-5, and tol=0.05 enables a posterior drawn from more simulated values
 
 ## Posterior distribution of Species richness from the selected model
 S.post1 <- abc(target = target, param=data.frame(S=abc2013$params[index]),
@@ -101,7 +104,8 @@ abc2013.summ <- list(target=target,
                    cv.modsel=cv.modsel, model.sel=model.sel,
                    index=index, gof=gof,
                    sgof=sgof, p.legend=p.legend,
-                   cv.rej=cv.rej, S.post1=S.post1)
+                   cv.rej=cv.rej, cv.neural=cv.neural, cv.ll=cv.ll, cv.ridge=cv.ridge,
+                   S.post1=S.post1)
 
 
 ################################################################################
@@ -199,7 +203,8 @@ abc2013t.summ <- list(target=target,
                    cv.modsel=cv.modsel, model.sel=model.sel,
                    index=index, gof=gof,
                    sgof=sgof, p.legend=p.legend,
-                   cv.rej=cv.rej, S.post1=S.post1)
+                   cv.rej=cv.rej, cv.neural=cv.neural, cv.ll=cv.ll, cv.ridge=cv.ridge,
+                   S.post1=S.post1)
 
 ################################################################################
 ## 2019 ##
@@ -290,7 +295,7 @@ abc2019.summ <- list(target=target,
                    cv.modsel=cv.modsel, model.sel=model.sel,
                    index=index, gof=gof,
                    sgof=sgof, p.legend=p.legend,
-                   ##cv.nn=cv.nn,
+                   cv.rej=cv.rej, cv.neural=cv.neural, cv.ll=cv.ll, cv.ridge=cv.ridge,
                    S.post1=S.post1)
 
 save(abc2013.summ, abc2013t.summ, abc2019.summ, file="abcSummaries.RData")
