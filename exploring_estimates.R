@@ -2,8 +2,15 @@ source("functions.R")
 load("lists_with_all_objects.RData")
 library(dplyr)
 library(tidyr)
+library(VCA)
 
 S.estimates <- read.csv("figs_and_tables/estimates_S_table.csv")
+
+##
+S.estimates %>%
+    filter(bias.corrected==TRUE&type!="LSE TNB"&sampling=="clump") %>%
+    mutate(difIC = (IC.up-IC.low)/IC.low)
+    
 
 S.estimates %>%
     filter(bias.corrected==TRUE&type!="LSE TNB") %>%

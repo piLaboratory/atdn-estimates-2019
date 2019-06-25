@@ -110,20 +110,6 @@ S.estimates[S.estimates$type=="CHAO"&S.estimates$dataset=="2013 updated",4:6] <-
     with(atdn.13.tax, Chao[c(2,4:5)])
 S.estimates[S.estimates$type=="CHAO"&S.estimates$dataset=="2019",4:6] <-
     with(atdn.19, Chao[c(2,4:5)])
-## ## Shen & He estimates (to be done)
-## S.estimates[S.estimates$type=="ShenHe"&S.estimates$dataset=="2013",4:6] <-
-##     with(atdn.13, S.Shen.boot["LS rnd",-4])
-## S.estimates[S.estimates$type=="ShenHe"&S.estimates$dataset=="2013 updated",4:6] <-
-##     with(atdn.13.tax, S.Shen.boot["LS rnd",-4])
-## S.estimates[S.estimates$type=="ShenHe"&S.estimates$dataset=="2019",4:6] <-
-##     with(atdn.19, S.Shen.boot["LS rnd",-4])
-## ## Hui estimates
-## S.estimates[S.estimates$type=="Hui"&S.estimates$dataset=="2013",4:6] <-
-##     with(atdn.13, S.orc.boot["LS rnd",-4])
-## S.estimates[S.estimates$type=="Hui"&S.estimates$dataset=="2013 updated",4:6] <-
-##     with(atdn.13.tax, S.orc.boot["LS rnd",-4])
-## S.estimates[S.estimates$type=="Hui"&S.estimates$dataset=="2019",4:6] <-
-##     with(atdn.19, S.orc.boot["LS rnd",-4])
 
 ## Table of Bias-corrected estimates ##
 S.estimates.bc <- expand.grid(
@@ -235,286 +221,491 @@ S.estimates.all$bias.corrected <- !is.na(S.estimates.all$sampling)
 write.csv(S.estimates.all, row.names=FALSE, file = "figs_and_tables/estimates_S_table.csv")
 
 ################################################################################
-## Figures with relationship estimated x true values of Species Richness
+## Figures with relationship estimated x true values of Species Richness 
 ################################################################################
+## auxiliary ploting functions ##
+## True x estimated values
+bias.p1 <- function(bias.est, point, lower, upper, reg.line = TRUE, ...){
+    plot(S ~ S.est.rnd, data = bias.est, type= "n", ...)
+    rect(lower,0,upper,max(bias.est$S)*1.1,col="lightgrey", border=NA)
+    box()
+    points(S ~ S.est.rnd, data = bias.est, col="blue", cex=0.5)
+    points(S ~ S.est.clump, data = bias.est, col="red", cex=0.5)
+    abline(0,1)
+    if(reg.line){
+        lm1 <- lm(S ~ S.est.rnd, data = bias.est, subset=S.est.rnd>=lower&S.est.rnd<=upper)
+        plm1 <- predict(lm1,data.frame(S.est.rnd=c(point,lower,upper)))
+        lm2 <- lm(S ~ S.est.clump, data = bias.est, subset=S.est.clump>=lower&S.est.clump<=upper)
+        plm2 <- predict(lm2,data.frame(S.est.clump=c(point,lower,upper)))
+        lines(c(point,lower,upper), plm1, col="blue", lwd=3)
+        lines(c(point,lower,upper), plm2, col="red", lwd=3)
+    }
+}
+## Point and range bias-corrected estimates
+bias.p2 <- function(dataset, type, ...){
+    df <- S.estimates.all[S.estimates.all$dataset==dataset & S.estimates.all$type==type & S.estimates.all$bias.corrected,]
+    df <- df[order(df$sampling),]
+    plot(df$mean ~ c(1,2), type = "n",
+         axes=FALSE,
+         xlab="", ylab="", xlim=c(0.5,2.5), ...)
+    segments(x0=1:2, x1=1:2, y0=df$IC.low, y1=df$IC.up, col=c("red", "blue"), lwd=2)
+    points(1:2, df$mean, col=c("red", "blue"), cex=2)
+}
 
-pdf("figs_and_tables/estSxS_ls_tnb.pdf", width = 12, height = 12)
+### Plots for each data set ###
+
+## 2013 ##
+pdf("figs_and_tables/estSxS_2013.pdf", width = 12, height = 11)
 nf <- layout(
     matrix(
-        c( c(1,2:10),c(1,11:19), c(1,20:28), c(1, 29:37), c(1,rep(38,9)) ),
-        nrow = 5,
-        ncol = 10,
+        c( c(1,2:5),c(1,6:9), c(1,rep(10,4)) ),
+        nrow = 3,
+        ncol = 5,
         byrow = TRUE
     ),
-    widths = c(1, rep(c(0.3,0.3,3),4)),
-    heights= c(3,3,3,3,1))
-## Logseries #
-## 2013
+    widths = c(0.5, rep(c(0.5,3),2)),
+    heights= c(3,3,0.5))
+## Y axis label
 par(las = 0, mar=c(0,4,0,0), cex.axis=1.25)
 plot(0,0, xlim=c(0,1), ylim =c(0,1), axes=FALSE, xlab="", ylab="", type="n")
 mtext(text = "Number of species in simulated communities", side=2, cex = 1.5)
-par(mar = c(3, 0, 2, 0))
-with(subset(bias13$ls$estimates, S.est.clump>atdn.13$S.ls.ci[1] & S.est.clump<atdn.13$S.ls.ci[2]),
-     boxplot(S, axes=FALSE, ylim = atdn.13$S.ls.ci*c(.9,1.1), border="red"))
-with(subset(bias13$ls$estimates, S.est.rnd>atdn.13$S.ls.ci[1] & S.est.rnd<atdn.13$S.ls.ci[2]),
-     boxplot(S, axes=FALSE, ylim = atdn.13$S.ls.ci*c(.9,1.1), border="blue"))
-par(mar = c(3, 2, 2, 4))
-plot(S ~ S.est.rnd, data = bias13$ls$estimates, ylim = atdn.13$S.ls.ci*c(.9,1.1),
-     xlim = atdn.13$S.ls.ci*c(.9,1.1), col="blue", ylab = "", xlab = "", type="n", main = "2013")
-rect(atdn.13$S.ls.ci[1],0,atdn.13$S.ls.ci[2],max(bias13$ls$estimates$S),col="lightgrey", border=NA)
-box()
-axis(1)
-points(S ~ S.est.rnd, data = bias13$ls$estimates, col="blue")
-points(S ~ S.est.clump, data = bias13$ls$estimates, col="red")
-abline(0,1)
-segments(x0 = c(atdn.13$S.ls.ci),
-       y0 = c(atdn.13$S.ls.ci),
-       x1 = c(0,0),
-       y1 = c(atdn.13$S.ls.ci),
-       lty=2)
-## 2013 updated taxonomy
-par(mar = c(3, 0, 2, 0))
-with(subset(bias13t$ls$estimates, S.est.clump>atdn.13.tax$S.ls.ci[1] & S.est.clump<atdn.13.tax$S.ls.ci[2]),
-     boxplot(S, axes=FALSE, ylim = atdn.13.tax$S.ls.ci*c(.9,1.1), border="red"))
-with(subset(bias13t$ls$estimates, S.est.rnd>atdn.13.tax$S.ls.ci[1] & S.est.rnd<atdn.13.tax$S.ls.ci[2]),
-     boxplot(S, axes=FALSE, ylim = atdn.13.tax$S.ls.ci*c(.9,1.1), border="blue"))
-par(mar = c(3, 2, 2, 4))
-plot(S ~ S.est.rnd, data = bias13t$ls$estimates, ylim = atdn.13.tax$S.ls.ci*c(.9,1.1),
-     xlim = atdn.13.tax$S.ls.ci*c(.9,1.1), col="blue", ylab = "", xlab = "", type="n", main = "2013 Updated")
-rect(atdn.13.tax$S.ls.ci[1],0,atdn.13.tax$S.ls.ci[2],max(bias13t$ls$estimates$S),col="lightgrey", border=NA)
-box()
-axis(1)
-points(S ~ S.est.rnd, data = bias13t$ls$estimates, col="blue")
-points(S ~ S.est.clump, data = bias13t$ls$estimates, col="red")
-abline(0,1)
-segments(x0 = c(atdn.13.tax$S.ls.ci),
-       y0 = c(atdn.13.tax$S.ls.ci),
-       x1 = c(0,0),
-       y1 = c(atdn.13.tax$S.ls.ci),
-       lty=2)
-## 2019
-par(mar = c(3, 0, 2, 0))
-with(subset(bias19$ls$estimates, S.est.clump>atdn.19$S.ls.ci[1] & S.est.clump<atdn.19$S.ls.ci[2]),
-     boxplot(S, axes=FALSE, ylim = atdn.19$S.ls.ci*c(.9,1.1), border="red"))
-with(subset(bias19$ls$estimates, S.est.rnd>atdn.19$S.ls.ci[1] & S.est.rnd<atdn.19$S.ls.ci[2]),
-     boxplot(S, axes=FALSE, ylim = atdn.19$S.ls.ci*c(.9,1.1), border="blue"))
-par(mar = c(3, 2, 2, 4))
-plot(S ~ S.est.rnd, data = bias19$ls$estimates, ylim = atdn.19$S.ls.ci*c(.9,1.1),
-     xlim = atdn.19$S.ls.ci*c(.9,1.1), col="blue", ylab = "", xlab = "", type="n", main = "2019")
-rect(atdn.19$S.ls.ci[1],0,atdn.19$S.ls.ci[2],max(bias19$ls$estimates$S),col="lightgrey", border=NA)
-box()
-axis(1)
-points(S ~ S.est.rnd, data = bias19$ls$estimates, col="blue")
-points(S ~ S.est.clump, data = bias19$ls$estimates, col="red")
-abline(0,1)
-segments(x0 = c(atdn.19$S.ls.ci),
-       y0 = c(atdn.19$S.ls.ci),
-       x1 = c(0,0),
-       y1 = c(atdn.19$S.ls.ci),
-       lty=2)
-par(las = 1)
-mtext("LS", side = 4, line = 1.1, cex = 1.1)
-par(las = 0)
+## Logseries #
+par(mar = c(5, 0, 4, 0))
+bias.p2("2013", "LS", ylim=atdn.13$S.ls.ci*c(.9,1.1))
+par(mar = c(5, 2, 4, 4), cex.main=1.5)
+p.bias(bias13$ls$estimates, atdn.13$S.ls, atdn.13$S.ls.ci[1], atdn.13$S.ls.ci[2],
+       ylim = atdn.13$S.ls.ci*c(.9,1.1),
+       xlim = atdn.13$S.ls.ci*c(.9,1.1),
+       ylab = "", xlab = "", main = "LS")
+# LSE
+par(mar = c(5, 0, 4, 0))
+bias.p2("2013", "LSE LS", ylim=c(1.5e4,1.95e4))
+par(mar = c(5, 2, 4, 4))
+p.bias(bias.lse.13$ls$estimates, atdn.13$S.ulrich$S$boot.mean[1],
+       atdn.13$S.ulrich$S$boot.CI.low[1], atdn.13$S.ulrich$S$boot.CI.up[1],
+       ylim = c(1.5e4,1.95e4),
+       xlim = c(1.4e4,1.6e4),
+       ylab = "", xlab = "", main = "LSE")
+##CHAO
+par(mar = c(5, 0, 4, 0))
+bias.p2("2013", "CHAO", ylim=c(5e3,1.6e4))
+par(mar = c(5, 2, 4, 4))
+p.bias(bias.chao.13$ls$estimates, atdn.13$Chao[2], 
+       atdn.13$Chao[4], atdn.13$Chao[5],
+       ylim = c(5e3,1.6e4),
+       xlim = atdn.13$Chao[4:5]*c(.95,1.05),
+       ylab = "", xlab = "", main = "CHAO")
 ## TNB
-par(mar = c(3, 0, 2, 0))
-with(subset(bias13$tnb$estimates, S.est.clump>atdn.13$tovo.S$CIs[4,2] & S.est.clump<atdn.13$tovo.S$CIs[4,1]),
-     boxplot(S, axes=FALSE, ylim = range(bias13$tnb$estimates$S), border="red"))
-with(subset(bias13$tnb$estimates, S.est.rnd>atdn.13$tovo.S$CIs[4,2] & S.est.rnd<atdn.13$tovo.S$CIs[4,1]),
-     boxplot(S, axes=FALSE, ylim = range(bias13$tnb$estimates$S), border="blue"))
-par(mar = c(3, 2, 2, 4))
-plot(S ~ S.est.rnd, data = bias13$tnb$estimates, ylim = range(bias13$tnb$estimates$S),
-     col="blue", ylab = "", xlab = "", type="n", main = "")
-rect(atdn.13$tovo.S$CIs[4,2],0,atdn.13$tovo.S$CIs[4,1],max(bias13$tnb$estimates$S)*1.1,col="lightgrey", border=NA)
-box()
-axis(1)
-points(S ~ S.est.rnd, data = bias13$tnb$estimates, col="blue")
-points(S ~ S.est.clump, data = bias13$tnb$estimates, col="red")
-abline(0,1)
-segments(x0 = c(atdn.13$tovo.S$CIs[4,]),
-       y0 = c(atdn.13$tovo.S$CIs[4,]),
-       x1 = c(0,0),
-       y1 = c(atdn.13$tovo.S$CIs[4,]),
-       lty=2)
-## 2013 updated taxonomy
-par(mar = c(3, 0, 2, 0))
-with(subset(bias13t$tnb$estimates, S.est.clump>atdn.13.tax$tovo.S$CIs[4,2] & S.est.clump<atdn.13.tax$tovo.S$CIs[4,1]),
-     boxplot(S, axes=FALSE, ylim = range(bias13t$tnb$estimates$S), border="red"))
-with(subset(bias13t$tnb$estimates, S.est.rnd>atdn.13.tax$tovo.S$CIs[4,2] & S.est.rnd<atdn.13.tax$tovo.S$CIs[4,1]),
-     boxplot(S, axes=FALSE, ylim = range(bias13t$tnb$estimates$S), border="blue"))
-par(mar = c(3, 2, 2, 4))
-plot(S ~ S.est.rnd, data = bias13t$tnb$estimates, ylim = range(bias13t$tnb$estimates$S),
-     xlim = range(bias13$tnb$estimates$S.est.rnd), ## That's it to avoid some extreme values 
-     col="blue", ylab = "", xlab = "", type="n", main = "")
-rect(atdn.13.tax$tovo.S$CIs[4,2],0,atdn.13.tax$tovo.S$CIs[4,1],max(bias13t$tnb$estimates$S),col="lightgrey", border=NA)
-box()
-axis(1)
-points(S ~ S.est.rnd, data = bias13t$tnb$estimates, col="blue")
-points(S ~ S.est.clump, data = bias13t$tnb$estimates, col="red")
-abline(0,1)
-segments(x0 = c(atdn.13.tax$tovo.S$CIs[4,]),
-       y0 = c(atdn.13.tax$tovo.S$CIs[4,]),
-       x1 = c(0,0),
-       y1 = c(atdn.13.tax$tovo.S$CIs[4,]),
-       lty=2)
-## 2019
-par(mar = c(3, 0, 2, 0))
-with(subset(bias19$tnb$estimates, S.est.clump>atdn.19$tovo.S$CIs[4,2] & S.est.clump<atdn.19$tovo.S$CIs[4,1]),
-     boxplot(S, axes=FALSE, ylim = range(bias19$tnb$estimates$S), border="red"))
-with(subset(bias19$tnb$estimates, S.est.rnd>atdn.19$tovo.S$CIs[4,2] & S.est.rnd<atdn.19$tovo.S$CIs[4,1]),
-     boxplot(S, axes=FALSE, ylim = range(bias19$tnb$estimates$S), border="blue"))
-par(mar = c(3, 2, 2, 4))
-plot(S ~ S.est.rnd, data = bias19$tnb$estimates, ylim = range(bias19$tnb$estimates$S),
-     xlim = range(bias13$tnb$estimates$S.est.rnd),
-     col="blue", ylab = "", xlab = "", type="n", main = "")
-rect(atdn.19$tovo.S$CIs[4,2],0,atdn.19$tovo.S$CIs[4,1],max(bias19$tnb$estimates$S),col="lightgrey", border=NA)
-box()
-axis(1)
-points(S ~ S.est.rnd, data = bias19$tnb$estimates, col="blue")
-points(S ~ S.est.clump, data = bias19$tnb$estimates, col="red")
-abline(0,1)
-segments(x0 = c(atdn.19$tovo.S$CIs[4,]),
-       y0 = c(atdn.19$tovo.S$CIs[4,]),
-       x1 = c(0,0),
-       y1 = c(atdn.19$tovo.S$CIs[4,]),
-       lty=2)
-par(las = 1)
-mtext("TNB", side = 4, line = 0.5, cex = 1.1)
-par(las = 0)
-## LSE
-par(mar = c(3, 0, 2, 0))
-with(subset(bias.lse.13$ls$estimates, S.est.clump>atdn.13$S.ulrich$S[1,3] & S.est.clump<atdn.13$S.ulrich$S[1,4]),
-     boxplot(S, axes=FALSE,  ylim = c(1.5e4,1.95e4), border="red"))
-with(subset(bias.lse.13$ls$estimates, S.est.rnd>atdn.13$S.ulrich$S[1,3] & S.est.rnd<atdn.13$S.ulrich$S[1,4]),
-     boxplot(S, axes=FALSE, ylim = c(1.5e4,1.95e4), border="blue"))
-par(mar = c(3, 2, 2, 4))
-plot(S ~ S.est.rnd, data = bias.lse.13$ls$estimates,
-     ylim = c(1.5e4,1.95e4), xlim = c(1.4e4,1.6e4),
-     col="blue", ylab = "", xlab = "", type="n", main = "")
-rect(atdn.13$S.ulrich$S[1,3],0,atdn.13$S.ulrich$S[1,4],max(bias.lse.13$ls$estimates$S)*1.1,col="lightgrey", border=NA)
-box()
-axis(1)
-points(S ~ S.est.rnd, data = bias.lse.13$ls$estimates, col="blue")
-points(S ~ S.est.clump, data = bias.lse.13$ls$estimates, col="red")
-abline(0,1)
-segments(x0 = unlist(atdn.13$S.ulrich$S[1,3:4]),
-       y0 = unlist(atdn.13$S.ulrich$S[1,3:4]),
-       x1 = c(0,0),
-       y1 = unlist(atdn.13$S.ulrich$S[1,3:4]),
-       lty=2)
-## 2013 updated taxonomy
-par(mar = c(3, 0, 2, 0))
-with(subset(bias.lse.13t$ls$estimates, S.est.clump>atdn.13.tax$S.ulrich$S[1,3] & S.est.clump<atdn.13.tax$S.ulrich$S[1,4]),
-     boxplot(S, axes=FALSE, ylim = c(1.25e4,1.65e4), border="red"))
-with(subset(bias.lse.13t$ls$estimates, S.est.rnd>atdn.13.tax$S.ulrich$S[1,3] & S.est.rnd<atdn.13.tax$S.ulrich$S[1,4]),
-     boxplot(S, axes=FALSE, ylim = c(1.25e4,1.65e4), border="blue"))
-par(mar = c(3, 2, 2, 4))
-plot(S ~ S.est.rnd, data = bias.lse.13t$ls$estimates,
-     ylim = c(1.25e4,1.65e4), xlim = c(1.3e4,1.45e4),
-     col="blue", ylab = "", xlab = "", type="n", main = "")
-rect(atdn.13.tax$S.ulrich$S[1,3],0,atdn.13.tax$S.ulrich$S[1,4],max(bias.lse.13t$ls$estimates$S),col="lightgrey", border=NA)
-box()
-axis(1)
-points(S ~ S.est.rnd, data = bias.lse.13t$ls$estimates, col="blue")
-points(S ~ S.est.clump, data = bias.lse.13t$ls$estimates, col="red")
-abline(0,1)
-segments(x0 = unlist(atdn.13.tax$S.ulrich$S[1,3:4]),
-       y0 = unlist(atdn.13.tax$S.ulrich$S[1,3:4]),
-       x1 = c(0,0),
-       y1 = unlist(atdn.13.tax$S.ulrich$S[1,3:4]),
-       lty=2)
-## 2019
-par(mar = c(3, 0, 2, 0))
-with(subset(bias.lse.19$ls$estimates, S.est.clump>atdn.19$S.ulrich$S[1,3] & S.est.clump<atdn.19$S.ulrich$S[1,4]),
-     boxplot(S, axes=FALSE, ylim = c(1.4e4,1.72e4), border="red"))
-with(subset(bias.lse.19$ls$estimates, S.est.rnd>atdn.19$S.ulrich$S[1,3] & S.est.rnd<atdn.19$S.ulrich$S[1,4]),
-     boxplot(S, axes=FALSE, ylim = c(1.4e4,1.72e4),border="blue"))
-par(mar = c(3, 2, 2, 4))
-plot(S ~ S.est.rnd, data = bias.lse.19$ls$estimates,
-     ylim = c(1.4e4,1.72e4), xlim = c(1.4e4,1.55e4),
-     col="blue", ylab = "", xlab = "", type="n", main = "")
-rect(atdn.19$S.ulrich$S[1,3],0,atdn.19$S.ulrich$S[1,4],max(bias.lse.19$ls$estimates$S),col="lightgrey", border=NA)
-box()
-axis(1)
-points(S ~ S.est.rnd, data = bias.lse.19$ls$estimates, col="blue")
-points(S ~ S.est.clump, data = bias.lse.19$ls$estimates, col="red")
-abline(0,1)
-segments(x0 = unlist(atdn.19$S.ulrich$S[1,3:4]),
-       y0 = unlist(atdn.19$S.ulrich$S[1,3:4]),
-       x1 = c(0,0),
-       y1 = unlist(atdn.19$S.ulrich$S[1,3:4]),
-       lty=2)
-par(las = 1)
-mtext("LSE", side = 4, line = 0.5, cex = 1.1)
-par(las = 0)
-## CHAO #
-## 2013
-par(mar = c(3, 0, 2, 0))
-with(subset(bias.chao.13$ls$estimates, S.est.clump>atdn.13$Chao[4] & S.est.clump<atdn.13$Chao[5]),
-     boxplot(S, axes=FALSE, ylim = c(5e3,1.6e4), border="red"))
-with(subset(bias.chao.13$ls$estimates, S.est.rnd>atdn.13$Chao[4] & S.est.rnd<atdn.13$Chao[5]),
-     boxplot(S, axes=FALSE, ylim = c(5e3,1.6e4), border="blue"))
-par(mar = c(3, 2, 2, 4))
-plot(S ~ S.est.rnd, data = bias.chao.13$ls$estimates, ylim = c(5e3,1.6e4),
-     xlim = atdn.13$Chao[4:5]*c(.95,1.05), col="blue", ylab = "", xlab = "", type="n", main = "")
-rect(atdn.13$Chao[4],0,atdn.13$Chao[5],max(bias.chao.13$ls$estimates$S),col="lightgrey", border=NA)
-box()
-axis(1)
-points(S ~ S.est.rnd, data = bias.chao.13$ls$estimates, col="blue")
-points(S ~ S.est.clump, data = bias.chao.13$ls$estimates, col="red")
-abline(0,1)
-segments(x0 = c(atdn.13$Chao[4:5]),
-       y0 = c(atdn.13$Chao[4:5]),
-       x1 = c(0,0),
-       y1 = c(atdn.13$Chao[4:5]),
-       lty=2)
-## 2013 updated taxonomy
-par(mar = c(3, 0, 2, 0))
-with(subset(bias.chao.13t$ls$estimates, S.est.clump>atdn.13.tax$Chao[4] & S.est.clump<atdn.13.tax$Chao[5]),
-     boxplot(S, axes=FALSE, ylim = c(5e3,1.6e4), border="red"))
-with(subset(bias.chao.13t$ls$estimates, S.est.rnd>atdn.13.tax$Chao[4] & S.est.rnd<atdn.13.tax$Chao[5]),
-     boxplot(S, axes=FALSE, ylim = c(5e3,1.6e4), border="blue"))
-par(mar = c(3, 2, 2, 4))
-plot(S ~ S.est.rnd, data = bias.chao.13t$ls$estimates, ylim = c(5e3,1.6e4),
-     xlim = atdn.13.tax$Chao[4:5]*c(.95,1.05), col="blue", ylab = "", xlab = "", type="n", main = "")
-rect(atdn.13.tax$Chao[4],0,atdn.13.tax$Chao[5],max(bias.chao.13t$ls$estimates$S),col="lightgrey", border=NA)
-box()
-axis(1)
-points(S ~ S.est.rnd, data = bias.chao.13t$ls$estimates, col="blue")
-points(S ~ S.est.clump, data = bias.chao.13t$ls$estimates, col="red")
-abline(0,1)
-segments(x0 = c(atdn.13.tax$Chao[4:5]),
-       y0 = c(atdn.13.tax$Chao[4:5]),
-       x1 = c(0,0),
-       y1 = c(atdn.13.tax$Chao[4:5]),
-       lty=2)
-## 2019
-par(mar = c(3, 0, 2, 0))
-with(subset(bias.chao.19$ls$estimates, S.est.clump>atdn.19$Chao[4] & S.est.clump<atdn.19$Chao[5]),
-     boxplot(S, axes=FALSE, ylim = c(5e3,1.6e4), border="red"))
-with(subset(bias.chao.19$ls$estimates, S.est.rnd>atdn.19$Chao[4] & S.est.rnd<atdn.19$Chao[5]),
-     boxplot(S, axes=FALSE, ylim = c(5e3,1.6e4), border="blue"))
-par(mar = c(3, 2, 2, 4))
-plot(S ~ S.est.rnd, data = bias.chao.19$ls$estimates, ylim = c(5e3,1.6e4),
-     xlim = atdn.19$Chao[4:5]*c(.95,1.05), col="blue", ylab = "", xlab = "", type="n", main = "")
-rect(atdn.19$Chao[4],0,atdn.19$Chao[5],max(bias.chao.19$ls$estimates$S),col="lightgrey", border=NA)
-box()
-axis(1)
-points(S ~ S.est.rnd, data = bias.chao.19$ls$estimates, col="blue")
-points(S ~ S.est.clump, data = bias.chao.19$ls$estimates, col="red")
-abline(0,1)
-segments(x0 = c(atdn.19$Chao[4:5]),
-       y0 = c(atdn.19$Chao[4:5]),
-       x1 = c(0,0),
-       y1 = c(atdn.19$Chao[4:5]),
-       lty=2)
-par(las = 1)
-mtext("CHAO", side = 4, line = 0.1, cex = 1)
-par(las = 0)
+par(mar = c(5, 0, 5, 0))
+bias.p2("2013", "TNB", ylim=range(bias13$tnb$estimates$S))
+par(mar = c(5, 2, 4, 4))
+p.bias(bias13$tnb$estimates, atdn.13$tovo.S$S.est, 
+       atdn.13$tovo.S$CIs[4,2], atdn.13$tovo.S$CIs[4,1],
+       reg.line=FALSE,
+       ylim = range(bias13$tnb$estimates$S),
+       ylab = "", xlab = "", main = "TNB")
 ## X axis
 par(mar=c(2,0,1,0))
 plot(0,0, xlim=c(0,1), ylim =c(0,1), axes=FALSE, xlab="", ylab="", type="n")
 mtext(text = "Estimated number of species from simulated samples", side=1, cex = 1.5)
 dev.off()
+
+## 2013 updated ##
+pdf("figs_and_tables/estSxS_2013t.pdf", width = 12, height = 11)
+nf <- layout(
+    matrix(
+        c( c(1,2:5),c(1,6:9), c(1,rep(10,4)) ),
+        nrow = 3,
+        ncol = 5,
+        byrow = TRUE
+    ),
+    widths = c(0.5, rep(c(0.5,3),2)),
+    heights= c(3,3,0.5))
+## Y axis label
+par(las = 0, mar=c(0,4,0,0), cex.axis=1.25)
+plot(0,0, xlim=c(0,1), ylim =c(0,1), axes=FALSE, xlab="", ylab="", type="n")
+mtext(text = "Number of species in simulated communities", side=2, cex = 1.5)
+## Logseries #
+par(mar = c(5, 0, 4, 0))
+bias.p2("2013 updated", "LS", ylim=atdn.13.tax$S.ls.ci*c(.9,1.1))
+par(mar = c(5, 2, 4, 4), cex.main=1.5)
+p.bias(bias13t$ls$estimates, atdn.13.tax$S.ls, atdn.13.tax$S.ls.ci[1], atdn.13.tax$S.ls.ci[2],
+       ylim = atdn.13.tax$S.ls.ci*c(.9,1.1),
+       xlim = atdn.13.tax$S.ls.ci*c(.9,1.1),
+       ylab = "", xlab = "", main = "LS")
+# LSE
+par(mar = c(5, 0, 4, 0))
+bias.p2("2013 updated", "LSE LS", ylim=c(1.25e4,1.65e4))
+par(mar = c(5, 2, 4, 4))
+p.bias(bias.lse.13t$ls$estimates, atdn.13.tax$S.ulrich$S$boot.mean[1],
+       atdn.13.tax$S.ulrich$S$boot.CI.low[1], atdn.13.tax$S.ulrich$S$boot.CI.up[1],
+       ylim = c(1.25e4,1.65e4),
+       xlim = c(1.3e4,1.45e4),
+       ylab = "", xlab = "", main = "LSE")
+##CHAO
+par(mar = c(5, 0, 4, 0))
+bias.p2("2013 updated", "CHAO", ylim=c(5e3,1.6e4))
+par(mar = c(5, 2, 4, 4))
+p.bias(bias.chao.13t$ls$estimates, atdn.13.tax$Chao[2], 
+       atdn.13.tax$Chao[4], atdn.13.tax$Chao[5],
+       ylim = c(5e3,1.6e4),
+       xlim = atdn.13.tax$Chao[4:5]*c(.95,1.05),
+       ylab = "", xlab = "", main = "CHAO")
+## TNB
+par(mar = c(5, 0, 5, 0))
+bias.p2("2013 updated", "TNB", ylim=range(bias13t$tnb$estimates$S))
+par(mar = c(5, 2, 4, 4))
+p.bias(bias13t$tnb$estimates, atdn.13.tax$tovo.S$S.est, 
+       atdn.13.tax$tovo.S$CIs[4,2], atdn.13.tax$tovo.S$CIs[4,1],
+       reg.line=FALSE,
+       ylim = range(bias13t$tnb$estimates$S),
+       xlim = range(bias13$tnb$estimates$S.est.rnd),
+       ylab = "", xlab = "", main = "TNB")
+## X axis
+par(mar=c(2,0,1,0))
+plot(0,0, xlim=c(0,1), ylim =c(0,1), axes=FALSE, xlab="", ylab="", type="n")
+mtext(text = "Estimated number of species from simulated samples", side=1, cex = 1.5)
+dev.off()
+
+
+## 2019 ##
+pdf("figs_and_tables/estSxS_2019.pdf", width = 12, height = 11)
+nf <- layout(
+    matrix(
+        c( c(1,2:5),c(1,6:9), c(1,rep(10,4)) ),
+        nrow = 3,
+        ncol = 5,
+        byrow = TRUE
+    ),
+    widths = c(0.5, rep(c(0.5,3),2)),
+    heights= c(3,3,0.5))
+## Y axis label
+par(las = 0, mar=c(0,4,0,0), cex.axis=1.25)
+plot(0,0, xlim=c(0,1), ylim =c(0,1), axes=FALSE, xlab="", ylab="", type="n")
+mtext(text = "Number of species in simulated communities", side=2, cex = 1.5)
+## Logseries #
+par(mar = c(5, 0, 4, 0))
+bias.p2("2019", "LS", ylim=atdn.19$S.ls.ci*c(.9,1.1))
+par(mar = c(5, 2, 4, 4), cex.main=1.5)
+p.bias(bias19$ls$estimates, atdn.19$S.ls, atdn.19$S.ls.ci[1], atdn.19$S.ls.ci[2],
+       ylim = atdn.19$S.ls.ci*c(.9,1.1),
+       xlim = atdn.19$S.ls.ci*c(.9,1.1),
+       ylab = "", xlab = "", main = "LS")
+# LSE
+par(mar = c(5, 0, 4, 0))
+bias.p2("2019", "LSE LS", ylim=c(1.4e4,1.72e4))
+par(mar = c(5, 2, 4, 4))
+p.bias(bias.lse.19$ls$estimates, atdn.19$S.ulrich$S$boot.mean[1],
+       atdn.19$S.ulrich$S$boot.CI.low[1], atdn.19$S.ulrich$S$boot.CI.up[1],
+       ylim = c(1.4e4,1.72e4),
+       xlim = c(1.4e4,1.55e4),
+       ylab = "", xlab = "", main = "LSE")
+##CHAO
+par(mar = c(5, 0, 4, 0))
+bias.p2("2019", "CHAO", ylim=c(5e3,1.6e4))
+par(mar = c(5, 2, 4, 4))
+p.bias(bias.chao.19$ls$estimates, atdn.19$Chao[2], 
+       atdn.19$Chao[4], atdn.19$Chao[5],
+       ylim = c(5e3,1.6e4),
+       xlim = atdn.19$Chao[4:5]*c(.95,1.05),
+       ylab = "", xlab = "", main = "CHAO")
+## TNB
+par(mar = c(5, 0, 5, 0))
+bias.p2("2019", "TNB", ylim=range(bias19$tnb$estimates$S))
+par(mar = c(5, 2, 4, 4))
+p.bias(bias19$tnb$estimates, atdn.19$tovo.S$S.est, 
+       atdn.19$tovo.S$CIs[4,2], atdn.19$tovo.S$CIs[4,1],
+       reg.line=FALSE,
+       ylim = range(bias19$tnb$estimates$S),
+       xlim = range(bias13$tnb$estimates$S.est.rnd),
+       ylab = "", xlab = "", main = "TNB")
+## X axis
+par(mar=c(2,0,1,0))
+plot(0,0, xlim=c(0,1), ylim =c(0,1), axes=FALSE, xlab="", ylab="", type="n")
+mtext(text = "Estimated number of species from simulated samples", side=1, cex = 1.5)
+dev.off()
+
+################################################################################
+## Old anc complex code for a complex figure with all data sets and methods##
+## pdf("figs_and_tables/estSxS_ls_tnb.pdf", width = 12, height = 12)
+## nf <- layout(
+##     matrix(
+##         c( c(1,2:10),c(1,11:19), c(1,20:28), c(1, 29:37), c(1,rep(38,9)) ),
+##         nrow = 5,
+##         ncol = 10,
+##         byrow = TRUE
+##     ),
+##     widths = c(1, rep(c(0.3,0.3,3),4)),
+##     heights= c(3,3,3,3,1))
+## ## Logseries #
+## ## 2013
+## par(las = 0, mar=c(0,4,0,0), cex.axis=1.25)
+## plot(0,0, xlim=c(0,1), ylim =c(0,1), axes=FALSE, xlab="", ylab="", type="n")
+## mtext(text = "Number of species in simulated communities", side=2, cex = 1.5)
+## par(mar = c(3, 0, 2, 0))
+## with(subset(bias13$ls$estimates, S.est.clump>atdn.13$S.ls.ci[1] & S.est.clump<atdn.13$S.ls.ci[2]),
+##      boxplot(S, axes=FALSE, ylim = atdn.13$S.ls.ci*c(.9,1.1), border="red"))
+## with(subset(bias13$ls$estimates, S.est.rnd>atdn.13$S.ls.ci[1] & S.est.rnd<atdn.13$S.ls.ci[2]),
+##      boxplot(S, axes=FALSE, ylim = atdn.13$S.ls.ci*c(.9,1.1), border="blue"))
+## par(mar = c(3, 2, 2, 4))
+## plot(S ~ S.est.rnd, data = bias13$ls$estimates, ylim = atdn.13$S.ls.ci*c(.9,1.1),
+##      xlim = atdn.13$S.ls.ci*c(.9,1.1), col="blue", ylab = "", xlab = "", type="n", main = "2013")
+## rect(atdn.13$S.ls.ci[1],0,atdn.13$S.ls.ci[2],max(bias13$ls$estimates$S),col="lightgrey", border=NA)
+## box()
+## axis(1)
+## points(S ~ S.est.rnd, data = bias13$ls$estimates, col="blue")
+## points(S ~ S.est.clump, data = bias13$ls$estimates, col="red")
+## abline(0,1)
+## segments(x0 = c(atdn.13$S.ls.ci),
+##        y0 = c(atdn.13$S.ls.ci),
+##        x1 = c(0,0),
+##        y1 = c(atdn.13$S.ls.ci),
+##        lty=2)
+## ## 2013 updated taxonomy
+## par(mar = c(3, 0, 2, 0))
+## with(subset(bias13t$ls$estimates, S.est.clump>atdn.13.tax$S.ls.ci[1] & S.est.clump<atdn.13.tax$S.ls.ci[2]),
+##      boxplot(S, axes=FALSE, ylim = atdn.13.tax$S.ls.ci*c(.9,1.1), border="red"))
+## with(subset(bias13t$ls$estimates, S.est.rnd>atdn.13.tax$S.ls.ci[1] & S.est.rnd<atdn.13.tax$S.ls.ci[2]),
+##      boxplot(S, axes=FALSE, ylim = atdn.13.tax$S.ls.ci*c(.9,1.1), border="blue"))
+## par(mar = c(3, 2, 2, 4))
+## plot(S ~ S.est.rnd, data = bias13t$ls$estimates, ylim = atdn.13.tax$S.ls.ci*c(.9,1.1),
+##      xlim = atdn.13.tax$S.ls.ci*c(.9,1.1), col="blue", ylab = "", xlab = "", type="n", main = "2013 Updated")
+## rect(atdn.13.tax$S.ls.ci[1],0,atdn.13.tax$S.ls.ci[2],max(bias13t$ls$estimates$S),col="lightgrey", border=NA)
+## box()
+## axis(1)
+## points(S ~ S.est.rnd, data = bias13t$ls$estimates, col="blue")
+## points(S ~ S.est.clump, data = bias13t$ls$estimates, col="red")
+## abline(0,1)
+## segments(x0 = c(atdn.13.tax$S.ls.ci),
+##        y0 = c(atdn.13.tax$S.ls.ci),
+##        x1 = c(0,0),
+##        y1 = c(atdn.13.tax$S.ls.ci),
+##        lty=2)
+## ## 2019
+## par(mar = c(3, 0, 2, 0))
+## with(subset(bias19$ls$estimates, S.est.clump>atdn.19$S.ls.ci[1] & S.est.clump<atdn.19$S.ls.ci[2]),
+##      boxplot(S, axes=FALSE, ylim = atdn.19$S.ls.ci*c(.9,1.1), border="red"))
+## with(subset(bias19$ls$estimates, S.est.rnd>atdn.19$S.ls.ci[1] & S.est.rnd<atdn.19$S.ls.ci[2]),
+##      boxplot(S, axes=FALSE, ylim = atdn.19$S.ls.ci*c(.9,1.1), border="blue"))
+## par(mar = c(3, 2, 2, 4))
+## plot(S ~ S.est.rnd, data = bias19$ls$estimates, ylim = atdn.19$S.ls.ci*c(.9,1.1),
+##      xlim = atdn.19$S.ls.ci*c(.9,1.1), col="blue", ylab = "", xlab = "", type="n", main = "2019")
+## rect(atdn.19$S.ls.ci[1],0,atdn.19$S.ls.ci[2],max(bias19$ls$estimates$S),col="lightgrey", border=NA)
+## box()
+## axis(1)
+## points(S ~ S.est.rnd, data = bias19$ls$estimates, col="blue")
+## points(S ~ S.est.clump, data = bias19$ls$estimates, col="red")
+## abline(0,1)
+## segments(x0 = c(atdn.19$S.ls.ci),
+##        y0 = c(atdn.19$S.ls.ci),
+##        x1 = c(0,0),
+##        y1 = c(atdn.19$S.ls.ci),
+##        lty=2)
+## par(las = 1)
+## mtext("LS", side = 4, line = 1.1, cex = 1.1)
+## par(las = 0)
+## ## TNB
+## par(mar = c(3, 0, 2, 0))
+## with(subset(bias13$tnb$estimates, S.est.clump>atdn.13$tovo.S$CIs[4,2] & S.est.clump<atdn.13$tovo.S$CIs[4,1]),
+##      boxplot(S, axes=FALSE, ylim = range(bias13$tnb$estimates$S), border="red"))
+## with(subset(bias13$tnb$estimates, S.est.rnd>atdn.13$tovo.S$CIs[4,2] & S.est.rnd<atdn.13$tovo.S$CIs[4,1]),
+##      boxplot(S, axes=FALSE, ylim = range(bias13$tnb$estimates$S), border="blue"))
+## par(mar = c(3, 2, 2, 4))
+## plot(S ~ S.est.rnd, data = bias13$tnb$estimates, ylim = range(bias13$tnb$estimates$S),
+##      col="blue", ylab = "", xlab = "", type="n", main = "")
+## rect(atdn.13$tovo.S$CIs[4,2],0,atdn.13$tovo.S$CIs[4,1],max(bias13$tnb$estimates$S)*1.1,col="lightgrey", border=NA)
+## box()
+## axis(1)
+## points(S ~ S.est.rnd, data = bias13$tnb$estimates, col="blue")
+## points(S ~ S.est.clump, data = bias13$tnb$estimates, col="red")
+## abline(0,1)
+## segments(x0 = c(atdn.13$tovo.S$CIs[4,]),
+##        y0 = c(atdn.13$tovo.S$CIs[4,]),
+##        x1 = c(0,0),
+##        y1 = c(atdn.13$tovo.S$CIs[4,]),
+##        lty=2)
+## ## 2013 updated taxonomy
+## par(mar = c(3, 0, 2, 0))
+## with(subset(bias13t$tnb$estimates, S.est.clump>atdn.13.tax$tovo.S$CIs[4,2] & S.est.clump<atdn.13.tax$tovo.S$CIs[4,1]),
+##      boxplot(S, axes=FALSE, ylim = range(bias13t$tnb$estimates$S), border="red"))
+## with(subset(bias13t$tnb$estimates, S.est.rnd>atdn.13.tax$tovo.S$CIs[4,2] & S.est.rnd<atdn.13.tax$tovo.S$CIs[4,1]),
+##      boxplot(S, axes=FALSE, ylim = range(bias13t$tnb$estimates$S), border="blue"))
+## par(mar = c(3, 2, 2, 4))
+## plot(S ~ S.est.rnd, data = bias13t$tnb$estimates, ylim = range(bias13t$tnb$estimates$S),
+##      xlim = range(bias13$tnb$estimates$S.est.rnd), ## To avoid some extreme values 
+##      col="blue", ylab = "", xlab = "", type="n", main = "")
+## rect(atdn.13.tax$tovo.S$CIs[4,2],0,atdn.13.tax$tovo.S$CIs[4,1],max(bias13t$tnb$estimates$S),col="lightgrey", border=NA)
+## box()
+## axis(1)
+## points(S ~ S.est.rnd, data = bias13t$tnb$estimates, col="blue")
+## points(S ~ S.est.clump, data = bias13t$tnb$estimates, col="red")
+## abline(0,1)
+## segments(x0 = c(atdn.13.tax$tovo.S$CIs[4,]),
+##        y0 = c(atdn.13.tax$tovo.S$CIs[4,]),
+##        x1 = c(0,0),
+##        y1 = c(atdn.13.tax$tovo.S$CIs[4,]),
+##        lty=2)
+## ## 2019
+## par(mar = c(3, 0, 2, 0))
+## with(subset(bias19$tnb$estimates, S.est.clump>atdn.19$tovo.S$CIs[4,2] & S.est.clump<atdn.19$tovo.S$CIs[4,1]),
+##      boxplot(S, axes=FALSE, ylim = range(bias19$tnb$estimates$S), border="red"))
+## with(subset(bias19$tnb$estimates, S.est.rnd>atdn.19$tovo.S$CIs[4,2] & S.est.rnd<atdn.19$tovo.S$CIs[4,1]),
+##      boxplot(S, axes=FALSE, ylim = range(bias19$tnb$estimates$S), border="blue"))
+## par(mar = c(3, 2, 2, 4))
+## plot(S ~ S.est.rnd, data = bias19$tnb$estimates, ylim = range(bias19$tnb$estimates$S),
+##      xlim = range(bias13$tnb$estimates$S.est.rnd),
+##      col="blue", ylab = "", xlab = "", type="n", main = "")
+## rect(atdn.19$tovo.S$CIs[4,2],0,atdn.19$tovo.S$CIs[4,1],max(bias19$tnb$estimates$S),col="lightgrey", border=NA)
+## box()
+## axis(1)
+## points(S ~ S.est.rnd, data = bias19$tnb$estimates, col="blue")
+## points(S ~ S.est.clump, data = bias19$tnb$estimates, col="red")
+## abline(0,1)
+## segments(x0 = c(atdn.19$tovo.S$CIs[4,]),
+##        y0 = c(atdn.19$tovo.S$CIs[4,]),
+##        x1 = c(0,0),
+##        y1 = c(atdn.19$tovo.S$CIs[4,]),
+##        lty=2)
+## par(las = 1)
+## mtext("TNB", side = 4, line = 0.5, cex = 1.1)
+## par(las = 0)
+## ## LSE
+## par(mar = c(3, 0, 2, 0))
+## with(subset(bias.lse.13$ls$estimates, S.est.clump>atdn.13$S.ulrich$S[1,3] & S.est.clump<atdn.13$S.ulrich$S[1,4]),
+##      boxplot(S, axes=FALSE,  ylim = c(1.5e4,1.95e4), border="red"))
+## with(subset(bias.lse.13$ls$estimates, S.est.rnd>atdn.13$S.ulrich$S[1,3] & S.est.rnd<atdn.13$S.ulrich$S[1,4]),
+##      boxplot(S, axes=FALSE, ylim = c(1.5e4,1.95e4), border="blue"))
+## par(mar = c(3, 2, 2, 4))
+## plot(S ~ S.est.rnd, data = bias.lse.13$ls$estimates,
+##      ylim = c(1.5e4,1.95e4), xlim = c(1.4e4,1.6e4),
+##      col="blue", ylab = "", xlab = "", type="n", main = "")
+## rect(atdn.13$S.ulrich$S[1,3],0,atdn.13$S.ulrich$S[1,4],max(bias.lse.13$ls$estimates$S)*1.1,col="lightgrey", border=NA)
+## box()
+## axis(1)
+## points(S ~ S.est.rnd, data = bias.lse.13$ls$estimates, col="blue")
+## points(S ~ S.est.clump, data = bias.lse.13$ls$estimates, col="red")
+## abline(0,1)
+## segments(x0 = unlist(atdn.13$S.ulrich$S[1,3:4]),
+##        y0 = unlist(atdn.13$S.ulrich$S[1,3:4]),
+##        x1 = c(0,0),
+##        y1 = unlist(atdn.13$S.ulrich$S[1,3:4]),
+##        lty=2)
+## ## 2013 updated taxonomy
+## par(mar = c(3, 0, 2, 0))
+## with(subset(bias.lse.13t$ls$estimates, S.est.clump>atdn.13.tax$S.ulrich$S[1,3] & S.est.clump<atdn.13.tax$S.ulrich$S[1,4]),
+##      boxplot(S, axes=FALSE, ylim = c(1.25e4,1.65e4), border="red"))
+## with(subset(bias.lse.13t$ls$estimates, S.est.rnd>atdn.13.tax$S.ulrich$S[1,3] & S.est.rnd<atdn.13.tax$S.ulrich$S[1,4]),
+##      boxplot(S, axes=FALSE, ylim = c(1.25e4,1.65e4), border="blue"))
+## par(mar = c(3, 2, 2, 4))
+## plot(S ~ S.est.rnd, data = bias.lse.13t$ls$estimates,
+##      ylim = c(1.25e4,1.65e4), xlim = c(1.3e4,1.45e4),
+##      col="blue", ylab = "", xlab = "", type="n", main = "")
+## rect(atdn.13.tax$S.ulrich$S[1,3],0,atdn.13.tax$S.ulrich$S[1,4],max(bias.lse.13t$ls$estimates$S),col="lightgrey", border=NA)
+## box()
+## axis(1)
+## points(S ~ S.est.rnd, data = bias.lse.13t$ls$estimates, col="blue")
+## points(S ~ S.est.clump, data = bias.lse.13t$ls$estimates, col="red")
+## abline(0,1)
+## segments(x0 = unlist(atdn.13.tax$S.ulrich$S[1,3:4]),
+##        y0 = unlist(atdn.13.tax$S.ulrich$S[1,3:4]),
+##        x1 = c(0,0),
+##        y1 = unlist(atdn.13.tax$S.ulrich$S[1,3:4]),
+##        lty=2)
+## ## 2019
+## par(mar = c(3, 0, 2, 0))
+## with(subset(bias.lse.19$ls$estimates, S.est.clump>atdn.19$S.ulrich$S[1,3] & S.est.clump<atdn.19$S.ulrich$S[1,4]),
+##      boxplot(S, axes=FALSE, ylim = c(1.4e4,1.72e4), border="red"))
+## with(subset(bias.lse.19$ls$estimates, S.est.rnd>atdn.19$S.ulrich$S[1,3] & S.est.rnd<atdn.19$S.ulrich$S[1,4]),
+##      boxplot(S, axes=FALSE, ylim = c(1.4e4,1.72e4),border="blue"))
+## par(mar = c(3, 2, 2, 4))
+## plot(S ~ S.est.rnd, data = bias.lse.19$ls$estimates,
+##      ylim = c(1.4e4,1.72e4), xlim = c(1.4e4,1.55e4),
+##      col="blue", ylab = "", xlab = "", type="n", main = "")
+## rect(atdn.19$S.ulrich$S[1,3],0,atdn.19$S.ulrich$S[1,4],max(bias.lse.19$ls$estimates$S),col="lightgrey", border=NA)
+## box()
+## axis(1)
+## points(S ~ S.est.rnd, data = bias.lse.19$ls$estimates, col="blue")
+## points(S ~ S.est.clump, data = bias.lse.19$ls$estimates, col="red")
+## abline(0,1)
+## segments(x0 = unlist(atdn.19$S.ulrich$S[1,3:4]),
+##        y0 = unlist(atdn.19$S.ulrich$S[1,3:4]),
+##        x1 = c(0,0),
+##        y1 = unlist(atdn.19$S.ulrich$S[1,3:4]),
+##        lty=2)
+## par(las = 1)
+## mtext("LSE", side = 4, line = 0.5, cex = 1.1)
+## par(las = 0)
+## ## CHAO #
+## ## 2013
+## par(mar = c(3, 0, 2, 0))
+## with(subset(bias.chao.13$ls$estimates, S.est.clump>atdn.13$Chao[4] & S.est.clump<atdn.13$Chao[5]),
+##      boxplot(S, axes=FALSE, ylim = c(5e3,1.6e4), border="red"))
+## with(subset(bias.chao.13$ls$estimates, S.est.rnd>atdn.13$Chao[4] & S.est.rnd<atdn.13$Chao[5]),
+##      boxplot(S, axes=FALSE, ylim = c(5e3,1.6e4), border="blue"))
+## par(mar = c(3, 2, 2, 4))
+## plot(S ~ S.est.rnd, data = bias.chao.13$ls$estimates, ylim = c(5e3,1.6e4),
+##      xlim = atdn.13$Chao[4:5]*c(.95,1.05), col="blue", ylab = "", xlab = "", type="n", main = "")
+## rect(atdn.13$Chao[4],0,atdn.13$Chao[5],max(bias.chao.13$ls$estimates$S),col="lightgrey", border=NA)
+## box()
+## axis(1)
+## points(S ~ S.est.rnd, data = bias.chao.13$ls$estimates, col="blue")
+## points(S ~ S.est.clump, data = bias.chao.13$ls$estimates, col="red")
+## abline(0,1)
+## segments(x0 = c(atdn.13$Chao[4:5]),
+##        y0 = c(atdn.13$Chao[4:5]),
+##        x1 = c(0,0),
+##        y1 = c(atdn.13$Chao[4:5]),
+##        lty=2)
+## ## 2013 updated taxonomy
+## par(mar = c(3, 0, 2, 0))
+## with(subset(bias.chao.13t$ls$estimates, S.est.clump>atdn.13.tax$Chao[4] & S.est.clump<atdn.13.tax$Chao[5]),
+##      boxplot(S, axes=FALSE, ylim = c(5e3,1.6e4), border="red"))
+## with(subset(bias.chao.13t$ls$estimates, S.est.rnd>atdn.13.tax$Chao[4] & S.est.rnd<atdn.13.tax$Chao[5]),
+##      boxplot(S, axes=FALSE, ylim = c(5e3,1.6e4), border="blue"))
+## par(mar = c(3, 2, 2, 4))
+## plot(S ~ S.est.rnd, data = bias.chao.13t$ls$estimates, ylim = c(5e3,1.6e4),
+##      xlim = atdn.13.tax$Chao[4:5]*c(.95,1.05), col="blue", ylab = "", xlab = "", type="n", main = "")
+## rect(atdn.13.tax$Chao[4],0,atdn.13.tax$Chao[5],max(bias.chao.13t$ls$estimates$S),col="lightgrey", border=NA)
+## box()
+## axis(1)
+## points(S ~ S.est.rnd, data = bias.chao.13t$ls$estimates, col="blue")
+## points(S ~ S.est.clump, data = bias.chao.13t$ls$estimates, col="red")
+## abline(0,1)
+## segments(x0 = c(atdn.13.tax$Chao[4:5]),
+##        y0 = c(atdn.13.tax$Chao[4:5]),
+##        x1 = c(0,0),
+##        y1 = c(atdn.13.tax$Chao[4:5]),
+##        lty=2)
+## ## 2019
+## par(mar = c(3, 0, 2, 0))
+## with(subset(bias.chao.19$ls$estimates, S.est.clump>atdn.19$Chao[4] & S.est.clump<atdn.19$Chao[5]),
+##      boxplot(S, axes=FALSE, ylim = c(5e3,1.6e4), border="red"))
+## with(subset(bias.chao.19$ls$estimates, S.est.rnd>atdn.19$Chao[4] & S.est.rnd<atdn.19$Chao[5]),
+##      boxplot(S, axes=FALSE, ylim = c(5e3,1.6e4), border="blue"))
+## par(mar = c(3, 2, 2, 4))
+## plot(S ~ S.est.rnd, data = bias.chao.19$ls$estimates, ylim = c(5e3,1.6e4),
+##      xlim = atdn.19$Chao[4:5]*c(.95,1.05), col="blue", ylab = "", xlab = "", type="n", main = "")
+## rect(atdn.19$Chao[4],0,atdn.19$Chao[5],max(bias.chao.19$ls$estimates$S),col="lightgrey", border=NA)
+## box()
+## axis(1)
+## points(S ~ S.est.rnd, data = bias.chao.19$ls$estimates, col="blue")
+## points(S ~ S.est.clump, data = bias.chao.19$ls$estimates, col="red")
+## abline(0,1)
+## segments(x0 = c(atdn.19$Chao[4:5]),
+##        y0 = c(atdn.19$Chao[4:5]),
+##        x1 = c(0,0),
+##        y1 = c(atdn.19$Chao[4:5]),
+##        lty=2)
+## par(las = 1)
+## mtext("CHAO", side = 4, line = 0.1, cex = 1)
+## par(las = 0)
+## ## X axis
+## par(mar=c(2,0,1,0))
+## plot(0,0, xlim=c(0,1), ylim =c(0,1), axes=FALSE, xlab="", ylab="", type="n")
+## mtext(text = "Estimated number of species from simulated samples", side=1, cex = 1.5)
+## dev.off()
+################################################################################
+
 
 ################################################################################
 ## Dotplots of estimated Species Richness  and ABC estimates##
@@ -841,7 +1032,14 @@ par(fig=c(0,1,0,1))
 dev.off()
 
 ################################################################################
-## Fits of sads to abundances in the sample
+## Simulating number of species recorded with sample increasing
+################################################################################
+teste <- sim.radsamp(rad = ls.m, tot.area=atdn.19$Tot.A,
+                     n.plots = atdn.19$N.plots, lmk.fit = atdn.19$lm.k, nb.fit = atdn.19$y.nb2)
+
+
+################################################################################
+## Fits of sads to abundances in the sample - Diagnostic plots
 ################################################################################
 ## Auxiliary functions
 f19 <- function(obj, legend=FALSE, ...){
@@ -871,7 +1069,7 @@ f20 <- function(obj, legend=FALSE, ...){
 }
 
 ## Octav and rad plots
-png("figs_and_tables/sads_fit_to_samples.png", width=9, height=7, res=150, units="in")
+##png("figs_and_tables/sads_fit_to_samples.png", width=9, height=7, res=150, units="in")
 pdf("figs_and_tables/sads_fit_to_samples.pdf", width=12, height=7)
 par(##mar = c(5, 5, 4, 2) + 0.1,
     ##mgp = c(3.25, 1, 0),
