@@ -19,6 +19,9 @@ load("bias_chao.RData")
 ## Bias analyses for estimates from LSE method on the estimated population sizes,
 ## from script 'simulation_bias/LSE_bias.R'
 load("bias_LSE.RData")
+## Extrapolated species richness from simulated samples with clumping from a logseries
+## from script 'richness_extrapolations.R'
+load("richness_extrapolation_19.RData")
 
 ################################################################################
 ## Model selection table for ls, tnb, poilog models for each dataset
@@ -1004,13 +1007,13 @@ pdf("figs_and_tables/pop_rad_with_predicted_rad.pdf")
 par(bty = "l", lwd = 2)
 plot(rad(atdn.19$data$population), xlim = c(1, S1[3]),
      ##ylim=c(min(c(ls.m$y, ls.up$y, ls.low$y)), max(atdn.19$data$population)),
-     ylim = c(0.5, max(atdn.19$data$population)),
+     ylim = c(1, max(atdn.19$data$population)),
      axes=FALSE , #yaxs="i",
      col=rep(c("red","darkgrey"), c(hd[1], length(atdn.19$data$population)-hd[1])),
      cex.lab = 1.25, font.lab = 2, cex.axis = 1.2)
 axis(1, at=c(1, seq(2500,17500, by=2500)))
 axis(2)
-lines(rad(ls.m$y), col="darkblue")
+lines(rad(ceiling(ls.m$y)), col="darkblue")
 lines(rad(ls.low$y), lty=2, col="darkblue")
 lines(rad(ls.up$y), lty=2, col="darkblue")
 text(1.7e4, 1e9, paste("Nr of hyperdominant species = ",hd[1]," (",hd[2]," - ",hd[3],")", sep=""), font=2, pos=2)
@@ -1034,9 +1037,40 @@ dev.off()
 ################################################################################
 ## Simulating number of species recorded with sample increasing
 ################################################################################
-teste <- sim.radsamp(rad = ls.m, tot.area=atdn.19$Tot.A,
-                     n.plots = atdn.19$N.plots, lmk.fit = atdn.19$lm.k, nb.fit = atdn.19$y.nb2)
-
+## assembles the data for clumped sampling in a dataframe
+sim.rich <- with(S.proj.19,
+                 data.frame(
+                     n.plots = n.plots, 
+                     mean = matrix(unlist(S.est.mean), byrow=TRUE, ncol=2)[,2],
+                     low = matrix(unlist(S.est.low), byrow=TRUE, ncol=2)[,2],
+                     upp= matrix(unlist(S.est.upp), byrow=TRUE, ncol=2)[,2])
+                 )
+## Estimated species richness from Fisher's logseries
+a1 <- fishers.alpha(N=atdn.19$Tot.t, S = S1[1])
+## Density per hectare
+d1 <- with(atdn.19, Tot.t/Tot.A)
+a1*log(1 + (max(S.proj.19$n.plots)*d1)/a1)
+## The plot
+pdf("figs_and_tables/richness_extrapolations.pdf")
+par(mar = c(5, 5, 4, 2) + 0.1,
+    mgp = c(3.5, 1, 0),
+    oma=c(3,3,0,0),
+    las = 0,
+    bty = "l", 
+    cex.main = 1.5,  
+    cex.lab = 1.4, font.lab = 2, cex.axis = 1.25,
+    lwd = 2)
+plot(mean ~ n.plots, data = sim.rich,
+     ylim = range(sim.rich[, -1]), type = "l",
+     xlab = "Sample size (1-ha plots)", ylab = "Expected Nr. of species in the sample")
+lines(low ~ n.plots, data=sim.rich, lty = 2)
+lines(upp ~ n.plots, data=sim.rich, lty = 2)
+points(c(atdn.13$N.plots, atdn.13.tax$N.plots, atdn.19$N.plots),
+       c(atdn.13$Sobs, atdn.13.tax$Sobs, atdn.19$Sobs), cex=1.5, pch=19, col="blue")
+text(c(atdn.13$N.plots, atdn.13.tax$N.plots, atdn.19$N.plots),
+     c(atdn.13$Sobs, atdn.13.tax$Sobs, atdn.19$Sobs), c("2013", "2013 updated", "2019"),
+     pos = 4, col="blue")
+dev.off()       
 
 ################################################################################
 ## Fits of sads to abundances in the sample - Diagnostic plots

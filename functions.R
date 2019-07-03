@@ -544,7 +544,7 @@ sim.rad <- function(S, N, sad=c("ls","tnb","lnorm"), nb.fit, ...){
 #'     sample.
 #'
 #' @param rad a vector of abundances of species to be sampled
-#' @param tot.area positive real, total area coverede by the community.
+#' @param tot.area positive real, total area covered by the community.
 #' @param n.plots positive integer, number of sampling unities (plots)
 #' of one unity of area that is drawn from the community to make the
 #' sample.
@@ -558,10 +558,8 @@ sim.rad <- function(S, N, sad=c("ls","tnb","lnorm"), nb.fit, ...){
 #'     empirical sample.
 #' @param ...  further arguments to be passed to the functions called
 #'     internally. Should include a named argument 'sdlog', with the
-#'     value of the standard deviation of log values of abundances fro
+#'     value of the standard deviation of log values of abundances for
 #'     the lognormal model of abundance distributions, if sad = lnorm.
-#' @param nrep positive integer, number of repetitions of the simulation.
-#' @param summary logical, should a summary table of statistics of the simulated samples be returned?
 #' @return a list with the simulated abundances of species in the Poisson and Negative binomial samples.
 #' }
 sim.radsamp<- function(rad,
