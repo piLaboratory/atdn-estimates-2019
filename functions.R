@@ -245,7 +245,7 @@ ls.pred <- function(rank, N, alpha){
     alpha*(X^rank)/rank
 }
 
-#'Predicted species richness from upsacling a sampled SAD
+#'Predicted species richness from upscaling a sampled SAD
 ls.estS <- function(rad, N){
     y <- sort(rad[rad>0])
     ls.fit <- fitls(y)
@@ -336,6 +336,48 @@ sim.pres <- function(mu, size, N, pois.samp=TRUE){
         lp <- size*(log(size) - log(mu+size))
     p0 <- exp(N*lp)
     sample(0:1, size=1, prob=c(p0, 1-p0))
+}
+
+
+#' Species richnnes from simulated samples of SADs
+#'
+#' @details This function performs a simulation of which species would
+#'     be included in a Negative Binomial sample of a regional
+#'     RAD. The expected dispersion parameter of negative binomial
+#'     sampling is allowed to vary across species, and is assumed to
+#'     have a lognormal error which is added in the simulations. This
+#'     is a simulation of how much species will show up in a sample.
+#' 
+#' @param rad a vector with the species population sizes in the RAD to be sampled
+#' @param tot.area total area of the community to be sampled. The area unit is one plot
+#' @param n.plots number of sampling units (e.g. plots) to be drawn out of the total number of plots.
+#' @param lmean.k  log of expected value of the dispersion
+#'     parameter of the Negative binomial for each species in the
+#'     rad. Usually estimated from a linear regression of
+#'     log(k)~log(abundance) from a dataset of known values of k and abundances.
+#' @param lsd.k log standard deviation of the lmean.k. Can be a single
+#'     value or a vector. Usually the standard error from a a linear regression of
+#'     log(k)~log(abundance) from a dataset of known values of k and
+#'     abundances.
+#' @param nrep number of replicates of the simulation
+#' @return A dataframe with the number of species in the Poisson and Negative binomial sample, for each replicate
+sp.samp <- function(rad, tot.area, n.plots, lmk.fit, nb.fit, nrep=100){
+    index <- order(rad, decreasing=TRUE)
+    rad <- rad[index]
+    ## Calculate expected k for each species in rad
+    rad.lk <- predict(lmk.fit, newdata=data.frame(dens.ha=rad/tot.area))
+    ## standard deviation of k (from regression object)
+    rad.lsk <- summary(lmk.fit)$sigma
+    ## simulates a value of k for each species
+    y1 <- y2 <- c()
+    for(i in 1:nrep){
+    rad.k <- exp(rnorm(length(rad), mean = rad.lk, sd = rad.lsk))
+    y1[i] <- sum(mapply(sim.pres, mu = rad/tot.area,
+                     MoreArgs=list(N = n.plots, pois.samp=TRUE)))
+    y2[i] <- sum(mapply(sim.pres, mu = rad/tot.area, size = rad.k,
+                    MoreArgs=list(N = n.plots, pois.samp=FALSE)))
+    }
+    data.frame(rnd.samp=y1, clump.samp=y2)
 }
 
 #' Simulates samples of population sizes using a Poisson sample
