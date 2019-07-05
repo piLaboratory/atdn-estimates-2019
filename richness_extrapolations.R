@@ -25,21 +25,23 @@ ls.m <- rad.ls(S = S1[1], N = atdn.19$Tot.t)
 ls.low <- rad.ls(S = S1[2], N = atdn.19$Tot.t)
 ls.up <- rad.ls(S = S1[3], N = atdn.19$Tot.t)
 ## Simulated samples
-n.plots <- ceiling( seq(round(atdn.13.tax$N.plots*.9), 2*atdn.19$N.plots, length=100) )
+n.plots <- ceiling( seq(round(atdn.13.tax$N.plots*.9), 10*atdn.19$N.plots, length=100))
+n.plots <- sort(c(n.plots, atdn.19$N.plots*c(2,4,8))) # to assure that exactly 4x and 8x the observed number of plots are simulated 
 S.est.mean <- mclapply(n.plots, f.sp,  rad = ls.m$y,
      tot.area=atdn.19$Tot.A,
      lmk.fit = atdn.19$lm.k,
      nb.fit = atdn.19$y.nb2,
-     mc.cores=5)
+     mc.cores = 7)
 S.est.low <- mclapply(n.plots, f.sp,  rad = ls.low$y,
      tot.area=atdn.19$Tot.A,
      lmk.fit = atdn.19$lm.k,
      nb.fit = atdn.19$y.nb2,
-     mc.cores=5)
+     mc.cores = 7)
 S.est.upp <- mclapply(n.plots, f.sp,  rad = ls.up$y,
      tot.area=atdn.19$Tot.A,
      lmk.fit = atdn.19$lm.k,
      nb.fit = atdn.19$y.nb2,
-     mc.cores=5)
+     mc.cores = 7)
 S.proj.19 <- list(n.plots=n.plots, S.est.mean=S.est.mean, S.est.low=S.est.low, S.est.upp=S.est.upp)
 save(S.proj.19, file="richness_extrapolation_19.RData")
+

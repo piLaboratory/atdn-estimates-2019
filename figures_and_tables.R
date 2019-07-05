@@ -1045,13 +1045,24 @@ sim.rich <- with(S.proj.19,
                      low = matrix(unlist(S.est.low), byrow=TRUE, ncol=2)[,2],
                      upp= matrix(unlist(S.est.upp), byrow=TRUE, ncol=2)[,2])
                  )
+write.csv(sim.rich, "figs_and_tables/sp_accum_2019_clump_samp_LS.csv", row.names=FALSE)
 ## Estimated species richness from Fisher's logseries
 a1 <- fishers.alpha(N=atdn.19$Tot.t, S = S1[1])
 ## Density per hectare
 d1 <- with(atdn.19, Tot.t/Tot.A)
 a1*log(1 + (max(S.proj.19$n.plots)*d1)/a1)
+## Richness with current, twice, 4x 8x and 10 times the current sample size
+## A function to calculate the expected richness by linear interpolation from the simulated values
+f.m <- approxfun( x= sim.rich$n.plots, y =sim.rich$mean)
+## Adding the observed value
+tmp <- c(atdn.19$Sobs,f.m(atdn.19$N.plots*c(2,4,8)))
+## Increment in species richness as we proceed to twice, four and eight times the observed sample size
+diff(tmp)
+diff(tmp)/tmp[-4]
+
+
 ## The plot
-pdf("figs_and_tables/richness_extrapolations.pdf")
+pdf("figs_and_tables/richness_extrapolations_10x.pdf")
 par(mar = c(5, 5, 4, 2) + 0.1,
     mgp = c(3.5, 1, 0),
     oma=c(3,3,0,0),
@@ -1066,10 +1077,10 @@ plot(mean ~ n.plots, data = sim.rich,
 lines(low ~ n.plots, data=sim.rich, lty = 2)
 lines(upp ~ n.plots, data=sim.rich, lty = 2)
 points(c(atdn.13$N.plots, atdn.13.tax$N.plots, atdn.19$N.plots),
-       c(atdn.13$Sobs, atdn.13.tax$Sobs, atdn.19$Sobs), cex=1.5, pch=19, col="blue")
+       c(atdn.13$Sobs, atdn.13.tax$Sobs, atdn.19$Sobs), cex=1, pch=19, col="darkblue")
 text(c(atdn.13$N.plots, atdn.13.tax$N.plots, atdn.19$N.plots),
      c(atdn.13$Sobs, atdn.13.tax$Sobs, atdn.19$Sobs), c("2013", "2013 updated", "2019"),
-     pos = 4, col="blue")
+     pos = c(1,4,4), col="darkblue")
 dev.off()       
 
 ################################################################################
