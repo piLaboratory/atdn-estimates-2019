@@ -1,5 +1,5 @@
 
-R version 3.6.0 (2019-04-26) -- "Planting of a Tree"
+R version 3.6.1 (2019-07-05) -- "Action of the Toes"
 Copyright (C) 2019 The R Foundation for Statistical Computing
 Platform: x86_64-pc-linux-gnu (64-bit)
 
@@ -126,7 +126,7 @@ The following object is masked from ‘package:VGAM’:
 > ls.up <- rad.ls(S = S1[3], N = atdn.19$Tot.t)
 > ## Simulated samples
 > n.plots <- ceiling( seq(round(atdn.13.tax$N.plots*.9), 10*atdn.19$N.plots, length=100))
-> n.plots <- sort(c(n.plots, atdn.19$N.plots*c(4,8))) # to assure that exactly 4x and 8x the observed number of plots are simulated 
+> n.plots <- sort(c(n.plots, atdn.19$N.plots*c(2,4,8))) # to assure that exactly 4x and 8x the observed number of plots are simulated 
 > S.est.mean <- mclapply(n.plots, f.sp,  rad = ls.m$y,
 +      tot.area=atdn.19$Tot.A,
 +      lmk.fit = atdn.19$lm.k,
@@ -148,4 +148,4 @@ The following object is masked from ‘package:VGAM’:
 > 
 > proc.time()
   usuário   sistema decorrido 
-21158.502    10.982  3315.531 
+21612.480    11.668  3290.496 
