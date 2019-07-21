@@ -22,7 +22,7 @@ load("bias_LSE.RData")
 load("richness_extrapolation_19.RData")
 
 ################################################################################
-## Model selection table for ls, tnb, poilog models for each dataset
+## AIC Model selection table for ls, tnb, poilog models for each dataset
 ################################################################################
 ms13 <- (with(atdn.13, AICtab(y.nb2, y.ls, pln, weights = TRUE, sort=FALSE)))
 ms13t <- (with(atdn.13.tax, AICtab(y.nb2, y.ls, pln, weights = TRUE, sort=FALSE)))
@@ -34,7 +34,23 @@ tab.ms.all <- data.frame(
     y.13t = ms13t$dAIC,
     y.19 = ms19$dAIC
 )
-write.csv(tab.ms.all, row.names=FALSE, file = "figs_and_tables/model_selection_table.csv")
+write.csv(tab.ms.all, row.names=FALSE, file = "figs_and_tables/AIC_model_selection_table.csv")
+
+################################################################################
+## BIC Model selection table for ls, tnb, poilog models for each dataset
+################################################################################
+ms13.b <- (with(atdn.13, BICtab(y.nb2, y.ls, pln, weights = TRUE, sort=FALSE)))
+ms13t.b <- (with(atdn.13.tax, BICtab(y.nb2, y.ls, pln, weights = TRUE, sort=FALSE)))
+ms19.b <- (with(atdn.19, BICtab(y.nb2, y.ls, pln, weights = TRUE, sort=FALSE)))
+tab.ms.all.b <- data.frame(
+    model = c("TNB", "LS", "PLN"),
+    df = ms13.b$df,
+    y.13 = ms13.b$dBIC,
+    y.13t = ms13t.b$dBIC,
+    y.19 = ms19.b$dBIC
+)
+write.csv(tab.ms.all, row.names=FALSE, file = "figs_and_tables/BIC_model_selection_table.csv")
+
 
 ################################################################################
 ## Table with estimated coefficients and SEs and likelihoods for ls, tnb, poilog models for each dataset
@@ -602,7 +618,7 @@ dev.off()
 ## Plots of model selection biases
 ################################################################################
 
-pdf("figs_and_tables/bias_model_selection.pdf", width = 9, height = 5)
+pdf("figs_and_tables/bias_model_selection.pdf", width = 9, height = 9)
 par(mar = c(5, 5, 4, 2) + 0.1,
     mgp = c(3.5, 1, 0),
     oma=c(3,3,0,0),
@@ -611,18 +627,28 @@ par(mar = c(5, 5, 4, 2) + 0.1,
     cex.main = 1.15,  
     cex.lab = 1, font.lab = 2, cex.axis = 1,
     lwd = 2,
-    mfrow=c(1,2))
-plot(ls.rnd.w ~ S, data = bias.msel.19$ls, ylim = c(0,1),
-     xlab = "Species richness in the community",
-     ylab = "Evidence weight of logseries fit",
+    mfrow=c(2,2))
+plot(ls.rnd.w.aic ~ S, data = bias.msel.19$ls, ylim = c(0,1),
+     xlab = "",
+     ylab = "AIC Evidence weight of logseries fit",
      main = "Logseries community")
-points(ls.clump.w ~ S, data = bias.msel.19$ls, col = 2)
-plot(ls.rnd.w ~ S, data = bias.msel.19$tnb, ylim = c(0,1),
-     xlab = "Species richness in the community",
-     ylab = "Evidence weight of logseries fit",
+points(ls.clump.w.aic ~ S, data = bias.msel.19$ls, col = 2)
+plot(ls.rnd.w.aic ~ S, data = bias.msel.19$tnb, ylim = c(0,1),
+     xlab = "",
+     ylab = "",
      main = "Negative binomial community")
-points(ls.clump.w ~ S, data = bias.msel.19$tnb, col = 2)
+points(ls.clump.w.aic ~ S, data = bias.msel.19$tnb, col = 2)
 legend("topright", c("Random", "Clumped"), col=c(1,2), cex = 1, pch =1, bty="n")
+plot(ls.rnd.w.bic ~ S, data = bias.msel.19$ls, ylim = c(0,1),
+     xlab = "Species richness in the community",
+     ylab = "BIC Evidence weight of logseries fit",
+     main = "")
+points(ls.clump.w.bic ~ S, data = bias.msel.19$ls, col = 2)
+plot(ls.rnd.w.bic ~ S, data = bias.msel.19$tnb, ylim = c(0,1),
+     xlab = "Species richness in the community",
+     ylab = "",
+     main = "")
+points(ls.clump.w.bic ~ S, data = bias.msel.19$tnb, col = 2)
 dev.off()
 
 

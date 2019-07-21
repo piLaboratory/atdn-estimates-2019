@@ -1,5 +1,5 @@
 
-R version 3.6.0 (2019-04-26) -- "Planting of a Tree"
+R version 3.6.1 (2019-07-05) -- "Action of the Toes"
 Copyright (C) 2019 The R Foundation for Statistical Computing
 Platform: x86_64-pc-linux-gnu (64-bit)
 
@@ -74,7 +74,7 @@ locfit 1.5-9.1 	 2013-03-22
 > load("../bias_ls_tnb_2019.RData")
 > 
 > ## Number of cores to use
-> mc.cores <- 3
+> mc.cores <- 5
 > 
 > ## Auxiliary functions
 > f10 <- function(x, size, index, ...){
@@ -82,42 +82,57 @@ locfit 1.5-9.1 	 2013-03-22
 +     x <- sort(y[y>0])
 +     ## TNB
 +     tnb <- try(fitnbinom2(x, start.value=c(size=size, mu=mean(x)), ...))
-+     if(class(tnb)=="try-error")
++     if(class(tnb)=="try-error"){
 +         AIC.tnb <- NA
-+     else
++         BIC.tnb <- NA
++     }
++     else{
 +         AIC.tnb <- AIC(tnb)
++         BIC.tnb <- BIC(tnb)
++          } 
 +     ## LS
 +     ls <- try(fitls(x))
-+     if(class(ls)=="try-error")
++     if(class(ls)=="try-error"){
 +         AIC.ls <- NA
-+     else
++         BIC.ls <- NA
++     }
++     else{
 +         AIC.ls <- AIC(ls)
-+     return(data.frame(AIC.ls=AIC.ls, AIC.tnb=AIC.tnb))
++         BIC.ls <- BIC(ls)
++     }
++     return(data.frame(AIC.ls=AIC.ls, AIC.tnb=AIC.tnb, BIC.ls=BIC.ls, BIC.tnb=BIC.tnb))
 + }
 > 
-> aic.w2 <- function(x){
+> ic.w2 <- function(x){
 +     x <- as.vector(x)
 +     min.aic <- min(x)
 +     daics <- sapply(x, function(x) x- min.aic)
 +     ws <- exp(-0.5*daics)
 +     ws/sum(ws)
-+     }
++ }
+> 
 > ################################################################################
 > ## Model selection AICs for samples of a logseries community
 > ################################################################################
 > ## Simulated samples (already done by bias analyses of S estimates from LS and TNB)
 > sim.ls.samp <- bias19$ls$samples
 > ## AICs of each model for each sample, with and without clumping
-> aics.rnd <- mclapply(sim.ls.samp, f10, size = 0.18, index = 1, mc.cores = mc.cores)
-> aics.clump <- mclapply(sim.ls.samp, f10, size = 0.18, index = 2, mc.cores = mc.cores)
+> ics.rnd <- mclapply(sim.ls.samp, f10, size = 0.18, index = 1, mc.cores = mc.cores)
+> ics.clump <- mclapply(sim.ls.samp, f10, size = 0.18, index = 2, mc.cores = mc.cores)
 > sim.ls.msel <- data.frame(S = bias19$ls$estimates$S,
-+                           ls.rnd = sapply(aics.rnd, function(x) unlist(x$AIC.ls)),
-+                           tnb.rnd = sapply(aics.rnd, function(x) unlist(x$AIC.tnb)),
-+                           ls.clump = sapply(aics.clump, function(x) unlist(x$AIC.ls)),
-+                           tnb.clump = sapply(aics.clump, function(x) unlist(x$AIC.tnb))
++                           ls.rnd.aic = sapply(ics.rnd, function(x) unlist(x$AIC.ls)),
++                           tnb.rnd.aic = sapply(ics.rnd, function(x) unlist(x$AIC.tnb)),
++                           ls.clump.aic = sapply(ics.clump, function(x) unlist(x$AIC.ls)),
++                           tnb.clump.aic = sapply(ics.clump, function(x) unlist(x$AIC.tnb)),
++                           ls.rnd.bic = sapply(ics.rnd, function(x) unlist(x$BIC.ls)),
++                           tnb.rnd.bic = sapply(ics.rnd, function(x) unlist(x$BIC.tnb)),
++                           ls.clump.bic = sapply(ics.clump, function(x) unlist(x$BIC.ls)),
++                           tnb.clump.bic = sapply(ics.clump, function(x) unlist(x$BIC.tnb))
 +                           )
-> sim.ls.msel$ls.rnd.w <- apply(sim.ls.msel[,c("ls.rnd","tnb.rnd")], 1, function(x) aic.w2(x)[1])
-> sim.ls.msel$ls.clump.w <- apply(sim.ls.msel[,c("ls.clump","tnb.clump")], 1, function(x) aic.w2(x)[1])
+> sim.ls.msel$ls.rnd.w.aic <- apply(sim.ls.msel[,c("ls.rnd.aic","tnb.rnd.aic")], 1, function(x) ic.w2(x)[1])
+> sim.ls.msel$ls.clump.w.aic <- apply(sim.ls.msel[,c("ls.clump.aic","tnb.clump.aic")], 1, function(x) ic.w2(x)[1])
+> sim.ls.msel$ls.rnd.w.bic <- apply(sim.ls.msel[,c("ls.rnd.bic","tnb.rnd.bic")], 1, function(x) ic.w2(x)[1])
+> sim.ls.msel$ls.clump.w.bic <- apply(sim.ls.msel[,c("ls.clump.bic","tnb.clump.bic")], 1, function(x) ic.w2(x)[1])
 > 
 > 
 > ################################################################################
@@ -126,136 +141,312 @@ locfit 1.5-9.1 	 2013-03-22
 > ## Simulated samples (already done by bias analyses of S estimates from LS and TNB)
 > sim.tnb.samp <- bias19$tnb$samples
 > ## AICs of each model for each sample, with and without clumping
-> aics.rnd <- mclapply(sim.tnb.samp, f10, size = 0.18, index = 1, mc.cores = mc.cores, upper=1e40)
+> ics.rnd <- mclapply(sim.tnb.samp, f10, size = 0.18, index = 1, mc.cores = mc.cores, upper=1e40)
 Error in optim(par = c(lsize = -1.71479842809193, lmu = 0), fn = function (p)  : 
   L-BFGS-B precisa de fn com valores finitos
-Além disso: Warning messages:
-1: In optim(par = c(lsize = -1.71479842809193, lmu = 6.84187853880703 :
-  bounds can only be used with method L-BFGS-B (or Brent)
-2: In optim(par = c(lsize = -1.71479842809193, lmu = 0), fn = function (p)  :
+Além disso: Warning message:
+In optim(par = c(lsize = -1.71479842809193, lmu = 0), fn = function (p)  :
   bounds can only be used with method L-BFGS-B (or Brent)
 Error in uniroot(f1, interval = c(1/N, N)) : 
   f() values at end points not of opposite sign
 Error in optim(par = c(lsize = -1.71479842809193, lmu = 0.181346422635748 : 
   L-BFGS-B precisa de fn com valores finitos
+Além disso: Warning message:
+In optim(par = c(lsize = -1.71479842809193, lmu = 0.181346422635748 :
+  bounds can only be used with method L-BFGS-B (or Brent)
+Error in uniroot(f1, interval = c(1/N, N)) : 
+  f() values at end points not of opposite sign
+Error in uniroot(f1, interval = c(1/N, N)) : 
+  f() values at end points not of opposite sign
 Além disso: Warning messages:
 1: In optim(par = c(lsize = -1.71479842809193, lmu = 26.2161865266696 :
   bounds can only be used with method L-BFGS-B (or Brent)
-2: In optim(par = c(lsize = -1.71479842809193, lmu = 9.79728591702224 :
+2: In optim(par = c(lsize = -1.71479842809193, lmu = 5.88109549910935 :
   bounds can only be used with method L-BFGS-B (or Brent)
-3: In optim(par = c(lsize = -1.71479842809193, lmu = 0.181346422635748 :
-  bounds can only be used with method L-BFGS-B (or Brent)
-Error in uniroot(f1, interval = c(1/N, N)) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, interval = c(1/N, N)) : 
-  f() values at end points not of opposite sign
-Além disso: Warning messages:
-1: In optim(par = c(lsize = -1.71479842809193, lmu = 2.34347089983648 :
-  bounds can only be used with method L-BFGS-B (or Brent)
-2: In optim(par = c(lsize = -1.71479842809193, lmu = 0.567259137247991 :
-  bounds can only be used with method L-BFGS-B (or Brent)
-3: In optim(par = c(lsize = -1.71479842809193, lmu = 5.88109549910935 :
+3: In optim(par = c(lsize = -1.71479842809193, lmu = 3.11711172717317 :
   bounds can only be used with method L-BFGS-B (or Brent)
 4: In optim(par = c(lsize = -1.71479842809193, lmu = 0), fn = function (p)  :
   bounds can only be used with method L-BFGS-B (or Brent)
 Error in uniroot(f1, interval = c(1/N, N)) : 
   f() values at end points not of opposite sign
 Além disso: Warning messages:
-1: In optim(par = c(lsize = -1.71479842809193, lmu = 15.1639255941357 :
+1: In optim(par = c(lsize = -1.71479842809193, lmu = 6.84187853880703 :
   bounds can only be used with method L-BFGS-B (or Brent)
-2: In optim(par = c(lsize = -1.71479842809193, lmu = 26.217011470111 :
+2: In optim(par = c(lsize = -1.71479842809193, lmu = 9.79728591702224 :
   bounds can only be used with method L-BFGS-B (or Brent)
 3: In optim(par = c(lsize = -1.71479842809193, lmu = 0), fn = function (p)  :
   bounds can only be used with method L-BFGS-B (or Brent)
 Error in uniroot(f1, interval = c(1/N, N)) : 
   f() values at end points not of opposite sign
 Além disso: Warning messages:
-1: In optim(par = c(lsize = -1.71479842809193, lmu = 4.47287580252327 :
+1: In optim(par = c(lsize = -1.71479842809193, lmu = 2.34347089983648 :
   bounds can only be used with method L-BFGS-B (or Brent)
-2: In optim(par = c(lsize = -1.71479842809193, lmu = 26.2047242243391 :
+2: In optim(par = c(lsize = -1.71479842809193, lmu = 4.47287580252327 :
   bounds can only be used with method L-BFGS-B (or Brent)
-3: In optim(par = c(lsize = -1.71479842809193, lmu = 3.11711172717317 :
+3: In optim(par = c(lsize = -1.71479842809193, lmu = 15.1639255941357 :
   bounds can only be used with method L-BFGS-B (or Brent)
-4: In optim(par = c(lsize = -1.71479842809193, lmu = 10.1069530794616 :
+4: In optim(par = c(lsize = -1.71479842809193, lmu = 6.03405966968577 :
   bounds can only be used with method L-BFGS-B (or Brent)
-5: In optim(par = c(lsize = -1.71479842809193, lmu = 4.53167610996499 :
+5: In optim(par = c(lsize = -1.71479842809193, lmu = 0), fn = function (p)  :
   bounds can only be used with method L-BFGS-B (or Brent)
-6: In optim(par = c(lsize = -1.71479842809193, lmu = 0), fn = function (p)  :
-  bounds can only be used with method L-BFGS-B (or Brent)
-7: In mle2(function (lsize, lmu)  :
+6: In mle2(function (lsize, lmu)  :
   convergence failure: code=52 (ERROR: ABNORMAL_TERMINATION_IN_LNSRCH)
 Error in uniroot(f1, interval = c(1/N, N)) : 
   f() values at end points not of opposite sign
-Além disso: Warning messages:
-1: In optim(par = c(lsize = -1.71479842809193, lmu = 26.2208697969796 :
-  bounds can only be used with method L-BFGS-B (or Brent)
-2: In optim(par = c(lsize = -1.71479842809193, lmu = 18.338151236824 :
-  bounds can only be used with method L-BFGS-B (or Brent)
-3: In optim(par = c(lsize = -1.71479842809193, lmu = 0.157628944203583 :
-  bounds can only be used with method L-BFGS-B (or Brent)
-Error in uniroot(f1, interval = c(1/N, N)) : 
-  f() values at end points not of opposite sign
-Além disso: Warning messages:
-1: In optim(par = c(lsize = -1.71479842809193, lmu = 26.216081776263 :
-  bounds can only be used with method L-BFGS-B (or Brent)
-2: In optim(par = c(lsize = -1.71479842809193, lmu = 4.86301446577278 :
-  bounds can only be used with method L-BFGS-B (or Brent)
-3: In optim(par = c(lsize = -1.71479842809193, lmu = 0.0298529631496811 :
-  bounds can only be used with method L-BFGS-B (or Brent)
-Error in uniroot(f1, interval = c(1/N, N)) : 
-  f() values at end points not of opposite sign
-Além disso: Warning messages:
-1: In optim(par = c(lsize = -1.71479842809193, lmu = 1.25601043700961 :
-  bounds can only be used with method L-BFGS-B (or Brent)
-2: In optim(par = c(lsize = -1.71479842809193, lmu = 1.49653915066267 :
-  bounds can only be used with method L-BFGS-B (or Brent)
-3: In optim(par = c(lsize = -1.71479842809193, lmu = 0.0694285064317629 :
+Além disso: Warning message:
+In optim(par = c(lsize = -1.71479842809193, lmu = 0.157628944203583 :
   bounds can only be used with method L-BFGS-B (or Brent)
 Error in uniroot(f1, interval = c(1/N, N)) : 
   f() values at end points not of opposite sign
 Além disso: Warning messages:
 1: In optim(par = c(lsize = -1.71479842809193, lmu = 26.2175787542973 :
   bounds can only be used with method L-BFGS-B (or Brent)
-2: In optim(par = c(lsize = -1.71479842809193, lmu = 6.03405966968577 :
+2: In optim(par = c(lsize = -1.71479842809193, lmu = 4.53167610996499 :
   bounds can only be used with method L-BFGS-B (or Brent)
-3: In optim(par = c(lsize = -1.71479842809193, lmu = 22.6584600563327 :
+3: In optim(par = c(lsize = -1.71479842809193, lmu = 18.338151236824 :
   bounds can only be used with method L-BFGS-B (or Brent)
-4: In optim(par = c(lsize = -1.71479842809193, lmu = 26.213892221883 :
+4: In optim(par = c(lsize = -1.71479842809193, lmu = 0.40488724042378 :
   bounds can only be used with method L-BFGS-B (or Brent)
-5: In optim(par = c(lsize = -1.71479842809193, lmu = 9.56328201070431 :
+5: In optim(par = c(lsize = -1.71479842809193, lmu = 1.25601043700961 :
   bounds can only be used with method L-BFGS-B (or Brent)
-6: In optim(par = c(lsize = -1.71479842809193, lmu = 0.40488724042378 :
+6: In optim(par = c(lsize = -1.71479842809193, lmu = 26.2209987606138 :
   bounds can only be used with method L-BFGS-B (or Brent)
-7: In optim(par = c(lsize = -1.71479842809193, lmu = 2.56960132322107 :
+7: In optim(par = c(lsize = -1.71479842809193, lmu = 0.0635134057223259 :
   bounds can only be used with method L-BFGS-B (or Brent)
-8: In optim(par = c(lsize = -1.71479842809193, lmu = 14.7254608410373 :
+Error in optim(par = c(lsize = -1.71479842809193, lmu = 0), fn = function (p)  : 
+  L-BFGS-B precisa de fn com valores finitos
+Além disso: Warning messages:
+1: In optim(par = c(lsize = -1.71479842809193, lmu = 26.213892221883 :
   bounds can only be used with method L-BFGS-B (or Brent)
-9: In optim(par = c(lsize = -1.71479842809193, lmu = 26.213641047486 :
+2: In optim(par = c(lsize = -1.71479842809193, lmu = 4.86301446577278 :
   bounds can only be used with method L-BFGS-B (or Brent)
-10: In optim(par = c(lsize = -1.71479842809193, lmu = 0.0800427076735364 :
+3: In optim(par = c(lsize = -1.71479842809193, lmu = 26.1387856082652 :
+  bounds can only be used with method L-BFGS-B (or Brent)
+4: In optim(par = c(lsize = -1.71479842809193, lmu = 26.213641047486 :
+  bounds can only be used with method L-BFGS-B (or Brent)
+5: In optim(par = c(lsize = -1.71479842809193, lmu = 17.8639369826921 :
+  bounds can only be used with method L-BFGS-B (or Brent)
+6: In optim(par = c(lsize = -1.71479842809193, lmu = 0), fn = function (p)  :
   bounds can only be used with method L-BFGS-B (or Brent)
 Error in uniroot(f1, interval = c(1/N, N)) : 
   f() values at end points not of opposite sign
-Além disso: Warning message:
-In optim(par = c(lsize = -1.71479842809193, lmu = 0.0635134057223259 :
+Error in uniroot(f1, interval = c(1/N, N)) : 
+  f() values at end points not of opposite sign
+Além disso: Warning messages:
+1: In optim(par = c(lsize = -1.71479842809193, lmu = 10.1069530794616 :
+  bounds can only be used with method L-BFGS-B (or Brent)
+2: In optim(par = c(lsize = -1.71479842809193, lmu = 26.2208697969796 :
+  bounds can only be used with method L-BFGS-B (or Brent)
+3: In optim(par = c(lsize = -1.71479842809193, lmu = 9.56328201070431 :
+  bounds can only be used with method L-BFGS-B (or Brent)
+4: In optim(par = c(lsize = -1.71479842809193, lmu = 0.0298529631496811 :
   bounds can only be used with method L-BFGS-B (or Brent)
 Error in uniroot(f1, interval = c(1/N, N)) : 
   f() values at end points not of opposite sign
 Além disso: Warning messages:
-1: In optim(par = c(lsize = -1.71479842809193, lmu = 10.9993249288769 :
+1: In optim(par = c(lsize = -1.71479842809193, lmu = 2.56960132322107 :
   bounds can only be used with method L-BFGS-B (or Brent)
-2: In optim(par = c(lsize = -1.71479842809193, lmu = 26.1387856082652 :
+2: In optim(par = c(lsize = -1.71479842809193, lmu = 1.49653915066267 :
   bounds can only be used with method L-BFGS-B (or Brent)
-3: In optim(par = c(lsize = -1.71479842809193, lmu = 10.3602346092962 :
+3: In optim(par = c(lsize = -1.71479842809193, lmu = 15.9798021439006 :
   bounds can only be used with method L-BFGS-B (or Brent)
-4: In optim(par = c(lsize = -1.71479842809193, lmu = 26.2209987606138 :
+4: In optim(par = c(lsize = -1.71479842809193, lmu = 16.9928234819509 :
   bounds can only be used with method L-BFGS-B (or Brent)
-5: In optim(par = c(lsize = -1.71479842809193, lmu = 15.9798021439006 :
+5: In optim(par = c(lsize = -1.71479842809193, lmu = 0.0180185055026782 :
   bounds can only be used with method L-BFGS-B (or Brent)
-6: In optim(par = c(lsize = -1.71479842809193, lmu = 0), fn = function (p)  :
+Error in uniroot(f1, interval = c(1/N, N)) : 
+  f() values at end points not of opposite sign
+Além disso: Warning messages:
+1: In optim(par = c(lsize = -1.71479842809193, lmu = 26.2154542302136 :
   bounds can only be used with method L-BFGS-B (or Brent)
-7: In mle2(function (lsize, lmu)  :
+2: In optim(par = c(lsize = -1.71479842809193, lmu = 0.111473866463119 :
+  bounds can only be used with method L-BFGS-B (or Brent)
+Error in uniroot(f1, interval = c(1/N, N)) : 
+  f() values at end points not of opposite sign
+Além disso: Warning messages:
+1: In optim(par = c(lsize = -1.71479842809193, lmu = 0), fn = function (p)  :
+  bounds can only be used with method L-BFGS-B (or Brent)
+2: In mle2(function (lsize, lmu)  :
   convergence failure: code=52 (ERROR: ABNORMAL_TERMINATION_IN_LNSRCH)
+Error in uniroot(f1, interval = c(1/N, N)) : 
+  f() values at end points not of opposite sign
+Além disso: Warning messages:
+1: In optim(par = c(lsize = -1.71479842809193, lmu = 10.3602346092962 :
+  bounds can only be used with method L-BFGS-B (or Brent)
+2: In optim(par = c(lsize = -1.71479842809193, lmu = 0.0800427076735364 :
+  bounds can only be used with method L-BFGS-B (or Brent)
+Error in uniroot(f1, interval = c(1/N, N)) : 
+  f() values at end points not of opposite sign
+Além disso: Warning messages:
+1: In optim(par = c(lsize = -1.71479842809193, lmu = 0.567259137247991 :
+  bounds can only be used with method L-BFGS-B (or Brent)
+2: In optim(par = c(lsize = -1.71479842809193, lmu = 26.2047242243391 :
+  bounds can only be used with method L-BFGS-B (or Brent)
+3: In optim(par = c(lsize = -1.71479842809193, lmu = 26.217011470111 :
+  bounds can only be used with method L-BFGS-B (or Brent)
+4: In optim(par = c(lsize = -1.71479842809193, lmu = 22.6584600563327 :
+  bounds can only be used with method L-BFGS-B (or Brent)
+5: In optim(par = c(lsize = -1.71479842809193, lmu = 26.216081776263 :
+  bounds can only be used with method L-BFGS-B (or Brent)
+6: In optim(par = c(lsize = -1.71479842809193, lmu = 10.9993249288769 :
+  bounds can only be used with method L-BFGS-B (or Brent)
+7: In optim(par = c(lsize = -1.71479842809193, lmu = 14.7254608410373 :
+  bounds can only be used with method L-BFGS-B (or Brent)
+8: In optim(par = c(lsize = -1.71479842809193, lmu = 0.0694285064317629 :
+  bounds can only be used with method L-BFGS-B (or Brent)
+Error in uniroot(f1, interval = c(1/N, N)) : 
+  f() values at end points not of opposite sign
+Além disso: Warning messages:
+1: In optim(par = c(lsize = -1.71479842809193, lmu = 0), fn = function (p)  :
+  bounds can only be used with method L-BFGS-B (or Brent)
+2: In mle2(function (lsize, lmu)  :
+  convergence failure: code=52 (ERROR: ABNORMAL_TERMINATION_IN_LNSRCH)
+Error in uniroot(f1, interval = c(1/N, N)) : 
+  f() values at end points not of opposite sign
+Além disso: Warning messages:
+1: In optim(par = c(lsize = -1.71479842809193, lmu = 8.92130434258012 :
+  bounds can only be used with method L-BFGS-B (or Brent)
+2: In optim(par = c(lsize = -1.71479842809193, lmu = 7.71599867849542 :
+  bounds can only be used with method L-BFGS-B (or Brent)
+3: In optim(par = c(lsize = -1.71479842809193, lmu = 0.118481603620523 :
+  bounds can only be used with method L-BFGS-B (or Brent)
+Error in uniroot(f1, interval = c(1/N, N)) : 
+  f() values at end points not of opposite sign
+Além disso: Warning messages:
+1: In optim(par = c(lsize = -1.71479842809193, lmu = 12.5838050992685 :
+  bounds can only be used with method L-BFGS-B (or Brent)
+2: In optim(par = c(lsize = -1.71479842809193, lmu = 6.03977468739674 :
+  bounds can only be used with method L-BFGS-B (or Brent)
+3: In optim(par = c(lsize = -1.71479842809193, lmu = 26.2134539869454 :
+  bounds can only be used with method L-BFGS-B (or Brent)
+4: In optim(par = c(lsize = -1.71479842809193, lmu = 15.0348329496537 :
+  bounds can only be used with method L-BFGS-B (or Brent)
+5: In optim(par = c(lsize = -1.71479842809193, lmu = 1.37904349140151 :
+  bounds can only be used with method L-BFGS-B (or Brent)
+6: In optim(par = c(lsize = -1.71479842809193, lmu = 6.91972539347894 :
+  bounds can only be used with method L-BFGS-B (or Brent)
+7: In optim(par = c(lsize = -1.71479842809193, lmu = 3.63418390931519 :
+  bounds can only be used with method L-BFGS-B (or Brent)
+8: In optim(par = c(lsize = -1.71479842809193, lmu = 0.173546610174838 :
+  bounds can only be used with method L-BFGS-B (or Brent)
+Error in uniroot(f1, interval = c(1/N, N)) : 
+  f() values at end points not of opposite sign
+Além disso: Warning messages:
+1: In optim(par = c(lsize = -1.71479842809193, lmu = 5.72501025600499 :
+  bounds can only be used with method L-BFGS-B (or Brent)
+2: In optim(par = c(lsize = -1.71479842809193, lmu = 5.93261522671967 :
+  bounds can only be used with method L-BFGS-B (or Brent)
+3: In optim(par = c(lsize = -1.71479842809193, lmu = 19.5140995496509 :
+  bounds can only be used with method L-BFGS-B (or Brent)
+4: In optim(par = c(lsize = -1.71479842809193, lmu = 26.216137575002 :
+  bounds can only be used with method L-BFGS-B (or Brent)
+5: In optim(par = c(lsize = -1.71479842809193, lmu = 25.5598600397637 :
+  bounds can only be used with method L-BFGS-B (or Brent)
+6: In optim(par = c(lsize = -1.71479842809193, lmu = 0.318654393304419 :
+  bounds can only be used with method L-BFGS-B (or Brent)
+Error in uniroot(f1, interval = c(1/N, N)) : 
+  f() values at end points not of opposite sign
+Além disso: Warning messages:
+1: In optim(par = c(lsize = -1.71479842809193, lmu = 26.2138039485121 :
+  bounds can only be used with method L-BFGS-B (or Brent)
+2: In optim(par = c(lsize = -1.71479842809193, lmu = 26.2177510505913 :
+  bounds can only be used with method L-BFGS-B (or Brent)
+3: In optim(par = c(lsize = -1.71479842809193, lmu = 26.2193755194774 :
+  bounds can only be used with method L-BFGS-B (or Brent)
+4: In optim(par = c(lsize = -1.71479842809193, lmu = 0.0559586536480446 :
+  bounds can only be used with method L-BFGS-B (or Brent)
+Error in uniroot(f1, interval = c(1/N, N)) : 
+  f() values at end points not of opposite sign
+Além disso: Warning messages:
+1: In optim(par = c(lsize = -1.71479842809193, lmu = 25.1468377151171 :
+  bounds can only be used with method L-BFGS-B (or Brent)
+2: In optim(par = c(lsize = -1.71479842809193, lmu = 2.71516228373996 :
+  bounds can only be used with method L-BFGS-B (or Brent)
+3: In optim(par = c(lsize = -1.71479842809193, lmu = 14.62629804068 :
+  bounds can only be used with method L-BFGS-B (or Brent)
+4: In optim(par = c(lsize = -1.71479842809193, lmu = 26.2144127255676 :
+  bounds can only be used with method L-BFGS-B (or Brent)
+5: In optim(par = c(lsize = -1.71479842809193, lmu = 10.2017069211753 :
+  bounds can only be used with method L-BFGS-B (or Brent)
+6: In optim(par = c(lsize = -1.71479842809193, lmu = 26.2185252231778 :
+  bounds can only be used with method L-BFGS-B (or Brent)
+7: In optim(par = c(lsize = -1.71479842809193, lmu = 0), fn = function (p)  :
+  bounds can only be used with method L-BFGS-B (or Brent)
+> ics.clump <- mclapply(sim.tnb.samp, f10, size = 0.18, index = 2, mc.cores = mc.cores, upper = 1e40)
+Error in uniroot(f1, interval = c(1/N, N)) : 
+  f() values at end points not of opposite sign
+Além disso: Warning messages:
+1: In optim(par = c(lsize = -1.71479842809193, lmu = 0), fn = function (p)  :
+  bounds can only be used with method L-BFGS-B (or Brent)
+2: In mle2(function (lsize, lmu)  :
+  convergence failure: code=52 (ERROR: ABNORMAL_TERMINATION_IN_LNSRCH)
+Error in uniroot(f1, interval = c(1/N, N)) : 
+  f() values at end points not of opposite sign
+Além disso: Warning messages:
+1: In optim(par = c(lsize = -1.71479842809193, lmu = 6.89516650280571 :
+  bounds can only be used with method L-BFGS-B (or Brent)
+2: In optim(par = c(lsize = -1.71479842809193, lmu = 9.83508795011409 :
+  bounds can only be used with method L-BFGS-B (or Brent)
+3: In optim(par = c(lsize = -1.71479842809193, lmu = 0), fn = function (p)  :
+  bounds can only be used with method L-BFGS-B (or Brent)
+4: In mle2(function (lsize, lmu)  :
+  convergence failure: code=52 (ERROR: ABNORMAL_TERMINATION_IN_LNSRCH)
+Error in uniroot(f1, interval = c(1/N, N)) : 
+  f() values at end points not of opposite sign
+Além disso: Warning messages:
+1: In optim(par = c(lsize = -1.71479842809193, lmu = 2.49154699039343 :
+  bounds can only be used with method L-BFGS-B (or Brent)
+2: In optim(par = c(lsize = -1.71479842809193, lmu = 4.55370267601857 :
+  bounds can only be used with method L-BFGS-B (or Brent)
+3: In optim(par = c(lsize = -1.71479842809193, lmu = 15.1854114096975 :
+  bounds can only be used with method L-BFGS-B (or Brent)
+4: In optim(par = c(lsize = -1.71479842809193, lmu = 6.08206750632171 :
+  bounds can only be used with method L-BFGS-B (or Brent)
+5: In optim(par = c(lsize = -1.71479842809193, lmu = 0.367724780125317 :
+  bounds can only be used with method L-BFGS-B (or Brent)
+6: In optim(par = c(lsize = -1.71479842809193, lmu = 0.363667979429703 :
+  bounds can only be used with method L-BFGS-B (or Brent)
+Error in uniroot(f1, interval = c(1/N, N)) : 
+  f() values at end points not of opposite sign
+Além disso: There were 43 warnings (use warnings() to see them)
+Error in uniroot(f1, interval = c(1/N, N)) : 
+  f() values at end points not of opposite sign
+Além disso: Warning messages:
+1: In optim(par = c(lsize = -1.71479842809193, lmu = 2.67857746653929 :
+  bounds can only be used with method L-BFGS-B (or Brent)
+2: In optim(par = c(lsize = -1.71479842809193, lmu = 1.69649145593931 :
+  bounds can only be used with method L-BFGS-B (or Brent)
+3: In optim(par = c(lsize = -1.71479842809193, lmu = 16.0011782291639 :
+  bounds can only be used with method L-BFGS-B (or Brent)
+4: In optim(par = c(lsize = -1.71479842809193, lmu = 17.0097755187099 :
+  bounds can only be used with method L-BFGS-B (or Brent)
+5: In optim(par = c(lsize = -1.71479842809193, lmu = 0.268263986594679 :
+  bounds can only be used with method L-BFGS-B (or Brent)
+Error in uniroot(f1, interval = c(1/N, N)) : 
+  f() values at end points not of opposite sign
+Além disso: Warning messages:
+1: In optim(par = c(lsize = -1.71479842809193, lmu = 10.3865894259775 :
+  bounds can only be used with method L-BFGS-B (or Brent)
+2: In optim(par = c(lsize = -1.71479842809193, lmu = 0.273537565065616 :
+  bounds can only be used with method L-BFGS-B (or Brent)
+Error in uniroot(f1, interval = c(1/N, N)) : 
+  f() values at end points not of opposite sign
+Além disso: Warning messages:
+1: In optim(par = c(lsize = -1.71479842809193, lmu = 8.96352375352263 :
+  bounds can only be used with method L-BFGS-B (or Brent)
+2: In optim(par = c(lsize = -1.71479842809193, lmu = 7.75573673003253 :
+  bounds can only be used with method L-BFGS-B (or Brent)
+3: In optim(par = c(lsize = -1.71479842809193, lmu = 0.24059046491793 :
+  bounds can only be used with method L-BFGS-B (or Brent)
+Error in uniroot(f1, interval = c(1/N, N)) : 
+  f() values at end points not of opposite sign
+Além disso: There were 50 or more warnings (use warnings() to see the first 50)
+Error in uniroot(f1, interval = c(1/N, N)) : 
+  f() values at end points not of opposite sign
+Além disso: There were 50 or more warnings (use warnings() to see the first 50)
+Error in uniroot(f1, interval = c(1/N, N)) : 
+  f() values at end points not of opposite sign
+Além disso: There were 50 or more warnings (use warnings() to see the first 50)
 Error in optim(par = c(lsize = -1.71479842809193, lmu = 0), fn = function (p)  : 
   L-BFGS-B precisa de fn com valores finitos
 Além disso: Warning message:
@@ -265,154 +456,24 @@ Error in uniroot(f1, interval = c(1/N, N)) :
   f() values at end points not of opposite sign
 Error in uniroot(f1, interval = c(1/N, N)) : 
   f() values at end points not of opposite sign
-Além disso: Warning messages:
-1: In optim(par = c(lsize = -1.71479842809193, lmu = 17.8639369826921 :
-  bounds can only be used with method L-BFGS-B (or Brent)
-2: In optim(par = c(lsize = -1.71479842809193, lmu = 8.92130434258012 :
-  bounds can only be used with method L-BFGS-B (or Brent)
-3: In optim(par = c(lsize = -1.71479842809193, lmu = 5.21989515912332 :
-  bounds can only be used with method L-BFGS-B (or Brent)
-4: In optim(par = c(lsize = -1.71479842809193, lmu = 0.0180185055026782 :
-  bounds can only be used with method L-BFGS-B (or Brent)
-Error in uniroot(f1, interval = c(1/N, N)) : 
-  f() values at end points not of opposite sign
-Além disso: Warning messages:
-1: In optim(par = c(lsize = -1.71479842809193, lmu = 5.93261522671967 :
-  bounds can only be used with method L-BFGS-B (or Brent)
-2: In optim(par = c(lsize = -1.71479842809193, lmu = 0.111473866463119 :
-  bounds can only be used with method L-BFGS-B (or Brent)
-Error in uniroot(f1, interval = c(1/N, N)) : 
-  f() values at end points not of opposite sign
-Além disso: Warning messages:
-1: In optim(par = c(lsize = -1.71479842809193, lmu = 16.9928234819509 :
-  bounds can only be used with method L-BFGS-B (or Brent)
-2: In optim(par = c(lsize = -1.71479842809193, lmu = 5.72501025600499 :
-  bounds can only be used with method L-BFGS-B (or Brent)
-3: In optim(par = c(lsize = -1.71479842809193, lmu = 26.2154542302136 :
-  bounds can only be used with method L-BFGS-B (or Brent)
-4: In optim(par = c(lsize = -1.71479842809193, lmu = 0.118481603620523 :
-  bounds can only be used with method L-BFGS-B (or Brent)
-Error in uniroot(f1, interval = c(1/N, N)) : 
-  f() values at end points not of opposite sign
-Além disso: Warning messages:
-1: In optim(par = c(lsize = -1.71479842809193, lmu = 7.71599867849542 :
-  bounds can only be used with method L-BFGS-B (or Brent)
-2: In optim(par = c(lsize = -1.71479842809193, lmu = 1.74571965648811 :
-  bounds can only be used with method L-BFGS-B (or Brent)
-3: In optim(par = c(lsize = -1.71479842809193, lmu = 12.5838050992685 :
-  bounds can only be used with method L-BFGS-B (or Brent)
-4: In optim(par = c(lsize = -1.71479842809193, lmu = 19.5140995496509 :
-  bounds can only be used with method L-BFGS-B (or Brent)
-5: In optim(par = c(lsize = -1.71479842809193, lmu = 0), fn = function (p)  :
-  bounds can only be used with method L-BFGS-B (or Brent)
-6: In mle2(function (lsize, lmu)  :
-  convergence failure: code=52 (ERROR: ABNORMAL_TERMINATION_IN_LNSRCH)
-Error in uniroot(f1, interval = c(1/N, N)) : 
-  f() values at end points not of opposite sign
-Além disso: Warning messages:
-1: In optim(par = c(lsize = -1.71479842809193, lmu = 2.71516228373996 :
-  bounds can only be used with method L-BFGS-B (or Brent)
-2: In optim(par = c(lsize = -1.71479842809193, lmu = 20.1558343143914 :
-  bounds can only be used with method L-BFGS-B (or Brent)
-3: In optim(par = c(lsize = -1.71479842809193, lmu = 15.0348329496537 :
-  bounds can only be used with method L-BFGS-B (or Brent)
-4: In optim(par = c(lsize = -1.71479842809193, lmu = 0.318654393304419 :
-  bounds can only be used with method L-BFGS-B (or Brent)
-Error in uniroot(f1, interval = c(1/N, N)) : 
-  f() values at end points not of opposite sign
-Além disso: There were 11 warnings (use warnings() to see them)
-Error in uniroot(f1, interval = c(1/N, N)) : 
-  f() values at end points not of opposite sign
-Além disso: There were 12 warnings (use warnings() to see them)
-Error in uniroot(f1, interval = c(1/N, N)) : 
-  f() values at end points not of opposite sign
-Além disso: Warning message:
-In optim(par = c(lsize = -1.71479842809193, lmu = 0.0559586536480446 :
-  bounds can only be used with method L-BFGS-B (or Brent)
-> aics.clump <- mclapply(sim.tnb.samp, f10, size = 0.18, index = 2, mc.cores = mc.cores, upper = 1e40)
-Error in uniroot(f1, interval = c(1/N, N)) : 
-  f() values at end points not of opposite sign
-Além disso: Warning messages:
-1: In optim(par = c(lsize = -1.71479842809193, lmu = 6.89516650280571 :
-  bounds can only be used with method L-BFGS-B (or Brent)
-2: In optim(par = c(lsize = -1.71479842809193, lmu = 0), fn = function (p)  :
-  bounds can only be used with method L-BFGS-B (or Brent)
-3: In mle2(function (lsize, lmu)  :
-  convergence failure: code=52 (ERROR: ABNORMAL_TERMINATION_IN_LNSRCH)
-Error in uniroot(f1, interval = c(1/N, N)) : 
-  f() values at end points not of opposite sign
-Além disso: Warning messages:
-1: In optim(par = c(lsize = -1.71479842809193, lmu = 2.49154699039343 :
-  bounds can only be used with method L-BFGS-B (or Brent)
-2: In optim(par = c(lsize = -1.71479842809193, lmu = 0.843188265562284 :
-  bounds can only be used with method L-BFGS-B (or Brent)
-3: In optim(par = c(lsize = -1.71479842809193, lmu = 5.94206067046998 :
-  bounds can only be used with method L-BFGS-B (or Brent)
-4: In optim(par = c(lsize = -1.71479842809193, lmu = 0), fn = function (p)  :
-  bounds can only be used with method L-BFGS-B (or Brent)
-5: In mle2(function (lsize, lmu)  :
-  convergence failure: code=52 (ERROR: ABNORMAL_TERMINATION_IN_LNSRCH)
-Error in uniroot(f1, interval = c(1/N, N)) : 
-  f() values at end points not of opposite sign
-Além disso: There were 48 warnings (use warnings() to see them)
-Error in uniroot(f1, interval = c(1/N, N)) : 
-  f() values at end points not of opposite sign
-Além disso: Warning messages:
-1: In optim(par = c(lsize = -1.71479842809193, lmu = 1.44731310612682 :
-  bounds can only be used with method L-BFGS-B (or Brent)
-2: In optim(par = c(lsize = -1.71479842809193, lmu = 1.69649145593931 :
-  bounds can only be used with method L-BFGS-B (or Brent)
-3: In optim(par = c(lsize = -1.71479842809193, lmu = 0.341107239125361 :
-  bounds can only be used with method L-BFGS-B (or Brent)
-Error in uniroot(f1, interval = c(1/N, N)) : 
-  f() values at end points not of opposite sign
-Além disso: There were 50 or more warnings (use warnings() to see the first 50)
-Error in uniroot(f1, interval = c(1/N, N)) : 
-  f() values at end points not of opposite sign
-Além disso: Warning messages:
-1: In optim(par = c(lsize = -1.71479842809193, lmu = 17.883177682084 :
-  bounds can only be used with method L-BFGS-B (or Brent)
-2: In optim(par = c(lsize = -1.71479842809193, lmu = 8.96352375352263 :
-  bounds can only be used with method L-BFGS-B (or Brent)
-3: In optim(par = c(lsize = -1.71479842809193, lmu = 5.30561967195769 :
-  bounds can only be used with method L-BFGS-B (or Brent)
-4: In optim(par = c(lsize = -1.71479842809193, lmu = 0.268263986594679 :
-  bounds can only be used with method L-BFGS-B (or Brent)
-Error in uniroot(f1, interval = c(1/N, N)) : 
-  f() values at end points not of opposite sign
-Além disso: There were 50 or more warnings (use warnings() to see the first 50)
-Error in uniroot(f1, interval = c(1/N, N)) : 
-  f() values at end points not of opposite sign
-Além disso: Warning message:
-In optim(par = c(lsize = -1.71479842809193, lmu = 0.2055992416633 :
-  bounds can only be used with method L-BFGS-B (or Brent)
-Error in optim(par = c(lsize = -1.71479842809193, lmu = 0), fn = function (p)  : 
-  L-BFGS-B precisa de fn com valores finitos
-Além disso: There were 45 warnings (use warnings() to see them)
-Error in uniroot(f1, interval = c(1/N, N)) : 
-  f() values at end points not of opposite sign
-Error in uniroot(f1, interval = c(1/N, N)) : 
-  f() values at end points not of opposite sign
-Além disso: Warning message:
-In optim(par = c(lsize = -1.71479842809193, lmu = 0.303682413798222 :
-  bounds can only be used with method L-BFGS-B (or Brent)
-Error in uniroot(f1, interval = c(1/N, N)) : 
-  f() values at end points not of opposite sign
-Além disso: There were 42 warnings (use warnings() to see them)
-Error in uniroot(f1, interval = c(1/N, N)) : 
-  f() values at end points not of opposite sign
-Além disso: There were 50 or more warnings (use warnings() to see the first 50)
+Além disso: There were 46 warnings (use warnings() to see them)
 Error in uniroot(f1, interval = c(1/N, N)) : 
   f() values at end points not of opposite sign
 Além disso: There were 50 or more warnings (use warnings() to see the first 50)
 > sim.tnb.msel <- data.frame(S = bias19$tnb$estimates$S,
-+                           ls.rnd = sapply(aics.rnd, function(x) unlist(x$AIC.ls)),
-+                           tnb.rnd = sapply(aics.rnd, function(x) unlist(x$AIC.tnb)),
-+                           ls.clump = sapply(aics.clump, function(x) unlist(x$AIC.ls)),
-+                           tnb.clump = sapply(aics.clump, function(x) unlist(x$AIC.tnb))
++                           ls.rnd.aic = sapply(ics.rnd, function(x) unlist(x$AIC.ls)),
++                           tnb.rnd.aic = sapply(ics.rnd, function(x) unlist(x$AIC.tnb)),
++                           ls.clump.aic = sapply(ics.clump, function(x) unlist(x$AIC.ls)),
++                           tnb.clump.aic = sapply(ics.clump, function(x) unlist(x$AIC.tnb)),
++                           ls.rnd.bic = sapply(ics.rnd, function(x) unlist(x$BIC.ls)),
++                           tnb.rnd.bic = sapply(ics.rnd, function(x) unlist(x$BIC.tnb)),
++                           ls.clump.bic = sapply(ics.clump, function(x) unlist(x$BIC.ls)),
++                           tnb.clump.bic = sapply(ics.clump, function(x) unlist(x$BIC.tnb))
 +                           )
-> sim.tnb.msel$ls.rnd.w <- apply(sim.tnb.msel[,c("ls.rnd","tnb.rnd")], 1, function(x) aic.w2(x)[1])
-> sim.tnb.msel$ls.clump.w <- apply(sim.tnb.msel[,c("ls.clump","tnb.clump")], 1, function(x) aic.w2(x)[1])
+> sim.tnb.msel$ls.rnd.w.aic <- apply(sim.tnb.msel[,c("ls.rnd.aic","tnb.rnd.aic")], 1, function(x) ic.w2(x)[1])
+> sim.tnb.msel$ls.clump.w.aic <- apply(sim.tnb.msel[,c("ls.clump.aic","tnb.clump.aic")], 1, function(x) ic.w2(x)[1])
+> sim.tnb.msel$ls.rnd.w.bic <- apply(sim.tnb.msel[,c("ls.rnd.bic","tnb.rnd.bic")], 1, function(x) ic.w2(x)[1])
+> sim.tnb.msel$ls.clump.w.bic <- apply(sim.tnb.msel[,c("ls.clump.bic","tnb.clump.bic")], 1, function(x) ic.w2(x)[1])
 > 
 > 
 > # Storing in a list
@@ -426,4 +487,4 @@ Além disso: There were 50 or more warnings (use warnings() to see the first 50)
 > 
 > proc.time()
   usuário   sistema decorrido 
-  191.082     2.000    74.297 
+  220.875     5.656    62.886 

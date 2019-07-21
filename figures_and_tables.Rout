@@ -676,9 +676,9 @@ null device
 +     font.lab = 2,
 +     cex.axis = 1.5,
 +     mfrow = c(3,1))
-> f11(tmp2, "LS", xlab = "", main= "Logseries", xlim=range(tmp2[,5:6]))
-> f11(tmp2, "TNB", xlab = "", main= "Truncated Negative Binomial", xlim=range(tmp2[,5:6]))
-> f11(tmp2, "LSE", xlab = "Estimated species richness", main= "RAD linear extension", xlim=range(tmp2[,5:6]))
+> f11(tmp2, "LS", xlab = "", main= "LS", xlim=range(tmp2[,5:6]))
+> f11(tmp2, "TNB", xlab = "", main= "TNB", xlim=range(tmp2[,5:6]))
+> f11(tmp2, "LSE", xlab = "Estimated species richness", main= "LSE", xlim=range(tmp2[,5:6]))
 > dev.off()
 null device 
           1 
@@ -845,7 +845,7 @@ null device
 > ## Plots of model selection biases
 > ################################################################################
 > 
-> pdf("figs_and_tables/bias_model_selection.pdf", width = 9, height = 5)
+> pdf("figs_and_tables/bias_model_selection.pdf", width = 9, height = 9)
 > par(mar = c(5, 5, 4, 2) + 0.1,
 +     mgp = c(3.5, 1, 0),
 +     oma=c(3,3,0,0),
@@ -854,18 +854,28 @@ null device
 +     cex.main = 1.15,  
 +     cex.lab = 1, font.lab = 2, cex.axis = 1,
 +     lwd = 2,
-+     mfrow=c(1,2))
-> plot(ls.rnd.w ~ S, data = bias.msel.19$ls, ylim = c(0,1),
-+      xlab = "Species richness in the community",
-+      ylab = "Evidence weight of logseries fit",
++     mfrow=c(2,2))
+> plot(ls.rnd.w.aic ~ S, data = bias.msel.19$ls, ylim = c(0,1),
++      xlab = "",
++      ylab = "AIC Evidence weight of logseries fit",
 +      main = "Logseries community")
-> points(ls.clump.w ~ S, data = bias.msel.19$ls, col = 2)
-> plot(ls.rnd.w ~ S, data = bias.msel.19$tnb, ylim = c(0,1),
-+      xlab = "Species richness in the community",
-+      ylab = "Evidence weight of logseries fit",
+> points(ls.clump.w.aic ~ S, data = bias.msel.19$ls, col = 2)
+> plot(ls.rnd.w.aic ~ S, data = bias.msel.19$tnb, ylim = c(0,1),
++      xlab = "",
++      ylab = "",
 +      main = "Negative binomial community")
-> points(ls.clump.w ~ S, data = bias.msel.19$tnb, col = 2)
+> points(ls.clump.w.aic ~ S, data = bias.msel.19$tnb, col = 2)
 > legend("topright", c("Random", "Clumped"), col=c(1,2), cex = 1, pch =1, bty="n")
+> plot(ls.rnd.w.bic ~ S, data = bias.msel.19$ls, ylim = c(0,1),
++      xlab = "Species richness in the community",
++      ylab = "BIC Evidence weight of logseries fit",
++      main = "")
+> points(ls.clump.w.bic ~ S, data = bias.msel.19$ls, col = 2)
+> plot(ls.rnd.w.bic ~ S, data = bias.msel.19$tnb, ylim = c(0,1),
++      xlab = "Species richness in the community",
++      ylab = "",
++      main = "")
+> points(ls.clump.w.bic ~ S, data = bias.msel.19$tnb, col = 2)
 > dev.off()
 null device 
           1 
@@ -1139,4 +1149,4 @@ null device
 > 
 > proc.time()
   usuário   sistema decorrido 
-  135.948     1.038   138.105 
+  139.131     1.457   146.652 
