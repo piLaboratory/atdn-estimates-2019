@@ -346,22 +346,30 @@ sim.pres <- function(mu, size, N, pois.samp=TRUE){
 #'     RAD. The expected dispersion parameter of negative binomial
 #'     sampling is allowed to vary across species, and is assumed to
 #'     have a lognormal error which is added in the simulations. This
-#'     is a simulation of how much species will show up in a sample.
+#'     is a simulation of how much species will show up in a
+#'     sample. The log of values of the dispersion parameter over the
+#'     plots (argument 'lmean.k' in "NB.samp") are drawn from the
+#'     estimates from a linear regression (in log scale) of value of
+#'     the aggregation parameter as a function of the number of
+#'     individuals per sampling unit in real data (argument
+#'     'lm.k.fit'). This approach requires a sample of a community
+#'     (presumably the same to be simulated) from which the
+#'     aggregation parameter of each species has been estimated by
+#'     fitting a negative binomial distribution. Usually there is a
+#'     positive linear between dispersion parameter and the expected
+#'     abundance of each species in the sample.
 #' 
 #' @param rad a vector with the species population sizes in the RAD to be sampled
 #' @param tot.area total area of the community to be sampled. The area unit is one plot
 #' @param n.plots number of sampling units (e.g. plots) to be drawn out of the total number of plots.
-#' @param lmean.k  log of expected value of the dispersion
-#'     parameter of the Negative binomial for each species in the
-#'     rad. Usually estimated from a linear regression of
-#'     log(k)~log(abundance) from a dataset of known values of k and abundances.
-#' @param lsd.k log standard deviation of the lmean.k. Can be a single
-#'     value or a vector. Usually the standard error from a a linear regression of
-#'     log(k)~log(abundance) from a dataset of known values of k and
-#'     abundances.
+#' @param lmk.fit lm object, fit of a linear regression of the log of
+#'     the aggregation parameter each species over plots (k) as a
+#'     function of the log of mean abundance of the species per plot. 
+#'     Data from this regression usually comes from an empiriccal
+#'     sample of plots from a real community (see details).
 #' @param nrep number of replicates of the simulation
 #' @return A dataframe with the number of species in the Poisson and Negative binomial sample, for each replicate
-sp.samp <- function(rad, tot.area, n.plots, lmk.fit, nb.fit, nrep=100){
+sp.samp <- function(rad, tot.area, n.plots, lmk.fit, nrep=100){
     index <- order(rad, decreasing=TRUE)
     rad <- rad[index]
     ## Calculate expected k for each species in rad
