@@ -778,7 +778,7 @@ dev.off()
 
 
 ################################################################################
-## Comparisons of rads of the 3 data sets
+### Regional SADs for the 3 data sets ###
 ################################################################################
 ## Weighted average of estimates (except TNB) for each data set
 ## 2013 data set
@@ -802,7 +802,7 @@ S.19  <-
     mutate(se = (IC.up-IC.low)/4)%>%
     summarise(w.mean = weighted.mean(mean, w=1/se), min=min(IC.low), max=max(IC.up)) %>%    
     unlist()
-## Simulated regional SADs with the Weigheted mean above ##
+## Simulated regional SADs with the Weighted mean above ##
 ## 2013
 ls.m.13 <- rad.ls(S = S.13[1], N = atdn.13$Tot.t)$y
 ls.low.13 <- rad.ls(S = S.13[2], N = atdn.13$Tot.t)$y
@@ -816,12 +816,8 @@ ls.up.13.tax <- rad.ls(S = S.13.tax[3], N = atdn.13.tax$Tot.t)$y
 ls.m.19 <- rad.ls(S = S.19[1], N = atdn.19$Tot.t)$y
 ls.low.19 <- rad.ls(S = S.19[2], N = atdn.19$Tot.t)$y
 ls.up.19 <- rad.ls(S = S.19[3], N = atdn.19$Tot.t)$y
-## Expected number of species by the reduction of total area in 2013 updated data set
-## (exp.13.upd <- apply(sp.samp(rad=ls.m.13, tot.area = atdn.13$Tot.A, n.plots=atdn.13$Tot.A, lmk.fit = atdn.19$lm.k), 2, mean))
-################################################################################
-
-### Plot of regional rads ###
-pdf("figs_and_tables/regional_rads_qqplots.pdf", width = 12, height=4.25)
+## The plot
+pdf("figs_and_tables/regional_rads_octav.pdf", width = 6, height=12)
 par(mar = c(5, 5, 4, 3) + 0.1,
     mgp = c(3.5, 1, 0),
     #oma=c(3,3,0,0),
@@ -830,65 +826,34 @@ par(mar = c(5, 5, 4, 3) + 0.1,
     cex.main = 1.5,  
     cex.lab = 1.4, font.lab = 2, cex.axis = 1.25,
     lwd = 2,
-    mfrow=c(1,3))
-plot(rad(ceiling(ls.m.19)/atdn.19$Tot.A), type="l",
-     ylab= expression(paste("Density (",ha^{-1},")")))
+    mfrow=c(2,1)
+    )
+## RAD
+plot(rad(ceiling(ls.m.19)/atdn.19$Tot.A),
+     ##xlab="",
+     ylab= expression(paste("Density (",ha^{-1},")")),
+     ##main = "Whole Amazon",
+     col="darkgray")
 lines(rad(ceiling(ls.m.13)/atdn.13$Tot.A))
 lines(rad(ceiling(ls.m.13.tax)/atdn.13.tax$Tot.A), col="red")
 legend("topright", c("2013", "2013 updated", "2019"),
-       col=c("blue","red","black"), bty="n", lty=1, cex=1.25)
-lines(rad(ceiling(ls.m.13)/atdn.13$Tot.A))
-lines(rad(ceiling(ls.m.13.tax)/atdn.13.tax$Tot.A), col="red")
-qqplot(ls.m.13/atdn.13$Tot.A, ls.m.13.tax/atdn.13.tax$Tot.A,
-       log="xy",
-       col="grey", cex=1,
-       ##xlim=c(1e-12, 1e-9),
-       ##ylim=c(1e-12, 1e-9),
-       xlab = expression(paste("2013 Density (",ha^{-1},")")),
-       ylab = expression(paste("2013 updated Density (",ha^{-1},")"))
-       )
-abline(0,1, col="darkblue")
-qqplot(ls.m.13.tax/atdn.13.tax$Tot.A, ls.m.19/atdn.19$Tot.A, 
-       log="xy",
-       col="grey", cex=1,
-       #xlim=c(5e-1, 4),
-       #ylim=c(5e-1, 4),
-       ylab = expression(paste("2019 Density (",ha^{-1},")")),
-       xlab = expression(paste("2013 updated Density (",ha^{-1},")"))
-       )
-abline(0,1, col="darkblue")
-## par(fig=c(0.53,0.63,0.25,0.45),
-##     ##mgp = c(2.5,1,0),
-##     mar = c(0,0,0,0),
-##     new = TRUE,
-##     cex.main = 1, cex.lab = 1, font.lab = 1, cex.axis = 1, lwd=1,
-##     #cex.axis = 1, cex.lab=1.1, lwd=2,
-##     #yaxp=c(1,3,3),
-##     bty="o")
-## qqplot(ls.m.13/atdn.13$Tot.A, ls.m.13.tax/atdn.13.tax$Tot.A,
-##        log="xy",
-##        col="grey",
-##        xlab = "",
-##        ylab = "")
-## abline(0,1)
-## segments(1e-12, 1e-12, 1e-9, 1e-9, col="darkblue", lwd=3)
-## par(fig=c(0.87,0.97,0.25,0.45),
-##     new=TRUE,
-##     cex.main = 1, cex.lab = 1, font.lab = 1, cex.axis = 1, lwd=1
-##     )
-## qqplot(ls.m.13.tax/atdn.13.tax$Tot.A, ls.m.19/atdn.19$Tot.A, 
-##        log="xy",
-##        col="grey",
-##        ylab = "",
-##        xlab = "")
-## abline(0,1)
-##segments(5e-1, 5e-1, 4, 4, col="darkblue", lwd=3)
-##par(fig=c(0,1,0,1))
+       col=c("blue","red","darkgrey"), bty="n", lty=1, cex=1.25)
+## Octav
+plot(octav(ls.m.19/atdn.19$Tot.A),
+     x.oct=TRUE,
+     border = NA,
+     xlab= expression(paste("Log2 Density (",ha^{-1},")")),
+     col = "darkgray"
+     )
+lines(octav(ls.m.13/atdn.13$Tot.A))
+lines(octav(ls.m.13.tax/atdn.13.tax$Tot.A), col="red")
 dev.off()
-################################################################################
 
-### RADs of the estimated population sizes ###
-pdf("figs_and_tables/pop_rads_qqplots.pdf", width = 12, height=4.25)
+
+################################################################################
+### Population SADs for the 3 data sets ###
+################################################################################
+pdf("figs_and_tables/population_rads_octav.pdf", width = 6, height=12)
 par(mar = c(5, 5, 4, 3) + 0.1,
     mgp = c(3.5, 1, 0),
     #oma=c(3,3,0,0),
@@ -897,32 +862,33 @@ par(mar = c(5, 5, 4, 3) + 0.1,
     cex.main = 1.5,  
     cex.lab = 1.4, font.lab = 2, cex.axis = 1.25,
     lwd = 2,
-    mfrow=c(1,3))
-plot(rad(atdn.19$data$population/atdn.19$Tot.A), type="l",
-     ylab= expression(paste("Density (",ha^{-1},")")))
+    mfrow=c(2,1)
+    )
+## RAD
+plot(rad(atdn.19$data$population/atdn.19$Tot.A),
+     ylab= expression(paste("Density (",ha^{-1},")")),
+     ##main = "Total population sizes",
+     col="darkgray")
 lines(rad(atdn.13$data$population/atdn.13$Tot.A))
 lines(rad(atdn.13.tax$data$population/atdn.13.tax$Tot.A), col="red")
 legend("topright", c("2013", "2013 updated", "2019"),
-       col=c("blue","red","black"), bty="n", lty=1, cex=1.25)
-qqplot(atdn.13$data$population/atdn.13$Tot.A, atdn.13.tax$data$population/atdn.13.tax$Tot.A,
-       log="xy",
-       col="grey", cex=1,
-       xlab = expression(paste("2013 Density (",ha^{-1},")")),
-       ylab = expression(paste("2013 updated Density (",ha^{-1},")"))
-       )
-abline(0,1, col="darkblue")
-qqplot(atdn.13.tax$data$population/atdn.13.tax$Tot.A, atdn.19$data$population/atdn.19$Tot.A, 
-       log="xy",
-       col="grey", cex=1,
-       ylab = expression(paste("2019 Density (",ha^{-1},")")),
-       xlab = expression(paste("2013 updated Density (",ha^{-1},")"))
-       )
-abline(0,1, col="darkblue")
+       col=c("blue","red","darkgrey"), bty="n", lty=1, cex=1.25)
+## Octav
+plot(octav(atdn.19$data$population/atdn.19$Tot.A),
+     x.oct=TRUE,
+     border = NA,
+     col = "darkgray",
+     ylim=c(0,600),
+     ##ylab="",
+     xlab= expression(paste("Log2 Density (",ha^{-1},")")))
+lines(octav(atdn.13$data$population/atdn.13$Tot.A))
+lines(octav(atdn.13.tax$data$population/atdn.13.tax$Tot.A), col="red")
 dev.off()
-################################################################################
 
-### RADs of the abundances in the sample ###
-pdf("figs_and_tables/sample_rads_qqplots.pdf", width = 12, height=4.25)
+################################################################################
+### Sample SADs for the 3 data sets ###
+################################################################################
+pdf("figs_and_tables/sample_rads_octav.pdf", width = 6, height=12)
 par(mar = c(5, 5, 4, 3) + 0.1,
     mgp = c(3.5, 1, 0),
     #oma=c(3,3,0,0),
@@ -931,61 +897,27 @@ par(mar = c(5, 5, 4, 3) + 0.1,
     cex.main = 1.5,  
     cex.lab = 1.4, font.lab = 2, cex.axis = 1.25,
     lwd = 2,
-    mfrow=c(1,3))
-plot(rad(atdn.19$data$N.ind/atdn.19$Samp.A), type="l",
-     ylab= expression(paste("Density (",ha^{-1},")")))
+    mfrow=c(2,1)
+    )
+plot(rad(atdn.19$data$N.ind/atdn.19$Samp.A),
+     ylab= expression(paste("Density (",ha^{-1},")")),
+     ##xlab = "",
+     ##main = "Abundance in the plots",
+     col="darkgray")
 lines(rad(atdn.13$data$N.ind/atdn.13$Samp.A))
 lines(rad(atdn.13.tax$data$N.ind/atdn.13.tax$Samp.A), col="red")
 legend("topright", c("2013", "2013 updated", "2019"),
-       col=c("blue","red","black"), bty="n", lty=1, cex=1.25)
-qqplot(atdn.13$data$N.ind/atdn.13$Samp.A, atdn.13.tax$data$N.ind/atdn.13.tax$Samp.A,
-       log="xy",
-       col="grey", cex=1,
-       xlab = expression(paste("2013 Density (",ha^{-1},")")),
-       ylab = expression(paste("2013 updated Density (",ha^{-1},")"))
-       )
-abline(0,1, col="darkblue")
-qqplot(atdn.13.tax$data$N.ind/atdn.13.tax$Samp.A, atdn.19$data$N.ind/atdn.19$Samp.A, 
-       log="xy",
-       col="grey", cex=1,
-       ylab = expression(paste("2019 Density (",ha^{-1},")")),
-       xlab = expression(paste("2013 updated Density (",ha^{-1},")"))
-       )
-abline(0,1, col="darkblue")
+       col=c("blue","red","darkgrey"), bty="n", lty=1, cex=1.25)
+## Octav
+plot(octav(atdn.19$data$N.ind/atdn.19$Samp.A),
+     x.oct=TRUE,
+     border = NA,
+     col = "darkgray",
+     ylim=c(0,650),
+     xlab= expression(paste("Log2 Density (",ha^{-1},")")))
+lines(octav(atdn.13$data$N.ind/atdn.13$Samp.A))
+lines(octav(atdn.13.tax$data$N.ind/atdn.13.tax$Samp.A), col="red")
 dev.off()
-
-
-### Octav sample ###
-## 2013 x 2013 updated
-plot(octav(atdn.13$data$N.ind/atdn.13$Samp.A),
-     xlab= expression(paste("Density (",ha^{-1},")")))
-lines(octav(atdn.13.tax$data$N.ind/atdn.13.tax$Samp.A))
-## 2013 updated x 2019
-plot(octav(atdn.13.tax$data$N.ind/atdn.13.tax$Samp.A),
-     xlab= expression(paste("Density (",ha^{-1},")")))
-lines(octav(atdn.19$data$N.ind/atdn.19$Samp.A))
-
-### Octav est pop ###
-## 2013 x 2013 updated
-plot(octav(atdn.13$data$population/atdn.13$Tot.A),
-     xlab= expression(paste("Density (",ha^{-1},")")))
-lines(octav(atdn.13.tax$data$population/atdn.13.tax$Tot.A))
-## 2013 updated x 2019
-plot(octav(atdn.13.tax$data$population/atdn.13.tax$Tot.A),
-     xlab= expression(paste("Density (",ha^{-1},")")), ylim=c(0,550))
-lines(octav(atdn.19$data$population/atdn.19$Tot.A))
-
-
-### Octav regional rad ###
-## 2013 x 2013 updated
-plot(octav(ls.m.13/atdn.13$Tot.A),
-     xlab= expression(paste("Density (",ha^{-1},")")))
-lines(octav(ls.m.13.tax/atdn.13.tax$Tot.A))
-## 2013 updated x 2019
-plot(octav(ls.m.13.tax/atdn.13.tax$Tot.A),
-     xlab= expression(paste("Density (",ha^{-1},")")), ylim=c(0,550))
-lines(octav(ls.m.19/atdn.19$Tot.A))
-
 
 ################################################################################
 ## Fits of sads to abundances in the sample - Diagnostic plots
@@ -1073,3 +1005,16 @@ qqsad(atdn.19$pln, main="", xlab="", ylab="", col="grey")
 mtext("PLN", at=1.8e5)
 dev.off()
 
+## Comparing Abundances in the sample
+data.13.13t <- merge(atdn.13$data, atdn.13.tax$data, by="species", all.x=TRUE, all.y=TRUE, suffixes=c(".13",".13t"))
+data.13.13t$dif <- with(data.13.13t, (N.ind.13-N.ind.13t)/N.ind.13)
+plot( I(N.ind.13t/atdn.13.tax$Samp.A) ~ I(N.ind.13/atdn.13$Samp.A), data=data.13.13t, log="xy")
+plot( N.ind.13t ~ N.ind.13, data=data.13.13t, log="xy")
+abline(0,1, col=2)
+plot(dif ~ N.ind.13, data=data.13.13t)
+
+data.13t.19 <- merge(atdn.13.tax$data, atdn.19$data, by="species", all.x=TRUE, all.y=TRUE, suffixes=c(".13t",".19"))
+plot( I(N.ind.19/atdn.19$Samp.A) ~ I(N.ind.13t/atdn.13.tax$Samp.A), data=data.13t.19, log="xy")
+abline(0,1, col=2)
+plot( N.ind.19 ~ N.ind.13t, data=data.13t.19, log="xy")
+abline(0,1, col=2)
