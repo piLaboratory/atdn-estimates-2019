@@ -7,7 +7,7 @@ library(VCA)
 ## Read table with all estimates, original and bias corrected
 S.estimates.all <- read.csv("figs_and_tables/estimates_S_table.csv")
 
-## Minimum and amximum values of estimates assuming clumped and random sampling in bias correction   
+## Minimum and maximum values of estimates assuming clumped and random sampling in bias correction   
 S.estimates.all %>%
     filter(bias.corrected==TRUE&type!="LSE TNB") %>%
     mutate(difIC = (IC.up-IC.low)/IC.low)%>%
