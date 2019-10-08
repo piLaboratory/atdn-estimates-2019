@@ -300,7 +300,7 @@ sim.occ <- function(mu, size, N, pois.samp=TRUE){
 }
 
 
-#' Simulates persence/absence of species in a sample of a RAD
+#' Simulates presence/absence of species in a sample of a RAD
 #'
 #' @details Utility function used by 'Pois.samp' and 'NB.samp'
 #'     functions, see below.  Given the density of species per plot in
@@ -580,12 +580,12 @@ sim.rad <- function(S, N, sad=c("ls","tnb","lnorm"), nb.fit, ...){
 #' @details This function simulates random and clumped samples from a
 #'     a vector of expected species abundances in the community. The
 #'     log of values of the dispersion parameter over the plots
-#'     (argument 'lmean.k' in "NB.samp") are drawn from Gaussian the
-#'     estimates from a linear regression (in log scale) of value of
-#'     the aggregation parameter as a function of the number of
-#'     individuals per sampling unit in real data (argument
-#'     'lm.k.fit'). This approach requires a sample of a community
-#'     (presumably the same to be simulated) from which the
+#'     (argument 'lmean.k' in "NB.samp") are drawn from a Gaussian
+#'     whose parameters are the estimates from a linear regression (in
+#'     log scale) of value of the aggregation parameter as a function
+#'     of the number of individuals per sampling unit in real data
+#'     (argument 'lm.k.fit'). This approach requires a sample of a
+#'     community (presumably the same to be simulated) from which the
 #'     aggregation parameter of each species has been estimated by
 #'     fitting a negative binomial distribution. Usually there is a
 #'     positive linear relationship between the standard deviations
@@ -1030,25 +1030,25 @@ hui.boot <- function(mu, lmean.k, lsd.k, n.samp, N.tot, pois.samp=TRUE, nrep = 1
 #'     sampling models (see Supplementary online material for
 #'     details). Bias correction can be done using a linear regression
 #'     of true values as a function of estimated values, which is
-#'     recommended if there is such a linear relantionship. If this i
+#'     recommended if there is such a linear relantionship. If this is
 #'     not true an approximate bias correction can be done with the
 #'     "quantile" method, that uses the mean and quantiles of the
-#'     values the paired true values within the range estimate. This
-#'     method assumes that the number of simulations within the range
-#'     estimate is a valid sample of the set of possible pairs of true
-#'     values/estimated values. 
+#'     values the paired true values that lie within the range
+#'     estimate. This 'quantile method' assumes that the number of
+#'     simulations within the range estimate is a valid sample of the
+#'     set of possible pairs of true values/estimated values.
 #' @param object list, an object returned from the bias analyses (see
-#'     scripts in directory 'bias estimation'). 
+#'     scripts in directory 'bias estimation').
 #' @param ci.vector, vector of original point estimate and lower and
-#'     upper limits of original range estimate. 
+#'     upper limits of original range estimate.
 #' @param method, character. For method="lm" bias correction is done
 #'     from a linear regression of the true values as a function of
 #'     estimated values. If method="quantile" the bias-corrected
 #'     estimates are calculated from the distribution of the true
-#'     values within the range estimate. See details. 
+#'     values within the range estimate. See details.
 #' @return a data.frame with the point and range estimates corrected
-#' from bias between the estimated value and true value, assuming random
-#' and clumped sampling.  
+#'     from bias between the estimated value and true value, assuming
+#'     random and clumped sampling.
 bias.ci <- function(object, ci.vector, method="quantile"){
     ci <- unlist(ci.vector)
 ##ugly tweak to solve a inconsistency in the format of some estimator functions,
@@ -1176,7 +1176,7 @@ atdn.estimates <- function(path.to.data,
     p1 <- sum(data$N.ind)/Tot.t
     ## Number of individuals in the sample
     N.ind <- data$N.ind
-    ## Number os species in the sample
+    ## Number of species in the sample
     Sobs <- length(N.ind)
 
     
