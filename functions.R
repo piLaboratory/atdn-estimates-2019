@@ -394,23 +394,34 @@ sp.samp <- function(rad, tot.area, n.plots, lmk.fit, nrep=100){
 #'     abundaces would be included in a Poisson sample of a regional
 #'     RAD. The population sizes of the included species are then set
 #'     to the population sizes of the 1st, 2nd .. Nth most abundant
-#'     species recorded. Two simulated RADs are simulated: (1) a "no estimate
-#'     error" vector of abundances, under the assumption that the only
-#'     source of uncertainty is which species will be included in the
-#'     sample (that is, which species would be detected); and (2) a
-#'     "estimate error" vector of abundances, that include the
-#'     uncertatinty in the estimation of population sizes (defined by
-#'     'lmean.sd' and 'lsd.sd') If nrep > 1 then the simulation is
-#'     repeated nrep times and the abundance of the 1st, 2nd ... Nth
-#'     species is taken from the mean abundances at each species rank
-#'     over repetitions.
+#'     species recorded. Two simulated RADs are simulated: (1) a
+#'     "no estimate error" vector of abundances, under the assumption
+#'     that the only source of uncertainty is which species will be
+#'     included in the sample (that is, which species would be
+#'     detected); and (2) a "estimate error"
+#'     vector of abundances, that include the uncertatinty in the
+#'     estimation of population sizes (defined by 'lmean.sd' and
+#'     'lsd.sd') If nrep > 1 then the simulation is repeated nrep
+#'     times and the abundance of the 1st, 2nd ... Nth species is
+#'     taken from the mean abundances at each species rank over
+#'     repetitions.
 #' 
-#' @param rad vector of positiev reals, species population sizes in
+#' @param rad vector of positive reals, species population sizes in
 #'     the RAD to be sampled.
 #' @param tot.area positive real, total area of the community to be
 #'     sampled. The area unit is one plot.
 #' @param n.plots positive integer, number of sampling units
 #'     (e.g. plots) to be drawn out of the total number of plots.
+#' @param lmean.sd  log of expected value of the standard deviation of
+#'     the estimated population sizes of each species in the
+#'     rad. Usually estimated from a linear regression of
+#'     log(sd)~log(abundance) from a dataset of known values of
+#'     estimated abundances and its standard deviations.
+#' @param lsd.sd log standard deviation of the lmean.sd. Can be a
+#'     single value or a vector. Usually the standard error from a
+#'     linear regression of log(sd)~log(abundance) from a dataset of
+#'     known values of estimated abundances and its standard
+#'     deviations.
 #' @param nrep positive integer, number of repetitions of the
 #'     simulated sampling
 #'
@@ -449,16 +460,17 @@ Pois.samp <- function(rad, tot.area, n.plots,
 #'     simulations. This is a simulation of how the distribution of
 #'     total population sizes would look like, assuming that the there
 #'     is a method to estimate the population sizes of the species
-#'     recorded. Two simulated RADs are simulated: (1) a "no estimate
-#'     error" vector of abundances, under the assumption that the only
-#'     source of uncertainty is which species will be included in the
-#'     sample (that is, which species would be detected); and (2) a
-#'     "estimate error" vector of abundances, that include the
-#'     uncertatinty in the estimation of population sizes (defined by
-#'     'lmean.sd and 'lsd.sd') If nrep > 1 then the simulation is
-#'     repeated nrep times and the abundance of the 1st, 2nd ... Nth
-#'     species is taken from the mean abundances at each species rank
-#'     over repetitions.
+#'     recorded. Two simulated RADs are simulated: (1) a
+#'     "no estimate error" vector of abundances, under the assumption
+#'     that the only source of uncertainty is which species will be
+#'     included in the sample (that is, which species would be
+#'     detected); and (2) a "estimate error"
+#'     vector of abundances, that include the uncertatinty in the
+#'     estimation of population sizes (defined by 'lmean.sd and
+#'     'lsd.sd') If nrep > 1 then the simulation is repeated nrep
+#'     times and the abundance of the 1st, 2nd ... Nth species is
+#'     taken from the mean abundances at each species rank over
+#'     repetitions.
 #' 
 #' @param rad a vector with the species population sizes in the RAD to be sampled
 #' @param tot.area total area of the community to be sampled. The area unit is one plot
@@ -545,8 +557,9 @@ NB.samp <- function(rad, tot.area, n.plots, lmean.k, lsd.k, lmean.sd,
 #'     according to the SAD model chosen by argument 'sad'
 sim.rad <- function(S, N, sad=c("ls","tnb","lnorm"), nb.fit, ...){
     dots <- list(...)
-    if(!is.null(nb.fit)&class(nb.fit)!= "fitsad")
-        stop("nb.fit should be an object of class fitsad")
+    if(!missing(nb.fit))
+        if(class(nb.fit)!= "fitsad")
+            stop("nb.fit should be an object of class fitsad")
     sad <- match.arg(sad)
     if(sad=="ls"){
         ## Calculate alpha
@@ -603,18 +616,13 @@ sim.rad <- function(S, N, sad=c("ls","tnb","lnorm"), nb.fit, ...){
 #'     function of the log of mean abundance of the species per plot. 
 #'     Data from this regression usually comes from an empiriccal
 #'     sample of plots from a real community (see details).
-#' @param nb.fit fitsad object, fit of the negative binomial model of
-#'     SADs truncated at zero to a vector of species abundances in a
-#'     empirical sample.
 #' @param ...  further arguments to be passed to the functions called
 #'     internally. Should include a named argument 'sdlog', with the
 #'     value of the standard deviation of log values of abundances for
 #'     the lognormal model of abundance distributions, if sad = lnorm.
 #' @return a list with the simulated abundances of species in the Poisson and Negative binomial samples.
 #' }
-sim.radsamp<- function(rad,
-                    tot.area, n.plots,
-                    lmk.fit, nb.fit, ...){
+sim.radsamp<- function(rad, tot.area, n.plots, lmk.fit, ...){
     rad <- sort(rad[rad>0])
     S <- length(rad)
     ## Calculate expected k for each species in rad
@@ -727,11 +735,11 @@ sim.abc <- function(S, N, rad, sad=c("ls","tnb","lnorm"),
         rad <- sim.rad(S, N, sad, nb.fit, ...)
     ## Calculate sd of pop estimates for each species in rad
     rad.lmean.sd <- predict(lm.sd.fit, newdata=data.frame(population=rad))
-    ## standard deviation of sd (from regression object)
+    ## standard deviation of sd (estimated from the regression object)
     rad.lsd.sd <- summary(lm.sd.fit)$sigma
     ## Calculate k for each species in rad
     rad.lk <- predict(lmk.fit, newdata=data.frame(dens.ha=rad/tot.area))
-    ## standard deviation of k (from regression object)
+    ## standard deviation of k (estimated from the regression object)
     rad.lsk <- summary(lmk.fit)$sigma
     ## Poisson sample
     p.samp <- Pois.samp(rad = rad, tot.area = tot.area,

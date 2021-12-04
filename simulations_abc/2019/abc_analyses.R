@@ -6,11 +6,11 @@ load("../lists_with_all_objects.RData")
 
 ## Load simulation ressults (ran in a computer cluster)
 load("abc_simulations/abcFinal2019.RData")
-## Use only the summary statistics of the simulations with noise in estimated tital population sizes (see abc2019run.R)
+## Use only the summary statistics of the simulations with noise in estimated total population sizes (see abc2019run.R)
 abc2019$sims <- abc2019$sims[,5:8]
 
 ## Model selection
-## Target: observed number of species, lmean, sdmean and zero of Mean_square with obs values             
+## Target: observed number of species, Simpson's species equivalent, lmean and  sdmean of estimated population sizes              
 target <- c(atdn.19$Sobs, D(atdn.19$data$population), mean(log(atdn.19$data$population)), sd(log(atdn.19$data$population)))
 
 ## Quick diagnostics plots

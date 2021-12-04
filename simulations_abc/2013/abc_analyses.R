@@ -6,11 +6,11 @@ load("../lists_with_all_objects.RData")
 
 ## Load simulation ressults (ran in a computer cluster)
 load("abc_simulations/abcFinal2013.RData")
-## Uses only the summary statistics of the simulations with noise in estimated tital population sizes (see abc2013run.R)
+## Uses only the summary statistics of the simulations with noise in estimated total population sizes (see abc2013run.R)
 abc2013$sims <- abc2013$sims[,5:8]
 
 ## Model selection
-## Target: observed number of species, lmean, sdmean and zero of Mean_square with obs values             
+## Target: observed number of species, Simpson's species-equivalent, lmean and sd mean of estimated population sizes             
 target <- c(atdn.13$Sobs, D(atdn.13$data$population), mean(log(atdn.13$data$population)), sd(log(atdn.13$data$population)))
 
 ## Quick diagnostics plots
@@ -159,7 +159,7 @@ f1 <- function(x, ...){
         return(y)
 }
 
-### Simulations and predcitive check
+### Simulations and predictive check
 LSclump.pc <- mclapply(sample(S.post1$unadj.values,100, replace=TRUE),
                   f1, sad="ls", lower=1e-20, upper=1e20, mc.cores=3)
 tmp1 <- LSclump.pc[[1]][2,5:8]

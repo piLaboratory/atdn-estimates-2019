@@ -12,11 +12,11 @@ mc.cores <- 12
 ## Checking the relationship between Estimated and real S
 S1 <- round(runif(250, 1e4, 2.5e4))
 
-sim.ls.rad <- mclapply(S1, sim.rad, N = atdn.19$Tot.t, sad = "ls", nb.fit = atdn.19$y.nb2,
+sim.ls.rad <- mclapply(S1, sim.rad, N = atdn.19$Tot.t, sad = "ls", 
                           mc.cores = mc.cores, upper = 1e12)
 sim.ls.samp <- mclapply(sim.ls.rad, sim.radsamp, tot.area  = atdn.19$Tot.A,
                            n.plots = atdn.19$N.plots, lmk.fit = atdn.19$lm.k,
-                           nb.fit = atdn.19$y.nb2, mc.cores = mc.cores)
+                           mc.cores = mc.cores)
 sim.ls.estS <- data.frame(S = S1,
                              S.est.rnd = unlist( mclapply(sim.ls.samp,
                                                          function(x) ls.estS(x$rnd.samp, N = atdn.19$Tot.t),
@@ -45,7 +45,7 @@ sim.tnb.rad <- mclapply(S3, sim.rad, N = atdn.19$Tot.t, sad = "tnb",
                                        nb.fit = atdn.19$y.nb2, mc.cores = mc.cores, upper = 1e50)
 sim.tnb.samp <- mclapply(sim.tnb.rad, sim.radsamp, tot.area  = atdn.19$Tot.A,
                            n.plots = atdn.19$N.plots, lmk.fit = atdn.19$lm.k,
-                           nb.fit = atdn.19$y.nb2, mc.cores = mc.cores)
+                           mc.cores = mc.cores)
 sim.tnb.estS <- data.frame(S = S3,
                               S.est.rnd = unlist(mclapply(sim.tnb.samp,
                                                           function(x) f3(x$rnd.samp, size = 0.018),
