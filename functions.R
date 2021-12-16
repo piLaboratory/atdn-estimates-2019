@@ -1048,7 +1048,9 @@ hui.boot <- function(mu, lmean.k, lsd.k, n.samp, N.tot, pois.samp=TRUE, nrep = 1
 #' @param object list, an object returned from the bias analyses (see
 #'     scripts in directory 'bias estimation').
 #' @param ci.vector, vector of original point estimate and lower and
-#'     upper limits of original range estimate.
+#'     upper limits of range estimate of species richness. Usually
+#'     this is obtained by some methods that estimates species
+#'     richness from the empirical data.
 #' @param method, character. For method="lm" bias correction is done
 #'     from a linear regression of the true values as a function of
 #'     estimated values. If method="quantile" the bias-corrected
@@ -1059,7 +1061,7 @@ hui.boot <- function(mu, lmean.k, lsd.k, n.samp, N.tot, pois.samp=TRUE, nrep = 1
 #'     random and clumped sampling.
 bias.ci <- function(object, ci.vector, method="quantile"){
     ci <- unlist(ci.vector)
-##ugly tweak to solve a inconsistency in the format of some estimator functions,
+##ugly tweak to solve an inconsistency in the format of some estimator functions,
 ##that return range estimates as [upper, lower limit]. 
     if(ci[2]>ci[3]) ci <- ci[c(1,3,2)] 
     y1 <- with(object$estimates,
